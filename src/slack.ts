@@ -3,6 +3,7 @@ import * as github from '@actions/github';
 import { IncomingWebhook, IncomingWebhookSendArguments } from '@slack/webhook';
 
 export async function Send(payload: IncomingWebhookSendArguments) {
+  core.debug(JSON.stringify(github.context, null, 2));
   const webhook = newWebhook();
   await webhook.send(payload);
   core.debug('send message');
