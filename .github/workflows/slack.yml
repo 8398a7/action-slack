@@ -10,19 +10,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Succeeded Check
-      uses: 8398a7/action-slack@v0
+      uses: 8398a7/action-slack@v1
       with:
         type: success
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
     - name: Failed Check
-      uses: 8398a7/action-slack@v0
+      uses: 8398a7/action-slack@v1
       with:
         type: failed
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
     - name: Custom Field Check
-      uses: 8398a7/action-slack@v0
+      uses: 8398a7/action-slack@v1
       with:
         payload: |
           {
