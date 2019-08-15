@@ -1,9 +1,8 @@
 name: Slack Checks
-on: [push]
-
-push:
-  branches:
-  - v0
+on:
+  push:
+    branches:
+    - v0
 
 jobs:
   check_pr:
