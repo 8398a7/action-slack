@@ -2,6 +2,7 @@ name: Slack Checks
 on:
   push:
     branches:
+    - master
     - v0
     - v1
 
