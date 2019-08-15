@@ -4,42 +4,8 @@ author: 8398a7
 inputs:
   text:
     description: e.g. succeeded workflow
-  iconEmoji:
-    description: 'e.g. :innocent:'
-  attachment.author_name:
-    description: 'e.g. author_name'
-  attachment.fallback:
-    description: 'e.g. fallback'
-  attachment.color:
-    description: 'e.g. danger'
-  attachment.title:
-    description: 'e.g. title'
-  attachment.text:
-    description: 'e.g. text'
-  attachment.field.title1:
-    description: 'e.g. title1'
-  attachment.field.value1:
-    description: 'e.g. value1'
-  attachment.field.short1:
-    description: 'true or false'
-  attachment.field.title2:
-    description: 'e.g. title2'
-  attachment.field.value2:
-    description: 'e.g. value2'
-  attachment.field.short2:
-    description: 'true or false'
-  attachment.field.title3:
-    description: 'e.g. title3'
-  attachment.field.value3:
-    description: 'e.g. value3'
-  attachment.field.short3:
-    description: 'true or false'
-  attachment.field.title4:
-    description: 'e.g. title4'
-  attachment.field.value4:
-    description: 'e.g. value4'
-  attachment.field.short4:
-    description: 'true or false'
+  attachments:
+    description: 'json payload(refs: https://github.com/slackapi/node-slack-sdk/blob/v5.0.0/packages/webhook/src/IncomingWebhook.ts#L91-L106)'
 runs:
   using: node12
   main: lib/main.js
