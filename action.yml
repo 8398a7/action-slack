@@ -2,6 +2,8 @@ name: action-slack
 description: You can notify slack of GitHub Actions.
 author: 8398a7
 inputs:
+  type:
+    description: auto or success or failed
   text:
     description: e.g. succeeded workflow
   attachments:

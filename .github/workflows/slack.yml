@@ -8,16 +8,17 @@ jobs:
   check_pr:
     runs-on: ubuntu-latest
     steps:
-    - uses: 8398a7/action-slack@v0
+    - name: Full Field Check
+      uses: 8398a7/action-slack@v0
       with:
-        text: Succeeded slack checks
+        text: Full Field Check
         attachments: |
           [{
-            "author_name": "",
-            "fallback": "",
-            "color": "",
-            "title": "",
-            "text": "",
+            "author_name": "slack-actions",
+            "fallback": "fallback",
+            "color": "good",
+            "title": "CI Result",
+            "text": "Succeeded",
             "fields": [{
               "title": "short title1",
               "value": "short value1",
@@ -32,7 +33,21 @@ jobs:
               "title": "long title1",
               "value": "long value1",
               "short": false
+            }],
+            "actions": [{
             }]
           }]
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+    - name: Succeeded Check
+      uses: 8398a7/action-slack@v0
+      with:
+        type: success
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+    - name: Failed Check
+      uses: 8398a7/action-slack@v0
+      with:
+        type: failed
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
