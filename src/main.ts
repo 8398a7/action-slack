@@ -1,29 +1,23 @@
 import * as core from '@actions/core';
 import { Send, successPayload, failedPayload } from './slack';
-import { MessageAttachment } from '@slack/types';
+import { IncomingWebhookSendArguments } from '@slack/webhook';
 
 async function run() {
   try {
+    let payload: IncomingWebhookSendArguments = {};
     switch (core.getInput('type')) {
       case 'auto':
         throw new Error('not implement');
-        break;
       case 'success':
-        await Send(successPayload());
+        payload = successPayload();
         break;
       case 'failed':
-        await Send(failedPayload());
+        payload = failedPayload();
         break;
       default:
-        const text = core.getInput('text');
-        const attachments: Array<MessageAttachment> = JSON.parse(
-          core.getInput('attachments'),
-        );
-        await Send({
-          text,
-          attachments,
-        });
+        payload = JSON.parse(core.getInput('payload'));
     }
+    await Send(payload);
   } catch (error) {
     core.setFailed(error.message);
   }

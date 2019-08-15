@@ -33,34 +33,36 @@ You can notify slack of GitHub Actions.
 ![](https://user-images.githubusercontent.com/8043276/63113021-9f65e700-bfcc-11e9-97cf-9a962c7ce611.png)
 
 ```yaml
-- uses: 8398a7/action-slack@v1
+- uses: 8398a7/action-slack@v0
   with:
-    text: Full Field Check
-    attachments: |
-      [{
-        "author_name": "slack-actions",
-        "fallback": "fallback",
-        "color": "good",
-        "title": "CI Result",
-        "text": "Succeeded",
-        "fields": [{
-          "title": "short title1",
-          "value": "short value1",
-          "short": true
-        },
-        {
-          "title": "short title2",
-          "value": "short value2",
-          "short": true
-        },
-        {
-          "title": "long title1",
-          "value": "long value1",
-          "short": false
-        }],
-        "actions": [{
+    payload: |
+      {
+        "text": "Custom Field Check",
+        "attachments": [{
+          "author_name": "slack-actions",
+          "fallback": "fallback",
+          "color": "good",
+          "title": "CI Result",
+          "text": "Succeeded",
+          "fields": [{
+            "title": "short title1",
+            "value": "short value1",
+            "short": true
+          },
+          {
+            "title": "short title2",
+            "value": "short value2",
+            "short": true
+          },
+          {
+            "title": "long title1",
+            "value": "long value1",
+            "short": false
+          }],
+          "actions": [{
+          }]
         }]
-      }]
+      }
   env:
     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 ```
