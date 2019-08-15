@@ -11,22 +11,28 @@ jobs:
     - uses: 8398a7/action-slack@v0
       with:
         text: Succeeded slack checks
-        attachment.author_name: action-slack
-        attachment.fallback: fallback
-        attachment.color: '#439FE0'
-        attachment.title: check slack
-        attachment.text: attachment text
-        attachment.field.title1: field title1
-        attachment.field.value1: field value1
-        attachment.field.short1: false
-        attachment.field.title2: field title2
-        attachment.field.value2: field value2
-        attachment.field.short2: true
-        attachment.field.title3: field title3
-        attachment.field.value3: field value3
-        attachment.field.short3: false
-        attachment.field.title4: field title4
-        attachment.field.value4: field value4
-        attachment.field.short4: true
+        attachments: |
+          [{
+            "author_name": "",
+            "fallback": "",
+            "color": "",
+            "title": "",
+            "text": "",
+            "fields": [{
+              "title": "short title1",
+              "value": "short value1",
+              "short": true
+            },
+            {
+              "title": "short title2",
+              "value": "short value2",
+              "short": true
+            },
+            {
+              "title": "long title1",
+              "value": "long value1",
+              "short": false
+            }]
+          }]
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
