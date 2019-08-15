@@ -30,7 +30,7 @@ export function successPayload() {
   return payload;
 }
 
-export function failedPayload() {
+export function failurePayload() {
   const payload: IncomingWebhookSendArguments = successPayload();
   payload.text = 'Failed Workflow';
   if (payload.attachments !== undefined) {
