@@ -19,19 +19,10 @@ export function successPayload() {
         fields: [
           { title: 'repo', value: github.context.repo.repo, short: true },
           { title: 'sha', value: github.context.sha, short: true },
-          {
-            title: 'sender',
-            value: JSON.stringify(github.context.payload.sender),
-            short: false,
-          },
           { title: 'actor', value: github.context.actor, short: true },
           { title: 'eventName', value: github.context.eventName, short: true },
           { title: 'ref', value: github.context.ref, short: true },
-          {
-            title: 'actor',
-            value: JSON.stringify(github.context),
-            short: false,
-          },
+          { title: 'workflow', value: github.context.workflow, short: true },
         ],
       },
     ],
@@ -41,6 +32,10 @@ export function successPayload() {
 
 export function failedPayload() {
   const payload: IncomingWebhookSendArguments = successPayload();
+  payload.text = 'Failed Workflow';
+  if (payload.attachments !== undefined) {
+    payload.attachments[0].color = 'danger';
+  }
   return payload;
 }
 
