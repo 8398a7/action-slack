@@ -1,5 +1,5 @@
 import * as core from '@actions/core';
-import { Send, successPayload, failedPayload } from './slack';
+import { Send, successPayload, failurePayload } from './slack';
 import { IncomingWebhookSendArguments } from '@slack/webhook';
 
 async function run() {
@@ -11,8 +11,8 @@ async function run() {
       case 'success':
         payload = successPayload();
         break;
-      case 'failed':
-        payload = failedPayload();
+      case 'failure':
+        payload = failurePayload();
         break;
       default:
         payload = JSON.parse(core.getInput('payload'));

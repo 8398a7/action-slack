@@ -30,7 +30,7 @@ See [action.yml](action.yml)
 ```yaml
 - uses: 8398a7/action-slack@v1
   with:
-    type: failed
+    type: failure
   env:
     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 ```
