@@ -6,6 +6,10 @@ inputs:
     description: e.g. succeeded workflow
   iconEmoji:
     description: 'e.g. :innocent:'
+  attachment.color:
+    description: 'e.g. danger'
+  attachment.title:
+    description: 'e.g. title'
 runs:
   using: node12
   main: lib/main.js

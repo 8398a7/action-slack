@@ -11,6 +11,7 @@ jobs:
     - uses: 8398a7/action-slack@v0
       with:
         text: Succeeded slack checks
-        iconEmoji: ':innocent:'
+        attachment.color: '#439FE0'
+        attachment.title: check slack
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

@@ -1,12 +1,7 @@
 import * as core from '@actions/core';
-import { IncomingWebhook } from '@slack/webhook';
+import { IncomingWebhook, IncomingWebhookSendArguments } from '@slack/webhook';
 
-export interface Payload {
-  text: string;
-  icon_emoji: string;
-}
-
-export async function Send(payload: Payload) {
+export async function Send(payload: IncomingWebhookSendArguments) {
   const webhook = newWebhook();
   await webhook.send(payload);
   core.debug('send message');
