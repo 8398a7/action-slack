@@ -1,4 +1,4 @@
-name: "PR Checks"
+name: PR Checks
 on: [pull_request, push]
 
 jobs:
@@ -6,17 +6,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
-
-    - name: "npm ci"
-      run: npm ci
-
-    - name: "npm run build"
-      run: npm run build
-
-    - name: "npm run test"
-      run: npm run test
-
-    - name: "check for uncommitted changes"
+    - run: npm ci
+    - run: npm run build
+    - run: npm run test
+    - name: check for uncommitted changes
       # Ensure no changes, but ignore node_modules dir since dev/fresh ci deps installed.
       run: |
         git diff --exit-code --stat -- . ':!node_modules' \
