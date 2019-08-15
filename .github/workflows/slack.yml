@@ -3,6 +3,7 @@ on:
   push:
     branches:
     - v0
+    - v1
 
 jobs:
   notification:
