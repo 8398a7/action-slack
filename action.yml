@@ -1,7 +1,7 @@
 name: 'Node 12 Template Action'
 description: 'Get started with Node actions'
-author: 'GitHub'
-inputs: 
+author: '8398a7'
+inputs:
   myInput:
     description: 'Input to use'
     default: 'world'

@@ -1,9 +1,7 @@
-# JavaScript Action Template
+# Action Slack
 
-This template offers an easy way to get started writing a javascript action with TypeScript compile time support, unit testing with Jest and using the GitHub Actions Toolkit.
+You can notify slack of GitHub Actions.
 
-## Getting Started
+## Usage
 
-See the walkthrough located [here](https://github.com/actions/toolkit/blob/master/docs/javascript-action.md).
-
-In addition to walking your through how to create an action, it also provides strategies for versioning, releasing and referencing your actions.
+TODO
