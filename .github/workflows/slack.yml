@@ -5,7 +5,7 @@ on:
     - v0
 
 jobs:
-  check_pr:
+  notification:
     runs-on: ubuntu-latest
     steps:
     - name: Full Field Check
