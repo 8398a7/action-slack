@@ -30,9 +30,13 @@ export function successPayload() {
   return payload;
 }
 
-export function failurePayload() {
+export function failurePayload(mention: string) {
   const payload: IncomingWebhookSendArguments = successPayload();
-  payload.text = 'Failed Workflow';
+  payload.text = '';
+  if (mention !== '') {
+    payload.text = `<!${mention}> `;
+  }
+  payload.text += `Failed Workflow`;
   if (payload.attachments !== undefined) {
     payload.attachments[0].color = 'danger';
   }

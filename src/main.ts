@@ -12,7 +12,7 @@ async function run() {
         payload = successPayload();
         break;
       case 'failure':
-        payload = failurePayload();
+        payload = failurePayload(core.getInput('failedMenthon'));
         break;
       default:
         payload = JSON.parse(core.getInput('payload'));
