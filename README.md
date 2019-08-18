@@ -31,7 +31,7 @@ See [action.yml](action.yml), [checkin.yml](.github/workflows/checkin.yml)
 
 ### Failed Notification
 
-![](https://user-images.githubusercontent.com/8043276/63113244-14392100-bfcd-11e9-962b-03a19ba86680.png)
+![](https://user-images.githubusercontent.com/8043276/63225165-8ba6c480-c208-11e9-841e-4d167028355f.png)
 
 ```yaml
 - uses: 8398a7/action-slack@v1
@@ -42,7 +42,7 @@ See [action.yml](action.yml), [checkin.yml](.github/workflows/checkin.yml)
 - uses: 8398a7/action-slack@v1
   with:
     type: failure
-    failedMention: channel
+    failedMention: channel # The default is here. No mention if empty character specified.
   env:
     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 ```
