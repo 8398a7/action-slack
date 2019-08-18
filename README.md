@@ -21,6 +21,12 @@ See [action.yml](action.yml), [checkin.yml](.github/workflows/checkin.yml)
     type: success
   env:
     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+- uses: 8398a7/action-slack@v1
+  with:
+    type: success
+    text: overwrite text
+  env:
+    SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 ```
 
 ### Failed Notification
@@ -31,6 +37,12 @@ See [action.yml](action.yml), [checkin.yml](.github/workflows/checkin.yml)
 - uses: 8398a7/action-slack@v1
   with:
     type: failure
+  env:
+    SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+- uses: 8398a7/action-slack@v1
+  with:
+    type: failure
+    failedMention: channel
   env:
     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 ```

@@ -5,14 +5,15 @@ import { IncomingWebhookSendArguments } from '@slack/webhook';
 async function run() {
   try {
     let payload: IncomingWebhookSendArguments = {};
+    const text = core.getInput('text');
     switch (core.getInput('type')) {
       case 'auto':
         throw new Error('not implement');
       case 'success':
-        payload = successPayload();
+        payload = successPayload(text);
         break;
       case 'failure':
-        payload = failurePayload();
+        payload = failurePayload(text, core.getInput('failedMenthon'));
         break;
       default:
         payload = JSON.parse(core.getInput('payload'));

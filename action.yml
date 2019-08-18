@@ -6,6 +6,11 @@ inputs:
     description: success or failure
   payload:
     description: 'json payload(refs: https://github.com/slackapi/node-slack-sdk/blob/v5.0.0/packages/webhook/src/IncomingWebhook.ts#L91-L106)'
+  failedMenthon:
+    description: 'Mention in case of type: failure'
+    default: here
+  text:
+    description: You can overwrite text
 runs:
   using: node12
   main: lib/main.js
