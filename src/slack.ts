@@ -39,9 +39,9 @@ export function failurePayload(text: string, mention: string) {
   if (mention !== '') {
     payload.text = `<!${mention}> `;
   }
+  payload.text += `Failed Workflow`;
+
   if (text !== '') {
-    payload.text += `Failed Workflow`;
-  } else {
     payload.text = text;
   }
   if (payload.attachments !== undefined) {
