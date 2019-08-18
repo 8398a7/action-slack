@@ -9,7 +9,7 @@ export async function Send(payload: IncomingWebhookSendArguments) {
   core.debug('send message');
 }
 
-export function successPayload() {
+export function successPayload(text: string) {
   const payload: IncomingWebhookSendArguments = {
     text: 'Succeeded Workflow',
     attachments: [
@@ -27,16 +27,23 @@ export function successPayload() {
       },
     ],
   };
+  if (text !== '') {
+    payload.text = text;
+  }
   return payload;
 }
 
-export function failurePayload(mention: string) {
-  const payload: IncomingWebhookSendArguments = successPayload();
+export function failurePayload(text: string, mention: string) {
+  const payload: IncomingWebhookSendArguments = successPayload(text);
   payload.text = '';
   if (mention !== '') {
     payload.text = `<!${mention}> `;
   }
-  payload.text += `Failed Workflow`;
+  if (text !== '') {
+    payload.text += `Failed Workflow`;
+  } else {
+    payload.text = text;
+  }
   if (payload.attachments !== undefined) {
     payload.attachments[0].color = 'danger';
   }

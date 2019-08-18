@@ -9,6 +9,8 @@ inputs:
   failedMenthon:
     description: 'Mention in case of type: failure'
     default: here
+  text:
+    description: You can overwrite text
 runs:
   using: node12
   main: lib/main.js
