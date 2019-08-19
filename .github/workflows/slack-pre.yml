@@ -13,12 +13,14 @@ jobs:
       with:
         type: success
       env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
     - name: Failed Check
       uses: 8398a7/action-slack@pre
       with:
         type: failure
       env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
     - name: Custom Field Check
       uses: 8398a7/action-slack@pre
