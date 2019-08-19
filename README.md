@@ -13,43 +13,47 @@ See [action.yml](action.yml), [checkin.yml](.github/workflows/checkin.yml)
 
 ### Succeeded Notification
 
-![](https://user-images.githubusercontent.com/8043276/63113235-10a59a00-bfcd-11e9-83be-2dd8662c9ebb.png)
+![](https://user-images.githubusercontent.com/8043276/63276385-3e952200-c2de-11e9-9f07-7e0fc4cf8d3a.png)
 
 ```yaml
 - uses: 8398a7/action-slack@v1
   with:
     type: success
   env:
-    SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # required
+    SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
 - uses: 8398a7/action-slack@v1
   with:
     type: success
     text: overwrite text
   env:
-    SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # required
+    SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
 ```
 
-### Failed Notification
+### Failure Notification
 
-![](https://user-images.githubusercontent.com/8043276/63113244-14392100-bfcd-11e9-962b-03a19ba86680.png)
+![](https://user-images.githubusercontent.com/8043276/63276493-6edcc080-c2de-11e9-97df-861d6564a888.png)
 
 ```yaml
 - uses: 8398a7/action-slack@v1
   with:
     type: failure
   env:
-    SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # required
+    SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
 - uses: 8398a7/action-slack@v1
   with:
     type: failure
-    failedMention: channel
+    failedMention: channel # The default is here. No mention if empty character specified.
   env:
-    SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # required
+    SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
 ```
 
 ### Custom Notification
 
-![](https://user-images.githubusercontent.com/8043276/63113021-9f65e700-bfcc-11e9-97cf-9a962c7ce611.png)
+![](https://user-images.githubusercontent.com/8043276/63276528-86b44480-c2de-11e9-9ad9-42a33d638c4c.png)
 
 ```yaml
 - uses: 8398a7/action-slack@v0
@@ -83,7 +87,7 @@ See [action.yml](action.yml), [checkin.yml](.github/workflows/checkin.yml)
         }]
       }
   env:
-    SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+    SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
 ```
 
 ### Auto Notification

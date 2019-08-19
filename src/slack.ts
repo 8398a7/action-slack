@@ -9,7 +9,14 @@ export async function Send(payload: IncomingWebhookSendArguments) {
   core.debug('send message');
 }
 
-export function successPayload(text: string) {
+const client = new github.GitHub(process.env.GITHUB_TOKEN as string);
+
+export async function successPayload(text: string) {
+  const { sha } = github.context;
+  const { owner, repo } = github.context.repo;
+  const commit = await client.repos.getCommit({ owner, repo, ref: sha });
+  const { author } = commit.data.commit;
+
   const payload: IncomingWebhookSendArguments = {
     text: 'Succeeded Workflow',
     attachments: [
@@ -17,9 +24,18 @@ export function successPayload(text: string) {
         color: 'good',
         author_name: 'action-slack',
         fields: [
-          { title: 'repo', value: github.context.repo.repo, short: true },
-          { title: 'sha', value: github.context.sha, short: true },
-          { title: 'actor', value: github.context.actor, short: true },
+          { title: 'repo', value: repo, short: true },
+          { title: 'message', value: commit.data.commit.message, short: true },
+          {
+            title: 'commit',
+            value: `<https://github.com/${owner}/${repo}/commit/${sha}|${sha}>`,
+            short: true,
+          },
+          {
+            title: 'author',
+            value: `${author.name}<${author.email}>`,
+            short: true,
+          },
           { title: 'eventName', value: github.context.eventName, short: true },
           { title: 'ref', value: github.context.ref, short: true },
           { title: 'workflow', value: github.context.workflow, short: true },
@@ -33,8 +49,8 @@ export function successPayload(text: string) {
   return payload;
 }
 
-export function failurePayload(text: string, mention: string) {
-  const payload: IncomingWebhookSendArguments = successPayload(text);
+export async function failurePayload(text: string, mention: string) {
+  const payload: IncomingWebhookSendArguments = await successPayload(text);
   payload.text = '';
   if (mention !== '') {
     payload.text = `<!${mention}> `;

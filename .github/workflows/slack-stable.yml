@@ -3,7 +3,6 @@ on:
   push:
     branches:
     - master
-    - v0
     - v1
 
 jobs:
@@ -15,12 +14,14 @@ jobs:
       with:
         type: success
       env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
     - name: Failed Check
       uses: 8398a7/action-slack@v1
       with:
         type: failure
       env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
     - name: Custom Field Check
       uses: 8398a7/action-slack@v1
