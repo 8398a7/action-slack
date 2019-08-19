@@ -16,10 +16,10 @@ async function run() {
       case 'auto':
         throw new Error('not implement');
       case 'success':
-        payload = successPayload(text);
+        payload = await successPayload(text);
         break;
       case 'failure':
-        payload = failurePayload(text, failedMention);
+        payload = await failurePayload(text, failedMention);
         break;
       default:
         payload = JSON.parse(core.getInput('payload'));
