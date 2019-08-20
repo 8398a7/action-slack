@@ -13,7 +13,7 @@ See [action.yml](action.yml), [checkin.yml](.github/workflows/checkin.yml)
 
 ### Succeeded Notification
 
-![](https://user-images.githubusercontent.com/8043276/63276385-3e952200-c2de-11e9-9f07-7e0fc4cf8d3a.png)
+<img width="436" alt="success" src="https://user-images.githubusercontent.com/8043276/63348255-dd2f8a80-c393-11e9-8890-02be1c502f08.png">
 
 ```yaml
 - uses: 8398a7/action-slack@v1
@@ -33,7 +33,7 @@ See [action.yml](action.yml), [checkin.yml](.github/workflows/checkin.yml)
 
 ### Failure Notification
 
-![](https://user-images.githubusercontent.com/8043276/63276493-6edcc080-c2de-11e9-97df-861d6564a888.png)
+<img width="427" alt="failure" src="https://user-images.githubusercontent.com/8043276/63348327-f9cbc280-c393-11e9-8b97-0c63dfe440d7.png">
 
 ```yaml
 - uses: 8398a7/action-slack@v1
@@ -53,7 +53,7 @@ See [action.yml](action.yml), [checkin.yml](.github/workflows/checkin.yml)
 
 ### Custom Notification
 
-![](https://user-images.githubusercontent.com/8043276/63276528-86b44480-c2de-11e9-9ad9-42a33d638c4c.png)
+<img width="395" alt="custom" src="https://user-images.githubusercontent.com/8043276/63348375-0fd98300-c394-11e9-99dc-6cd78fef2d98.png">
 
 ```yaml
 - uses: 8398a7/action-slack@v0
@@ -90,6 +90,23 @@ See [action.yml](action.yml), [checkin.yml](.github/workflows/checkin.yml)
     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
 ```
 
+## Next Action
+
+### Selectable Field
+
+Currently the field is fixed, but I want to make it selectable.  
+It is assumed that the input is in csv format.
+
+```yaml
+- uses: 8398a7/action-slack@v1
+  with:
+    type: success
+    fields: repo,message,action,author
+  env:
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # required
+    SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
+```
+
 ### Auto Notification
 
 We are considering an automatic handling mode based on the job status.  
@@ -100,5 +117,6 @@ I'm leaving it because I don't seem to get the information.
   with:
     type: auto
   env:
-    SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # required
+    SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} #required
 ```
