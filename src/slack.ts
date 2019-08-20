@@ -32,6 +32,11 @@ export async function successPayload(text: string) {
             short: true,
           },
           {
+            title: 'action',
+            value: `<https://github.com/${owner}/${repo}/commit/${sha}/checks|action>`,
+            short: true,
+          },
+          {
             title: 'author',
             value: `${author.name}<${author.email}>`,
             short: true,
