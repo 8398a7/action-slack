@@ -6,7 +6,7 @@ inputs:
     description: success or failure
   payload:
     description: 'json payload(refs: https://github.com/slackapi/node-slack-sdk/blob/v5.0.0/packages/webhook/src/IncomingWebhook.ts#L91-L106)'
-  failedMenthon:
+  failedMention:
     description: 'Mention in case of type: failure'
     default: here
   text:
