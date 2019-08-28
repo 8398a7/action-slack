@@ -6,7 +6,7 @@ async function run() {
   try {
     let payload: IncomingWebhookSendArguments = {};
     const text = core.getInput('text');
-    const failedMention = core.getInput('failedMenthon');
+    const failedMention = core.getInput('failedMention');
     const _type = core.getInput('type');
     core.debug(`text: ${text}`);
     core.debug(`failedMention: ${failedMention}`);
