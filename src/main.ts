@@ -1,30 +1,40 @@
 import * as core from '@actions/core';
-import { Send, successPayload, failurePayload } from './slack';
+import { Client } from './client';
 import { IncomingWebhookSendArguments } from '@slack/webhook';
 
 async function run() {
   try {
-    let payload: IncomingWebhookSendArguments = {};
+    const status = core.getInput('status', { required: true });
+    const mention = core.getInput('mention') as '' | 'channel' | 'here';
+    const author_name = core.getInput('author_name');
     const text = core.getInput('text');
-    const failedMention = core.getInput('failedMention');
-    const _type = core.getInput('type');
     core.debug(`text: ${text}`);
-    core.debug(`failedMention: ${failedMention}`);
-    core.debug(`type: ${_type}`);
+    core.debug(`mention: ${mention}`);
+    core.debug(`status: ${status}`);
+    const client = new Client({
+      mention,
+      author_name,
+    });
 
-    switch (_type) {
-      case 'auto':
-        throw new Error('not implement');
+    switch (status) {
       case 'success':
-        payload = await successPayload(text);
+        await client.success(text);
         break;
-      case 'failure':
-        payload = await failurePayload(text, failedMention);
+      case 'fail':
+        await client.fail(text);
+        break;
+      case 'cancel':
+        await client.cancel(text);
+        break;
+      case 'custom':
+        const payload: IncomingWebhookSendArguments = JSON.parse(
+          core.getInput('payload'),
+        );
+        await client.send(payload);
         break;
       default:
-        payload = JSON.parse(core.getInput('payload'));
+        throw new Error('You can specify success or fail or cancel or custom');
     }
-    await Send(payload);
   } catch (error) {
     core.setFailed(error.message);
   }
