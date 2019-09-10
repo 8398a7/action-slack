@@ -5,6 +5,7 @@ import { IncomingWebhook, IncomingWebhookSendArguments } from '@slack/webhook';
 interface With {
   mention: '' | 'channel' | 'here';
   author_name: string;
+  only_mention_fail: '' | 'channel' | 'here';
 }
 
 export class Client {
@@ -39,6 +40,9 @@ export class Client {
   public async fail(text: string) {
     const template = await this.payloadTemplate();
     template.attachments[0].color = 'danger';
+    if (this.with.only_mention_fail !== '') {
+      template.text += `<!${this.with.only_mention_fail}> `;
+    }
     template.text += 'Failed Github Actions\n';
     template.text += text;
 

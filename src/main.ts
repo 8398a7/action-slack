@@ -7,6 +7,10 @@ async function run() {
     const status = core.getInput('status', { required: true });
     const mention = core.getInput('mention') as '' | 'channel' | 'here';
     const author_name = core.getInput('author_name');
+    const only_mention_fail = core.getInput('only_mention_fail') as
+      | ''
+      | 'channel'
+      | 'here';
     const text = core.getInput('text');
     core.debug(`text: ${text}`);
     core.debug(`mention: ${mention}`);
@@ -14,6 +18,7 @@ async function run() {
     const client = new Client({
       mention,
       author_name,
+      only_mention_fail,
     });
 
     switch (status) {
