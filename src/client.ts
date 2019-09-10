@@ -94,13 +94,13 @@ export class Client {
               short: true,
             },
             {
-              title: 'action',
-              value: `<https://github.com/${owner}/${repo}/commit/${sha}/checks|action>`,
+              title: 'author',
+              value: `${author.name}<${author.email}>`,
               short: true,
             },
             {
-              title: 'author',
-              value: `${author.name}<${author.email}>`,
+              title: 'action',
+              value: `<https://github.com/${owner}/${repo}/commit/${sha}/checks|action>`,
               short: true,
             },
             {
