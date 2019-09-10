@@ -4,7 +4,8 @@ import { IncomingWebhookSendArguments } from '@slack/webhook';
 
 async function run() {
   try {
-    const status = core.getInput('status', { required: true });
+    let status: string = core.getInput('status', { required: true });
+    status = status.toLowerCase();
     const mention = core.getInput('mention') as '' | 'channel' | 'here';
     const author_name = core.getInput('author_name');
     const only_mention_fail = core.getInput('only_mention_fail') as
@@ -28,7 +29,7 @@ async function run() {
       case 'fail':
         await client.fail(text);
         break;
-      case 'cancel':
+      case 'cancelled':
         await client.cancel(text);
         break;
       case 'custom':
