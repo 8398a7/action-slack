@@ -3,7 +3,7 @@ description: You can notify slack of GitHub Actions.
 author: 8398a7
 inputs:
   status:
-    description: Specify success or fail or cancel or custom.
+    description: Specify success or failure or cancelled or custom.
   payload:
     description: |
       json payload
