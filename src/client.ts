@@ -47,7 +47,7 @@ export class Client {
 
   public async cancel(text: string) {
     const template = await this.payloadTemplate();
-    template.attachments[0].color = 'warining';
+    template.attachments[0].color = 'warning';
     template.text += 'Cancelded Github Actions\n';
     template.text += text;
 
