@@ -11,6 +11,9 @@ inputs:
   mention:
     description: Specify channel or here or empty string.
     default: ""
+  only_mention_fail:
+    description: Specify channel or here or empty string.
+    default: ""
   author_name:
     description: User name for slack notification.
     default: 8398a7@action-slack

@@ -19,6 +19,7 @@ jobs:
         uses: 8398a7/action-slack@pre
         with:
           status: fail
+          only_mention_fail: here
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
