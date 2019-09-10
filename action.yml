@@ -2,15 +2,23 @@ name: action-slack
 description: You can notify slack of GitHub Actions.
 author: 8398a7
 inputs:
-  type:
-    description: success or failure
+  status:
+    description: |
+      Specify success or fail or cancel or custom.
+      Recommend ${{ job.status }}
   payload:
-    description: 'json payload(refs: https://github.com/slackapi/node-slack-sdk/blob/v5.0.0/packages/webhook/src/IncomingWebhook.ts#L91-L106)'
-  failedMention:
-    description: 'Mention in case of type: failure'
-    default: here
+    description: |
+      json payload
+      refs https://github.com/slackapi/node-slack-sdk/blob/v5.0.0/packages/webhook/src/IncomingWebhook.ts#L91-L106)
+  mention:
+    description: Specify channel or here or empty string.
+    default: ""
+  author_name:
+    description: User name for slack notification.
+    default: 8398a7@action-slack
   text:
-    description: You can overwrite text
+    description: You can overwrite text.
+    default: ""
 runs:
   using: node12
   main: lib/main.js
