@@ -94,9 +94,9 @@ Currently the field is fixed, but I want to make it selectable.
 It is assumed that the input is in csv format.
 
 ```yaml
-- uses: 8398a7/action-slack@v1
+- uses: 8398a7/action-slack@v2
   with:
-    type: success
+    status: ${{ job.status }}
     fields: repo,message,action,author
   env:
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # required
