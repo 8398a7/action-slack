@@ -11,41 +11,36 @@ You can notify slack of GitHub Actions.
 
 See [action.yml](action.yml), [checkin.yml](.github/workflows/checkin.yml)
 
-### Succeeded Notification
+### with Parameters
+
+| key               | value                                             | default               | description                            |
+| ----------------- | ------------------------------------------------- | --------------------- | -------------------------------------- |
+| status            | 'success' or 'failure' or 'cancelled' or 'custom' | ''                    | Recommend `${{ job.status }}`.         |
+| text              | any string                                        | ''                    | You can add to text by specifying it.  |
+| author_name       | any string                                        | '8398a7@action-slack' | It can be overwritten by specifying.   |
+| mention           | 'here' or 'channel' or ''                         | ''                    | Always mention when specified.         |
+| only_mention_fail | 'here' or 'channel' or ''                         | ''                    | If specified, mention only on failure. |
+| payload           | e.g. `{"text": "Custom Field Check"}`             | ''                    | Only available when status: custom.    |
+
+See here for `payload` reference or [Custom Notification](https://github.com/8398a7/action-slack#custom-notification).  
+refs: https://api.slack.com/reference/messaging/payload
+
+### Notification
 
 <img width="436" alt="success" src="https://user-images.githubusercontent.com/8043276/63348255-dd2f8a80-c393-11e9-8890-02be1c502f08.png">
 
 ```yaml
-- uses: 8398a7/action-slack@v1
+- uses: 8398a7/action-slack@v2
   with:
-    type: success
+    status: ${{ job.status }}
   env:
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # required
     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
-- uses: 8398a7/action-slack@v1
+  if: always()
+- uses: 8398a7/action-slack@v2
   with:
-    type: success
+    type: ${{ job.status }}
     text: overwrite text
-  env:
-    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # required
-    SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
-```
-
-### Failure Notification
-
-<img width="427" alt="failure" src="https://user-images.githubusercontent.com/8043276/63348327-f9cbc280-c393-11e9-8b97-0c63dfe440d7.png">
-
-```yaml
-- uses: 8398a7/action-slack@v1
-  with:
-    type: failure
-  env:
-    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # required
-    SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
-- uses: 8398a7/action-slack@v1
-  with:
-    type: failure
-    failedMention: channel # The default is here. No mention if empty character specified.
   env:
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # required
     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
@@ -56,11 +51,11 @@ See [action.yml](action.yml), [checkin.yml](.github/workflows/checkin.yml)
 <img width="395" alt="custom" src="https://user-images.githubusercontent.com/8043276/63348375-0fd98300-c394-11e9-99dc-6cd78fef2d98.png">
 
 ```yaml
-- uses: 8398a7/action-slack@v0
+- uses: 8398a7/action-slack@v2
   with:
+    status: custom
     payload: |
-      {
-        "text": "Custom Field Check",
+      { "text": "Custom Field Check",
         "attachments": [{
           "author_name": "slack-actions",
           "fallback": "fallback",
@@ -87,6 +82,7 @@ See [action.yml](action.yml), [checkin.yml](.github/workflows/checkin.yml)
         }]
       }
   env:
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # required
     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
 ```
 
@@ -105,18 +101,4 @@ It is assumed that the input is in csv format.
   env:
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # required
     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
-```
-
-### Auto Notification
-
-We are considering an automatic handling mode based on the job status.  
-I'm leaving it because I don't seem to get the information.
-
-```yaml
-- uses: 8398a7/action-slack@v1
-  with:
-    type: auto
-  env:
-    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # required
-    SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} #required
 ```
