@@ -23,17 +23,10 @@ jobs:
           || (echo "##[error] found changed files after build. please 'npm run build && npm run format'" \
                    "and check in all changes" \
               && exit 1)
-      - uses: 8398a7/action-slack@v1
+      - uses: 8398a7/action-slack@v2
         with:
-          type: success
+          status: ${{ job.status }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-        if: success()
-      - uses: 8398a7/action-slack@v1
-        with:
-          type: failure
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-        if: failure()
+        if: always()
