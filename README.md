@@ -27,7 +27,9 @@ refs: https://api.slack.com/reference/messaging/payload
 
 ### Notification
 
-<img width="436" alt="success" src="https://user-images.githubusercontent.com/8043276/63348255-dd2f8a80-c393-11e9-8890-02be1c502f08.png">
+<img width="495" alt="success" src="https://user-images.githubusercontent.com/8043276/64783194-242f2b00-d5a2-11e9-836c-7a8a4a8b46ae.png">
+<img width="489" alt="failure" src="https://user-images.githubusercontent.com/8043276/64783230-42952680-d5a2-11e9-9b92-fafcf3a27353.png">
+<img width="483" alt="cancelled" src="https://user-images.githubusercontent.com/8043276/64783296-6a848a00-d5a2-11e9-9b4d-7e00d1d8482d.png">
 
 ```yaml
 - uses: 8398a7/action-slack@v2
