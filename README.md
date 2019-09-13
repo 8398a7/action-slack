@@ -27,7 +27,7 @@ refs: https://api.slack.com/reference/messaging/payload
 
 ### Notification
 
-<img width="495" alt="success" src="https://user-images.githubusercontent.com/8043276/64783194-242f2b00-d5a2-11e9-836c-7a8a4a8b46ae.png">
+<img width="480" alt="success" src="https://user-images.githubusercontent.com/8043276/64882150-7c942480-d697-11e9-9fc8-85e6c02f6aeb.png">
 
 ```yaml
 - uses: 8398a7/action-slack@v2
@@ -53,14 +53,14 @@ When adding to text, write as follows.
 
 In case of failure or cancellation, you will be notified as follows.
 
-<img width="489" alt="failure" src="https://user-images.githubusercontent.com/8043276/64783230-42952680-d5a2-11e9-9b92-fafcf3a27353.png">
-<img width="483" alt="cancelled" src="https://user-images.githubusercontent.com/8043276/64783296-6a848a00-d5a2-11e9-9b4d-7e00d1d8482d.png">
+<img width="483" alt="failure" src="https://user-images.githubusercontent.com/8043276/64882189-933a7b80-d697-11e9-8afc-56530176a15e.png">
+<img width="484" alt="cancelled" src="https://user-images.githubusercontent.com/8043276/64882212-a3525b00-d697-11e9-8e98-aa5e515b304f.png">
 
 ### Custom Notification
 
 Use `status: custom` if you want to send an arbitrary payload.
 
-<img width="395" alt="custom" src="https://user-images.githubusercontent.com/8043276/63348375-0fd98300-c394-11e9-99dc-6cd78fef2d98.png">
+<img width="395" alt="custom" src="https://user-images.githubusercontent.com/8043276/64882303-cc72eb80-d697-11e9-8027-b7de99e0d587.png">
 
 ```yaml
 - uses: 8398a7/action-slack@v2
