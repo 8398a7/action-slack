@@ -82,7 +82,11 @@ export class Client {
           color: '',
           author_name: this.with.author_name,
           fields: [
-            { title: 'repo', value: repo, short: true },
+            {
+              title: 'repo',
+              value: `<https://github.com/${owner}/${repo}|${owner}/${repo}>`,
+              short: true,
+            },
             {
               title: 'message',
               value: commit.data.commit.message,
