@@ -64,6 +64,23 @@ In case of failure or cancellation, you will be notified as follows.
 <img width="483" alt="failure" src="https://user-images.githubusercontent.com/8043276/64882189-933a7b80-d697-11e9-8afc-56530176a15e.png">
 <img width="484" alt="cancelled" src="https://user-images.githubusercontent.com/8043276/64882212-a3525b00-d697-11e9-8e98-aa5e515b304f.png">
 
+#### Legacy Incoming Webhooks
+
+If you specify as follows, you can also support legacy incoming webhooks.  
+The specified `secrets.SLACK_WEBHOOK_URL` must be legacy.
+
+```yaml
+- uses: 8398a7/action-slack@v2
+  with:
+    type: ${{ job.status }}
+    username: Custom Username
+    icon_emoji: ':octocat:'
+    channel: '#integration-test'
+  env:
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # required
+    SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
+```
+
 ### Custom Notification
 
 Use `status: custom` if you want to send an arbitrary payload.
