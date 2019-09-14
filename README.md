@@ -13,14 +13,18 @@ See [action.yml](action.yml), [checkin.yml](.github/workflows/checkin.yml)
 
 ### with Parameters
 
-| key               | value                                             | default               | description                                                     |
-| ----------------- | ------------------------------------------------- | --------------------- | --------------------------------------------------------------- |
-| status            | 'success' or 'failure' or 'cancelled' or 'custom' | ''                    | Recommend<br />`${{ job.status }}`.                             |
-| text              | any string                                        | ''                    | You can add to text by specifying it.                           |
-| author_name       | any string                                        | '8398a7@action-slack' | It can be overwritten by specifying. The job name is recommend. |
-| mention           | 'here' or 'channel' or ''                         | ''                    | Always mention when specified.                                  |
-| only_mention_fail | 'here' or 'channel' or ''                         | ''                    | If specified, mention only on failure.                          |
-| payload           | e.g. `{"text": "Custom Field Check"}`             | ''                    | Only available when status: custom.                             |
+| key               | value                                             | default               | description                                                                                                 |
+| ----------------- | ------------------------------------------------- | --------------------- | ----------------------------------------------------------------------------------------------------------- |
+| status            | 'success' or 'failure' or 'cancelled' or 'custom' | ''                    | Recommend<br />`${{ job.status }}`.                                                                         |
+| text              | any string                                        | ''                    | You can add to text by specifying it.                                                                       |
+| author_name       | any string                                        | '8398a7@action-slack' | It can be overwritten by specifying. The job name is recommend.                                             |
+| mention           | 'here' or 'channel' or ''                         | ''                    | Always mention when specified.                                                                              |
+| only_mention_fail | 'here' or 'channel' or ''                         | ''                    | If specified, mention only on failure.                                                                      |
+| payload           | e.g. `{"text": "Custom Field Check"}`             | ''                    | Only available when status: custom.                                                                         |
+| username          |                                                   | ''                    | override the legacy integration's default name.                                                             |
+| icon_emoji        |                                                   | ''                    | an [emoji code](https://www.webfx.com/tools/emoji-cheat-sheet/) string to use in place of the default icon. |
+| icon_url          |                                                   | ''                    | an icon image URL string to use in place of the default icon.                                               |
+| channel           |                                                   | ''                    | override the legacy integration's default channel. This should be an ID, such as `C8UJ12P4P`.               |
 
 See here for `payload` reference or [Custom Notification](https://github.com/8398a7/action-slack#custom-notification).
 
