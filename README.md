@@ -13,17 +13,24 @@ See [action.yml](action.yml), [checkin.yml](.github/workflows/checkin.yml)
 
 ### with Parameters
 
-| key               | value                                             | default               | description                            |
-| ----------------- | ------------------------------------------------- | --------------------- | -------------------------------------- |
-| status            | 'success' or 'failure' or 'cancelled' or 'custom' | ''                    | Recommend `${{ job.status }}`.         |
-| text              | any string                                        | ''                    | You can add to text by specifying it.  |
-| author_name       | any string                                        | '8398a7@action-slack' | It can be overwritten by specifying.   |
-| mention           | 'here' or 'channel' or ''                         | ''                    | Always mention when specified.         |
-| only_mention_fail | 'here' or 'channel' or ''                         | ''                    | If specified, mention only on failure. |
-| payload           | e.g. `{"text": "Custom Field Check"}`             | ''                    | Only available when status: custom.    |
+| key               | value                                             | default               | description                                                                                                 |
+| ----------------- | ------------------------------------------------- | --------------------- | ----------------------------------------------------------------------------------------------------------- |
+| status            | 'success' or 'failure' or 'cancelled' or 'custom' | ''                    | Recommend<br />`${{ job.status }}`.                                                                         |
+| text              | any string                                        | ''                    | You can add to text by specifying it.                                                                       |
+| author_name       | any string                                        | '8398a7@action-slack' | It can be overwritten by specifying. The job name is recommend.                                             |
+| mention           | 'here' or 'channel' or ''                         | ''                    | Always mention when specified.                                                                              |
+| only_mention_fail | 'here' or 'channel' or ''                         | ''                    | If specified, mention only on failure.                                                                      |
+| payload           | e.g. `{"text": "Custom Field Check"}`             | ''                    | Only available when status: custom.                                                                         |
+| username          | Only legacy incoming webhook supported.           | ''                    | override the legacy integration's default name.                                                             |
+| icon_emoji        | Only legacy incoming webhook supported.           | ''                    | an [emoji code](https://www.webfx.com/tools/emoji-cheat-sheet/) string to use in place of the default icon. |
+| icon_url          | Only legacy incoming webhook supported.           | ''                    | an icon image URL string to use in place of the default icon.                                               |
+| channel           | Only legacy incoming webhook supported.           | ''                    | override the legacy integration's default channel. This should be an ID, such as `C8UJ12P4P`.               |
 
-See here for `payload` reference or [Custom Notification](https://github.com/8398a7/action-slack#custom-notification).  
-refs: https://api.slack.com/reference/messaging/payload
+See here for `payload` reference or [Custom Notification](https://github.com/8398a7/action-slack#custom-notification).
+
+- [Message Formatting](https://api.slack.com/docs/messages/builder)
+  - Enter json and check in preview.
+- [Reference: Message payloads](https://api.slack.com/reference/messaging/payload)
 
 ### Notification
 
@@ -33,6 +40,7 @@ refs: https://api.slack.com/reference/messaging/payload
 - uses: 8398a7/action-slack@v2
   with:
     status: ${{ job.status }}
+    author_name: Integration Test # default: 8398a7@action-slack
   env:
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # required
     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
