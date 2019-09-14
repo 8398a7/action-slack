@@ -13,13 +13,29 @@ async function run() {
       | 'channel'
       | 'here';
     const text = core.getInput('text');
-    core.debug(`text: ${text}`);
-    core.debug(`mention: ${mention}`);
+    const username = core.getInput('username');
+    const icon_emoji = core.getInput('icon_emoji');
+    const icon_url = core.getInput('icon_url');
+    const channel = core.getInput('channel');
+
     core.debug(`status: ${status}`);
+    core.debug(`mention: ${mention}`);
+    core.debug(`author_name: ${author_name}`);
+    core.debug(`only_mention_fail: ${only_mention_fail}`);
+    core.debug(`text: ${text}`);
+    core.debug(`username: ${username}`);
+    core.debug(`icon_emoji: ${icon_emoji}`);
+    core.debug(`icon_url: ${icon_url}`);
+    core.debug(`channel: ${channel}`);
+
     const client = new Client({
       mention,
       author_name,
       only_mention_fail,
+      username,
+      icon_emoji,
+      icon_url,
+      channel,
     });
 
     switch (status) {
