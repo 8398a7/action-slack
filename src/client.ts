@@ -6,6 +6,10 @@ interface With {
   mention: '' | 'channel' | 'here';
   author_name: string;
   only_mention_fail: '' | 'channel' | 'here';
+  username: string;
+  icon_emoji: string;
+  icon_url: string;
+  channel: string;
 }
 
 export class Client {
@@ -24,8 +28,7 @@ export class Client {
     if (process.env.SLACK_WEBHOOK_URL === undefined) {
       throw new Error('Specify secrets.SLACK_WEBHOOK_URL');
     }
-    const url = process.env.SLACK_WEBHOOK_URL;
-    this.webhook = new IncomingWebhook(url);
+    this.webhook = new IncomingWebhook(process.env.SLACK_WEBHOOK_URL);
   }
 
   public async success(text: string) {
@@ -81,6 +84,10 @@ export class Client {
         {
           color: '',
           author_name: this.with.author_name,
+          username: this.with.username,
+          icon_emoji: this.with.icon_emoji,
+          icon_url: this.with.icon_url,
+          channel: this.with.channel,
           fields: [
             {
               title: 'repo',

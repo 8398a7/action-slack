@@ -20,6 +20,18 @@ inputs:
   text:
     description: You can overwrite text.
     default: ""
+  username:
+    description: override the legacy integration's default name.
+    default: ""
+  icon_emoji:
+    description: an emoji code string to use in place of the default icon.
+    default: ""
+  icon_url:
+    description: an icon image URL string to use in place of the default icon.
+    default: ""
+  channel:
+    description: override the legacy integration's default channel. This should be an ID, such as C8UJ12P4P.
+    default: ""
 runs:
   using: node12
   main: lib/main.js
