@@ -22,8 +22,11 @@ See [action.yml](action.yml), [checkin.yml](.github/workflows/checkin.yml)
 | only_mention_fail | 'here' or 'channel' or ''                         | ''                    | If specified, mention only on failure.                          |
 | payload           | e.g. `{"text": "Custom Field Check"}`             | ''                    | Only available when status: custom.                             |
 
-See here for `payload` reference or [Custom Notification](https://github.com/8398a7/action-slack#custom-notification).  
-refs: https://api.slack.com/reference/messaging/payload
+See here for `payload` reference or [Custom Notification](https://github.com/8398a7/action-slack#custom-notification).
+
+- [Message Formatting](https://api.slack.com/docs/messages/builder)
+  - Enter json and check in preview.
+- [Reference: Message payloads](https://api.slack.com/reference/messaging/payload)
 
 ### Notification
 
