@@ -43,29 +43,29 @@ jobs:
           status: custom
           payload: |
             {
-              "text": "Custom Field Check",
-              "attachments": [{
-                "author_name": "slack-actions",
-                "fallback": "fallback",
-                "color": "good",
-                "title": "CI Result",
-                "text": "Succeeded",
-                "fields": [{
-                  "title": "short title1",
-                  "value": "short value1",
-                  "short": true
+              text: "Custom Field Check",
+              attachments: [{
+                "author_name": "slack-actions", # json
+                fallback: 'fallback',
+                color: 'good',
+                title: 'CI Result',
+                text: 'Succeeded',
+                fields: [{
+                  title: 'lower case',
+                  value: 'LOWER CASE CHECK'.toLowerCase(),
+                  short: true
                 },
                 {
-                  "title": "short title2",
-                  "value": "short value2",
-                  "short": true
+                  title: 'reverse',
+                  value: 'gnirts esrever'.split('').reverse().join(''),
+                  short: true
                 },
                 {
-                  "title": "long title1",
-                  "value": "long value1",
-                  "short": false
+                  title: 'long title1',
+                  value: 'long value1',
+                  short: false
                 }],
-                "actions": [{
+                actions: [{
                 }]
               }]
             }
