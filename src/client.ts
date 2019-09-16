@@ -68,11 +68,6 @@ export class Client {
   }
 
   private async payloadTemplate() {
-    const { sha } = github.context;
-    const { owner, repo } = github.context.repo;
-    const commit = await this.github.repos.getCommit({ owner, repo, ref: sha });
-    const { author } = commit.data.commit;
-
     let text = '';
     if (this.with.mention !== '') {
       text += `<!${this.with.mention}> `;
@@ -88,27 +83,36 @@ export class Client {
           icon_emoji: this.with.icon_emoji,
           icon_url: this.with.icon_url,
           channel: this.with.channel,
-          fields: [
-            this.repo,
-            {
-              title: 'message',
-              value: commit.data.commit.message,
-              short: true,
-            },
-            this.commit,
-            {
-              title: 'author',
-              value: `${author.name}<${author.email}>`,
-              short: true,
-            },
-            this.action,
-            this.eventName,
-            this.ref,
-            this.workflow,
-          ],
+          fields: await this.fields(),
         },
       ],
     };
+  }
+
+  private async fields() {
+    const { sha } = github.context;
+    const { owner, repo } = github.context.repo;
+    const commit = await this.github.repos.getCommit({ owner, repo, ref: sha });
+    const { author } = commit.data.commit;
+
+    return [
+      this.repo,
+      {
+        title: 'message',
+        value: commit.data.commit.message,
+        short: true,
+      },
+      this.commit,
+      {
+        title: 'author',
+        value: `${author.name}<${author.email}>`,
+        short: true,
+      },
+      this.action,
+      this.eventName,
+      this.ref,
+      this.workflow,
+    ];
   }
 
   private get commit() {
