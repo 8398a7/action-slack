@@ -89,41 +89,73 @@ export class Client {
           icon_url: this.with.icon_url,
           channel: this.with.channel,
           fields: [
-            {
-              title: 'repo',
-              value: `<https://github.com/${owner}/${repo}|${owner}/${repo}>`,
-              short: true,
-            },
+            this.repo,
             {
               title: 'message',
               value: commit.data.commit.message,
               short: true,
             },
-            {
-              title: 'commit',
-              value: `<https://github.com/${owner}/${repo}/commit/${sha}|${sha}>`,
-              short: true,
-            },
+            this.commit,
             {
               title: 'author',
               value: `${author.name}<${author.email}>`,
               short: true,
             },
-            {
-              title: 'action',
-              value: `<https://github.com/${owner}/${repo}/commit/${sha}/checks|action>`,
-              short: true,
-            },
-            {
-              title: 'eventName',
-              value: github.context.eventName,
-              short: true,
-            },
-            { title: 'ref', value: github.context.ref, short: true },
-            { title: 'workflow', value: github.context.workflow, short: true },
+            this.action,
+            this.eventName,
+            this.ref,
+            this.workflow,
           ],
         },
       ],
     };
+  }
+
+  private get commit() {
+    const { sha } = github.context;
+    const { owner, repo } = github.context.repo;
+
+    return {
+      title: 'commit',
+      value: `<https://github.com/${owner}/${repo}/commit/${sha}|${sha}>`,
+      short: true,
+    };
+  }
+
+  private get repo() {
+    const { owner, repo } = github.context.repo;
+
+    return {
+      title: 'repo',
+      value: `<https://github.com/${owner}/${repo}|${owner}/${repo}>`,
+      short: true,
+    };
+  }
+
+  private get action() {
+    const { sha } = github.context;
+    const { owner, repo } = github.context.repo;
+
+    return {
+      title: 'action',
+      value: `<https://github.com/${owner}/${repo}/commit/${sha}/checks|action>`,
+      short: true,
+    };
+  }
+
+  private get eventName() {
+    return {
+      title: 'eventName',
+      value: github.context.eventName,
+      short: true,
+    };
+  }
+
+  private get ref() {
+    return { title: 'ref', value: github.context.ref, short: true };
+  }
+
+  private get workflow() {
+    return { title: 'workflow', value: github.context.workflow, short: true };
   }
 }
