@@ -21,10 +21,10 @@ See [action.yml](action.yml), [checkin.yml](.github/workflows/checkin.yml)
 | mention           | 'here' or 'channel' or ''                         | ''                    | Always mention when specified.                                                                              |
 | only_mention_fail | 'here' or 'channel' or ''                         | ''                    | If specified, mention only on failure.                                                                      |
 | payload           | e.g. `{"text": "Custom Field Check"}`             | ''                    | Only available when status: custom.                                                                         |
-| username          |                                                   | ''                    | override the legacy integration's default name.                                                             |
-| icon_emoji        |                                                   | ''                    | an [emoji code](https://www.webfx.com/tools/emoji-cheat-sheet/) string to use in place of the default icon. |
-| icon_url          |                                                   | ''                    | an icon image URL string to use in place of the default icon.                                               |
-| channel           |                                                   | ''                    | override the legacy integration's default channel. This should be an ID, such as `C8UJ12P4P`.               |
+| username          | Only legacy incoming webhook supported.           | ''                    | override the legacy integration's default name.                                                             |
+| icon_emoji        | Only legacy incoming webhook supported.           | ''                    | an [emoji code](https://www.webfx.com/tools/emoji-cheat-sheet/) string to use in place of the default icon. |
+| icon_url          | Only legacy incoming webhook supported.           | ''                    | an icon image URL string to use in place of the default icon.                                               |
+| channel           | Only legacy incoming webhook supported.           | ''                    | override the legacy integration's default channel. This should be an ID, such as `C8UJ12P4P`.               |
 
 See here for `payload` reference or [Custom Notification](https://github.com/8398a7/action-slack#custom-notification).
 
@@ -63,6 +63,23 @@ In case of failure or cancellation, you will be notified as follows.
 
 <img width="483" alt="failure" src="https://user-images.githubusercontent.com/8043276/64882189-933a7b80-d697-11e9-8afc-56530176a15e.png">
 <img width="484" alt="cancelled" src="https://user-images.githubusercontent.com/8043276/64882212-a3525b00-d697-11e9-8e98-aa5e515b304f.png">
+
+#### Legacy Incoming Webhooks
+
+If you specify as follows, you can also support legacy incoming webhooks.  
+The specified `secrets.SLACK_WEBHOOK_URL` must be legacy.
+
+```yaml
+- uses: 8398a7/action-slack@v2
+  with:
+    type: ${{ job.status }}
+    username: Custom Username
+    icon_emoji: ':octocat:'
+    channel: '#integration-test'
+  env:
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # required
+    SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
+```
 
 ### Custom Notification
 

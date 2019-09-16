@@ -35,3 +35,6 @@ inputs:
 runs:
   using: node12
   main: lib/main.js
+branding:
+  icon: bell
+  color: blue
