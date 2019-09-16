@@ -17,6 +17,7 @@ async function run() {
     const icon_emoji = core.getInput('icon_emoji');
     const icon_url = core.getInput('icon_url');
     const channel = core.getInput('channel');
+    const rawPayload = core.getInput('payload');
 
     core.debug(`status: ${status}`);
     core.debug(`mention: ${mention}`);
@@ -27,6 +28,7 @@ async function run() {
     core.debug(`icon_emoji: ${icon_emoji}`);
     core.debug(`icon_url: ${icon_url}`);
     core.debug(`channel: ${channel}`);
+    core.debug(`rawPayload: ${rawPayload}`);
 
     const client = new Client({
       mention,
@@ -49,9 +51,10 @@ async function run() {
         await client.cancel(text);
         break;
       case 'custom':
-        const payload: IncomingWebhookSendArguments = JSON.parse(
-          core.getInput('payload'),
+        var payload: IncomingWebhookSendArguments = eval(
+          `payload = ${rawPayload}`,
         );
+        core.debug(`payload: ${payload}`);
         await client.send(payload);
         break;
       default:
