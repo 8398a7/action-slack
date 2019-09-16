@@ -13,18 +13,18 @@ See [action.yml](action.yml), [checkin.yml](.github/workflows/checkin.yml)
 
 ### with Parameters
 
-| key               | value                                             | default               | description                                                                                                 |
-| ----------------- | ------------------------------------------------- | --------------------- | ----------------------------------------------------------------------------------------------------------- |
-| status            | 'success' or 'failure' or 'cancelled' or 'custom' | ''                    | Recommend<br />`${{ job.status }}`.                                                                         |
-| text              | any string                                        | ''                    | You can add to text by specifying it.                                                                       |
-| author_name       | any string                                        | '8398a7@action-slack' | It can be overwritten by specifying. The job name is recommend.                                             |
-| mention           | 'here' or 'channel' or ''                         | ''                    | Always mention when specified.                                                                              |
-| only_mention_fail | 'here' or 'channel' or ''                         | ''                    | If specified, mention only on failure.                                                                      |
-| payload           | e.g. `{"text": "Custom Field Check"}`             | ''                    | Only available when status: custom.                                                                         |
-| username          | Only legacy incoming webhook supported.           | ''                    | override the legacy integration's default name.                                                             |
-| icon_emoji        | Only legacy incoming webhook supported.           | ''                    | an [emoji code](https://www.webfx.com/tools/emoji-cheat-sheet/) string to use in place of the default icon. |
-| icon_url          | Only legacy incoming webhook supported.           | ''                    | an icon image URL string to use in place of the default icon.                                               |
-| channel           | Only legacy incoming webhook supported.           | ''                    | override the legacy integration's default channel. This should be an ID, such as `C8UJ12P4P`.               |
+| key               | value                                                                  | default               | description                                                                                                 |
+| ----------------- | ---------------------------------------------------------------------- | --------------------- | ----------------------------------------------------------------------------------------------------------- |
+| status            | 'success' or 'failure' or 'cancelled' or 'custom'                      | ''                    | Recommend<br />`${{ job.status }}`.                                                                         |
+| text              | any string                                                             | ''                    | You can add to text by specifying it.                                                                       |
+| author_name       | any string                                                             | '8398a7@action-slack' | It can be overwritten by specifying. The job name is recommend.                                             |
+| mention           | 'here' or 'channel' or ''                                              | ''                    | Always mention when specified.                                                                              |
+| only_mention_fail | 'here' or 'channel' or ''                                              | ''                    | If specified, mention only on failure.                                                                      |
+| payload           | e.g. `{"text": "Custom Field Check", obj: 'LOWER CASE'.toLowerCase()}` | ''                    | Only available when status: custom. The payload format can pass javascript object.                          |
+| username          | Only legacy incoming webhook supported.                                | ''                    | override the legacy integration's default name.                                                             |
+| icon_emoji        | Only legacy incoming webhook supported.                                | ''                    | an [emoji code](https://www.webfx.com/tools/emoji-cheat-sheet/) string to use in place of the default icon. |
+| icon_url          | Only legacy incoming webhook supported.                                | ''                    | an icon image URL string to use in place of the default icon.                                               |
+| channel           | Only legacy incoming webhook supported.                                | ''                    | override the legacy integration's default channel. This should be an ID, such as `C8UJ12P4P`.               |
 
 See here for `payload` reference or [Custom Notification](https://github.com/8398a7/action-slack#custom-notification).
 
@@ -83,38 +83,40 @@ The specified `secrets.SLACK_WEBHOOK_URL` must be legacy.
 
 ### Custom Notification
 
-Use `status: custom` if you want to send an arbitrary payload.
+Use `status: custom` if you want to send an arbitrary payload.  
+The payload format can pass javascript object.
 
-<img width="395" alt="custom" src="https://user-images.githubusercontent.com/8043276/64882303-cc72eb80-d697-11e9-8027-b7de99e0d587.png">
+<img width="401" alt="custom" src="https://user-images.githubusercontent.com/8043276/64948009-1aaf0700-d8b1-11e9-868e-00be274821cf.png">
 
 ```yaml
 - uses: 8398a7/action-slack@v2
   with:
     status: custom
     payload: |
-      { "text": "Custom Field Check",
-        "attachments": [{
-          "author_name": "slack-actions",
-          "fallback": "fallback",
-          "color": "good",
-          "title": "CI Result",
-          "text": "Succeeded",
-          "fields": [{
-            "title": "short title1",
-            "value": "short value1",
-            "short": true
+      {
+        text: "Custom Field Check",
+        attachments: [{
+          "author_name": "8398a7@action-slack", // json
+          fallback: 'fallback',
+          color: 'good',
+          title: 'CI Result',
+          text: 'Succeeded',
+          fields: [{
+            title: 'lower case',
+            value: 'LOWER CASE CHECK'.toLowerCase(),
+            short: true
           },
           {
-            "title": "short title2",
-            "value": "short value2",
-            "short": true
+            title: 'reverse',
+            value: 'gnirts esrever'.split('').reverse().join(''),
+            short: true
           },
           {
-            "title": "long title1",
-            "value": "long value1",
-            "short": false
+            title: 'long title1',
+            value: 'long value1',
+            short: false
           }],
-          "actions": [{
+          actions: [{
           }]
         }]
       }
