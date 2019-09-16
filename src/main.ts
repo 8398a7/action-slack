@@ -54,7 +54,6 @@ async function run() {
         var payload: IncomingWebhookSendArguments = eval(
           `payload = ${rawPayload}`,
         );
-        core.debug(`payload: ${payload}`);
         await client.send(payload);
         break;
       default:
