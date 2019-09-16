@@ -45,7 +45,7 @@ jobs:
             {
               text: "Custom Field Check",
               attachments: [{
-                "author_name": "slack-actions", # json
+                "author_name": "slack-actions", // json
                 fallback: 'fallback',
                 color: 'good',
                 title: 'CI Result',
