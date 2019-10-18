@@ -31,6 +31,7 @@ async function run() {
     core.debug(`rawPayload: ${rawPayload}`);
 
     const client = new Client({
+      status,
       mention,
       author_name,
       only_mention_fail,

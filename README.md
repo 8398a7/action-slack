@@ -121,7 +121,7 @@ The payload format can pass javascript object.
         }]
       }
   env:
-    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # required
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # optional
     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
 ```
 
