@@ -3,6 +3,7 @@ import * as github from '@actions/github';
 import { IncomingWebhook, IncomingWebhookSendArguments } from '@slack/webhook';
 
 interface With {
+  status: string;
   mention: '' | 'channel' | 'here';
   author_name: string;
   only_mention_fail: '' | 'channel' | 'here';
@@ -14,16 +15,18 @@ interface With {
 
 export class Client {
   private webhook: IncomingWebhook;
-  private github: github.GitHub;
+  private github?: github.GitHub;
   private with: With;
 
   constructor(props: With) {
     this.with = props;
 
-    if (process.env.GITHUB_TOKEN === undefined) {
-      throw new Error('Specify secrets.GITHUB_TOKEN');
+    if (props.status !== 'custom') {
+      if (process.env.GITHUB_TOKEN === undefined) {
+        throw new Error('Specify secrets.GITHUB_TOKEN');
+      }
+      this.github = new github.GitHub(process.env.GITHUB_TOKEN);
     }
-    this.github = new github.GitHub(process.env.GITHUB_TOKEN);
 
     if (process.env.SLACK_WEBHOOK_URL === undefined) {
       throw new Error('Specify secrets.SLACK_WEBHOOK_URL');
@@ -68,11 +71,6 @@ export class Client {
   }
 
   private async payloadTemplate() {
-    const { sha } = github.context;
-    const { owner, repo } = github.context.repo;
-    const commit = await this.github.repos.getCommit({ owner, repo, ref: sha });
-    const { author } = commit.data.commit;
-
     let text = '';
     if (this.with.mention !== '') {
       text += `<!${this.with.mention}> `;
@@ -88,42 +86,86 @@ export class Client {
           icon_emoji: this.with.icon_emoji,
           icon_url: this.with.icon_url,
           channel: this.with.channel,
-          fields: [
-            {
-              title: 'repo',
-              value: `<https://github.com/${owner}/${repo}|${owner}/${repo}>`,
-              short: true,
-            },
-            {
-              title: 'message',
-              value: commit.data.commit.message,
-              short: true,
-            },
-            {
-              title: 'commit',
-              value: `<https://github.com/${owner}/${repo}/commit/${sha}|${sha}>`,
-              short: true,
-            },
-            {
-              title: 'author',
-              value: `${author.name}<${author.email}>`,
-              short: true,
-            },
-            {
-              title: 'action',
-              value: `<https://github.com/${owner}/${repo}/commit/${sha}/checks|action>`,
-              short: true,
-            },
-            {
-              title: 'eventName',
-              value: github.context.eventName,
-              short: true,
-            },
-            { title: 'ref', value: github.context.ref, short: true },
-            { title: 'workflow', value: github.context.workflow, short: true },
-          ],
+          fields: await this.fields(),
         },
       ],
     };
+  }
+
+  private async fields() {
+    if (this.github === undefined) {
+      throw Error('Specify secrets.GITHUB_TOKEN');
+    }
+    const { sha } = github.context;
+    const { owner, repo } = github.context.repo;
+    const commit = await this.github.repos.getCommit({ owner, repo, ref: sha });
+    const { author } = commit.data.commit;
+
+    return [
+      this.repo,
+      {
+        title: 'message',
+        value: commit.data.commit.message,
+        short: true,
+      },
+      this.commit,
+      {
+        title: 'author',
+        value: `${author.name}<${author.email}>`,
+        short: true,
+      },
+      this.action,
+      this.eventName,
+      this.ref,
+      this.workflow,
+    ];
+  }
+
+  private get commit() {
+    const { sha } = github.context;
+    const { owner, repo } = github.context.repo;
+
+    return {
+      title: 'commit',
+      value: `<https://github.com/${owner}/${repo}/commit/${sha}|${sha}>`,
+      short: true,
+    };
+  }
+
+  private get repo() {
+    const { owner, repo } = github.context.repo;
+
+    return {
+      title: 'repo',
+      value: `<https://github.com/${owner}/${repo}|${owner}/${repo}>`,
+      short: true,
+    };
+  }
+
+  private get action() {
+    const { sha } = github.context;
+    const { owner, repo } = github.context.repo;
+
+    return {
+      title: 'action',
+      value: `<https://github.com/${owner}/${repo}/commit/${sha}/checks|action>`,
+      short: true,
+    };
+  }
+
+  private get eventName() {
+    return {
+      title: 'eventName',
+      value: github.context.eventName,
+      short: true,
+    };
+  }
+
+  private get ref() {
+    return { title: 'ref', value: github.context.ref, short: true };
+  }
+
+  private get workflow() {
+    return { title: 'workflow', value: github.context.workflow, short: true };
   }
 }
