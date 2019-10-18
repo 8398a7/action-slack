@@ -3,6 +3,7 @@ import * as github from '@actions/github';
 import { IncomingWebhook, IncomingWebhookSendArguments } from '@slack/webhook';
 
 interface With {
+  status: string;
   mention: '' | 'channel' | 'here';
   author_name: string;
   only_mention_fail: '' | 'channel' | 'here';
@@ -14,16 +15,18 @@ interface With {
 
 export class Client {
   private webhook: IncomingWebhook;
-  private github: github.GitHub;
+  private github?: github.GitHub;
   private with: With;
 
   constructor(props: With) {
     this.with = props;
 
-    if (process.env.GITHUB_TOKEN === undefined) {
-      throw new Error('Specify secrets.GITHUB_TOKEN');
+    if (props.status !== 'custom') {
+      if (process.env.GITHUB_TOKEN === undefined) {
+        throw new Error('Specify secrets.GITHUB_TOKEN');
+      }
+      this.github = new github.GitHub(process.env.GITHUB_TOKEN);
     }
-    this.github = new github.GitHub(process.env.GITHUB_TOKEN);
 
     if (process.env.SLACK_WEBHOOK_URL === undefined) {
       throw new Error('Specify secrets.SLACK_WEBHOOK_URL');
@@ -90,6 +93,9 @@ export class Client {
   }
 
   private async fields() {
+    if (this.github === undefined) {
+      throw Error('Specify secrets.GITHUB_TOKEN');
+    }
     const { sha } = github.context;
     const { owner, repo } = github.context.repo;
     const commit = await this.github.repos.getCommit({ owner, repo, ref: sha });
