@@ -52,7 +52,7 @@ When adding to text, write as follows.
 ```yaml
 - uses: 8398a7/action-slack@v2
   with:
-    type: ${{ job.status }}
+    status: ${{ job.status }}
     text: overwrite text
   env:
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # required
