@@ -1,6 +1,6 @@
-name: action-slack
-description: You can notify slack of GitHub Actions.
-author: 8398a7
+name: action-slack-customized
+description: You can notify slack of GitHub Actions. (customized version of 8398a7@action-slack)
+author: ykodama
 inputs:
   status:
     description: Specify success or failure or cancelled or custom.
@@ -16,7 +16,7 @@ inputs:
     default: ""
   author_name:
     description: User name for slack notification.
-    default: 8398a7@action-slack
+    default: ykodama@action-slack
   text:
     description: You can overwrite text.
     default: ""
