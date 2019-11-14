@@ -106,13 +106,13 @@ export class Client {
       {
         title: 'message',
         value: commit.data.commit.message,
-        short: true,
+        short: false,
       },
       this.commit,
       {
         title: 'author',
         value: `${author.name}<${author.email}>`,
-        short: true,
+        short: false,
       },
       this.action,
       this.eventName,
@@ -128,7 +128,7 @@ export class Client {
     return {
       title: 'commit',
       value: `<https://github.com/${owner}/${repo}/commit/${sha}|${sha}>`,
-      short: true,
+      short: false,
     };
   }
 
@@ -138,7 +138,7 @@ export class Client {
     return {
       title: 'repo',
       value: `<https://github.com/${owner}/${repo}|${owner}/${repo}>`,
-      short: true,
+      short: false,
     };
   }
 
@@ -149,7 +149,7 @@ export class Client {
     return {
       title: 'action',
       value: `<https://github.com/${owner}/${repo}/commit/${sha}/checks|action>`,
-      short: true,
+      short: false,
     };
   }
 
@@ -157,15 +157,15 @@ export class Client {
     return {
       title: 'eventName',
       value: github.context.eventName,
-      short: true,
+      short: false,
     };
   }
 
   private get ref() {
-    return { title: 'ref', value: github.context.ref, short: true };
+    return { title: 'ref', value: github.context.ref, short: false };
   }
 
   private get workflow() {
-    return { title: 'workflow', value: github.context.workflow, short: true };
+    return { title: 'workflow', value: github.context.workflow, short: false };
   }
 }
