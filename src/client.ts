@@ -38,7 +38,7 @@ export class Client {
   public async success(text: string) {
     const template = await this.payloadTemplate();
     template.attachments[0].color = 'good';
-    template.text += ':white_check_mark: Succeeded Github Actions\n';
+    template.text += `:heavy_check_mark: Successful GitHub Action <https://github.com/${owner}/${repo}/commit/${sha}/checks|${github.context.workflow}>\n`;
     template.text += text;
 
     this.send(template);
@@ -50,7 +50,7 @@ export class Client {
     if (this.with.only_mention_fail !== '') {
       template.text += `<!${this.with.only_mention_fail}> `;
     }
-    template.text += ':no_entry: Failed Github Actions\n';
+    template.text += `:no_entry: Failed GitHub Action <https://github.com/${owner}/${repo}/commit/${sha}/checks|${github.context.workflow}>\n`;
     template.text += text;
 
     this.send(template);
@@ -59,7 +59,7 @@ export class Client {
   public async cancel(text: string) {
     const template = await this.payloadTemplate();
     template.attachments[0].color = 'warning';
-    template.text += ':warning: Canceled Github Actions\n';
+    template.text += `:warning: Canceled Github Actions <https://github.com/${owner}/${repo}/commit/${sha}/checks|${github.context.workflow}>\n`;
     template.text += text;
 
     this.send(template);
@@ -149,7 +149,7 @@ export class Client {
 
     return {
       title: 'action',
-      value: `<https://github.com/${owner}/${repo}/commit/${sha}/checks|action>`,
+      value: `<https://github.com/${owner}/${repo}/commit/${sha}/checks|${github.context.workflow}>`,
       short: true,
     };
   }
