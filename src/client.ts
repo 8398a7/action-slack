@@ -67,7 +67,7 @@ export class Client {
   public async send(payload: string | IncomingWebhookSendArguments) {
     core.debug(JSON.stringify(github.context, null, 2));
     await this.webhook.send(payload);
-    core.debug('send message');
+    console.log('Sending message: ' + JSON.stringify(payload, null, 2));
   }
 
   private async payloadTemplate() {
