@@ -11,6 +11,7 @@ interface With {
   icon_emoji: string;
   icon_url: string;
   channel: string;
+  exclude_fields: string[]
 }
 
 export class Client {
@@ -118,7 +119,7 @@ export class Client {
       this.eventName,
       this.ref,
       this.workflow,
-    ];
+    ].filter(v => !this.with.exclude_fields.includes(v.title));
   }
 
   private get commit() {

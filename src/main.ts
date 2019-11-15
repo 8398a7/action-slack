@@ -17,6 +17,7 @@ async function run() {
     const icon_emoji = core.getInput('icon_emoji');
     const icon_url = core.getInput('icon_url');
     const channel = core.getInput('channel');
+    const exclude_fields = core.getInput('exclude_fields').split(/[, ]+/);
     const rawPayload = core.getInput('payload');
 
     core.debug(`status: ${status}`);
@@ -30,6 +31,8 @@ async function run() {
     core.debug(`channel: ${channel}`);
     core.debug(`rawPayload: ${rawPayload}`);
 
+    console.log('Disable fields: ' + JSON.stringify(exclude_fields));
+
     const client = new Client({
       status,
       mention,
@@ -39,6 +42,7 @@ async function run() {
       icon_emoji,
       icon_url,
       channel,
+      exclude_fields
     });
 
     switch (status) {

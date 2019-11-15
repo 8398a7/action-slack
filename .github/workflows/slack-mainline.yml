@@ -34,10 +34,12 @@ jobs:
         with:
           status: success
           username: foobar
+          test: Some additional text
           icon_url: https://s3-us-west-2.amazonaws.com/slack-files2/bot_icons/2019-11-15/838269560934_48.png
+          exclude_fields: repo, action
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}      
       - name: Succeeded Check
         uses: ./
         with:
