@@ -37,10 +37,8 @@ export class Client {
 
   public async success(text: string) {
     const template = await this.payloadTemplate();
-    const { sha } = github.context;
-    const { owner, repo } = github.context.repo;
     template.attachments[0].color = 'good';
-    template.text += `:heavy_check_mark: Successful GitHub Action <https://github.com/${owner}/${repo}/commit/${sha}/checks|${github.context.workflow}>`;
+    template.text += `:heavy_check_mark: Successful GitHub Action ${this.actionLink}\n`;
     template.text += text;
 
     this.send(template);
@@ -48,13 +46,11 @@ export class Client {
 
   public async fail(text: string) {
     const template = await this.payloadTemplate();
-    const { sha } = github.context;
-    const { owner, repo } = github.context.repo;
     template.attachments[0].color = 'danger';
     if (this.with.only_mention_fail !== '') {
       template.text += `<!${this.with.only_mention_fail}> `;
     }
-    template.text += `:no_entry: Failed GitHub Action <https://github.com/${owner}/${repo}/commit/${sha}/checks|${github.context.workflow}>`;
+    template.text += `:no_entry: Failed GitHub Action ${this.actionLink}\n`;
     template.text += text;
 
     this.send(template);
@@ -62,10 +58,8 @@ export class Client {
 
   public async cancel(text: string) {
     const template = await this.payloadTemplate();
-    const { sha } = github.context;
-    const { owner, repo } = github.context.repo;
     template.attachments[0].color = 'warning';
-    template.text += `:warning: Canceled Github Actions <https://github.com/${owner}/${repo}/commit/${sha}/checks|${github.context.workflow}>`;
+    template.text += `:warning: Canceled Github Actions ${this.actionLink}\n`;
     template.text += text;
 
     this.send(template);
@@ -75,6 +69,12 @@ export class Client {
     core.debug(JSON.stringify(github.context, null, 2));
     await this.webhook.send(payload);
     console.log('Sending message: ' + JSON.stringify(payload, null, 2));
+  }
+
+  private get actionLink() {
+    const { sha } = github.context;
+    const { owner, repo } = github.context.repo;
+    return `<https://github.com/${owner}/${repo}/commit/${sha}/checks|${github.context.workflow}>`;
   }
 
   private async payloadTemplate() {
@@ -155,7 +155,7 @@ export class Client {
 
     return {
       title: 'action',
-      value: `<https://github.com/${owner}/${repo}/commit/${sha}/checks|${github.context.workflow}>`,
+      value: this.actionLink,
       short: true,
     };
   }
