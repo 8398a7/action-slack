@@ -67,8 +67,9 @@ export class Client {
 
   public async send(payload: string | IncomingWebhookSendArguments) {
     core.debug(JSON.stringify(github.context, null, 2));
-    await this.webhook.send(payload);
-    console.log('Sending message: ' + JSON.stringify(payload, null, 2));
+    const toSend = JSON.stringify(payload, null, 2);
+    await this.webhook.send(toSend);
+    console.log('Sending message: ' + toSend);
   }
 
   private get actionLink() {
@@ -86,7 +87,7 @@ export class Client {
     return {
       text: text,
       icon_emoji: this.with.icon_emoji,
-      icon_url: this.with.icon_url && this.with.icon_url.length > 0 ? this.with.icon_url : null,
+      icon_url: this.with.icon_url,
       username: this.with.username,
       attachments: [
         {
