@@ -86,7 +86,7 @@ export class Client {
     return {
       text: text,
       icon_emoji: this.with.icon_emoji,
-      icon_url: this.with.icon_url,
+      icon_url: this.with.icon_url && this.with.icon_url.length > 0 ? this.with.icon_url : null,
       username: this.with.username,
       attachments: [
         {
