@@ -10,35 +10,35 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Succeeded Check
-        uses: 8398a7/action-slack@v2
+        uses: ./
         with:
           status: success
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
       - name: Failed Check
-        uses: 8398a7/action-slack@v2
+        uses: ./
         with:
           status: failure
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
       - name: Cancelled Check
-        uses: 8398a7/action-slack@v2
+        uses: ./
         with:
           status: cancelled
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
       - name: Check
-        uses: 8398a7/action-slack@v2
+        uses: ./
         with:
           status: ${{ job.status }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
       - name: Custom Field Check
-        uses: 8398a7/action-slack@v2
+        uses: ./
         with:
           status: custom
           payload: |
