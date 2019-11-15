@@ -78,13 +78,13 @@ export class Client {
 
     return {
       text: text,
+      icon_emoji: this.with.icon_emoji,
+      icon_url: this.with.icon_url,
+      username: this.with.username,
       attachments: [
         {
           color: '',
           author_name: this.with.author_name,
-          username: this.with.username,
-          icon_emoji: this.with.icon_emoji,
-          icon_url: this.with.icon_url,
           channel: this.with.channel,
           fields: await this.fields(),
         },

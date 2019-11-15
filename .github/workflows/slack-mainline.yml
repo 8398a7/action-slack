@@ -28,7 +28,16 @@ jobs:
           || (echo "##[error] found changed files after build. please 'npm run build && npm run format'" \
                    "and check in all changes" \
               && exit 1)
-              
+
+      - name: Bells and whistles
+        uses: ./
+        with:
+          status: success
+          username: foobar
+          icon_url: https://s3-us-west-2.amazonaws.com/slack-files2/bot_icons/2019-11-15/838269560934_48.png
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
       - name: Succeeded Check
         uses: ./
         with:
