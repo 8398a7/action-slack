@@ -4,6 +4,7 @@ on:
     branches:
       - master
       - v2
+      - just_playing_around
 
 jobs:
   notification:
