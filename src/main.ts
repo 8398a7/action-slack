@@ -1,6 +1,7 @@
 import * as core from '@actions/core';
 import { Client } from './client';
 import { IncomingWebhookSendArguments } from '@slack/webhook';
+import * as github from '@actions/github';
 
 async function run() {
   try {
@@ -33,6 +34,14 @@ async function run() {
 
     console.log('Disable fields: ' + JSON.stringify(exclude_fields));
 
+    var gh: github.GitHub | undefined = undefined;
+    if (status !== 'custom') {
+      if (process.env.GITHUB_TOKEN === undefined) {
+        throw new Error('Specify secrets.GITHUB_TOKEN');
+      }
+      gh = new github.GitHub(process.env.GITHUB_TOKEN);
+    }
+
     const client = new Client({
       status,
       mention,
@@ -43,7 +52,7 @@ async function run() {
       icon_url,
       channel,
       exclude_fields
-    });
+    }, gh);
 
     switch (status) {
       case 'success':

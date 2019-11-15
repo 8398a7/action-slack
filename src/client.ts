@@ -15,19 +15,13 @@ interface With {
 }
 
 export class Client {
-  private webhook: IncomingWebhook;
   private github?: github.GitHub;
   private with: With;
+  private webhook: IncomingWebhook;
 
-  constructor(props: With) {
+  constructor(props: With, github: github.GitHub | undefined) {
     this.with = props;
-
-    if (props.status !== 'custom') {
-      if (process.env.GITHUB_TOKEN === undefined) {
-        throw new Error('Specify secrets.GITHUB_TOKEN');
-      }
-      this.github = new github.GitHub(process.env.GITHUB_TOKEN);
-    }
+    this.github = github;
 
     if (process.env.SLACK_WEBHOOK_URL === undefined) {
       throw new Error('Specify secrets.SLACK_WEBHOOK_URL');
@@ -68,7 +62,7 @@ export class Client {
   public async send(payload: string | IncomingWebhookSendArguments) {
     core.debug(JSON.stringify(github.context, null, 2));
     const toSend = JSON.stringify(payload, null, 2);
-    await this.webhook.send(toSend);
+    await this.webhook.send(payload);
     console.log('Sending message: ' + toSend);
   }
 
