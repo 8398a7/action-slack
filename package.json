@@ -30,7 +30,7 @@
     "@actions/github": "^1.0.0",
     "@actions/io": "^1.0.0",
     "@actions/tool-cache": "^1.0.0",
-    "@slack/webhook": "^5.0.1",
+    "@slack/webhook": "^5.0.2",
     "semver": "^6.1.1"
   },
   "devDependencies": {

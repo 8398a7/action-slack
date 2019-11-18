@@ -62,8 +62,9 @@ export class Client {
   public async send(payload: string | IncomingWebhookSendArguments) {
     core.debug(JSON.stringify(github.context, null, 2));
     const toSend = JSON.stringify(payload, null, 2);
-    await this.webhook.send(payload);
     console.log('Sending message: ' + toSend);
+    
+    await this.webhook.send(payload);
   }
 
   private get actionLink() {
