@@ -1,11 +1,18 @@
-# Action Slack
+# Slack Build Notifier
 
 <p align="left">
   <a href="https://github.com/8398a7/action-slack"><img alt="GitHub Actions status" src="https://github.com/8398a7/action-slack/workflows/PR%20Checks/badge.svg"></a>
   <a href="https://github.com/8398a7/action-slack"><img alt="GitHub Actions status" src="https://github.com/8398a7/action-slack/workflows/Slack%20Mainline/badge.svg"></a>
 </p>
 
-You can notify slack of GitHub Actions.
+This notifier is a fork of [8398a7/action-slack](/8398a7/action-slack). However, its goals have diverged quite a bit from whe original, which is why I've decided to keept is separate. Its main differences are at this time:
+* Working support for the legacy webhook features which lets allow setting the author name and the autor-emoji-icon. (I was never able to get this to work in the original version)
+* More compact default templates while retaining all relevant information
+
+Future directions:
+* Use of Slack's block formatting for improved presentation over the fields-based approach
+* Support for test failure analysis summaries in the message
+* Support for notification only on status change, i.e. notify when builds _become_ stable/unstable, but not otherwise
 
 ## Usage
 

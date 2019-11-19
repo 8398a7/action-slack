@@ -19,7 +19,7 @@ export class Client {
   private with: With;
   private webhook: IncomingWebhook;
 
-  constructor(props: With, github: github.GitHub | undefined) {
+  constructor(props: With, github?: github.GitHub) {
     this.with = props;
     this.github = github;
 

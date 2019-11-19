@@ -29,10 +29,9 @@ jobs:
                    "and check in all changes" \
               && exit 1)
 
-      - name: Bells and whistles
+      - name: Bells and whistles (and default status)
         uses: ./
         with:
-          status: success
           username: foobar
           text: Some additional text
           icon_emoji: octocat

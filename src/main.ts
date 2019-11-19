@@ -5,14 +5,22 @@ import * as github from '@actions/github';
 
 async function run() {
   try {
-    let status: string = core.getInput('status', { required: true });
-    status = status.toLowerCase();
+    let s: string = core.getInput('status') || 'default';
+    let status = s.toLowerCase() as 
+      'success' 
+      | 'failure'
+      | 'cancelled'
+      | 'custom';
+
     const mention = core.getInput('mention') as '' | 'channel' | 'here';
+
     const author_name = core.getInput('author_name');
+    
     const only_mention_fail = core.getInput('only_mention_fail') as
       | ''
       | 'channel'
       | 'here';
+
     const text = core.getInput('text');
     const username = core.getInput('username');
     const icon_emoji = core.getInput('icon_emoji');

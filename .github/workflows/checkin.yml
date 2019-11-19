@@ -23,7 +23,8 @@ jobs:
           || (echo "##[error] found changed files after build. please 'npm run build && npm run format'" \
                    "and check in all changes" \
               && exit 1)
-      - uses: 8398a7/action-slack@v2
+      
+      - uses: ./
         with:
           status: ${{ job.status }}
         env:
