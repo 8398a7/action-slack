@@ -137,7 +137,7 @@ export class Client {
 
     return {
       title: 'commit',
-      value: `<https://github.com/${owner}/${repo}/commit/${sha}|${sha}>`,
+      value: `<https://github.com/${owner}/${repo}/commit/${sha}|${sha.substring(0,6)}...>`,
       short: true,
     };
   }

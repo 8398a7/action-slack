@@ -33,6 +33,9 @@ inputs:
   channel:
     description: override the legacy integration's default channel. This should be an ID, such as C8UJ12P4P.
     default: ""
+  exclude_fields:
+    description: a comma-separated list of fields to hide from the template
+    default: author, action, workflow
 runs:
   using: node12
   main: lib/main.js

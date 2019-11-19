@@ -39,8 +39,7 @@ async function run() {
     core.debug(`icon_url: ${icon_url}`);
     core.debug(`channel: ${channel}`);
     core.debug(`rawPayload: ${rawPayload}`);
-
-    console.log('Disable fields: ' + JSON.stringify(exclude_fields));
+    core.debug('Exclude fields: ' + JSON.stringify(exclude_fields));
 
     var gh: github.GitHub | undefined = undefined;
     if (status !== 'custom') {
