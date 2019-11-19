@@ -1,9 +1,10 @@
-name: action-slack
-description: You can notify slack of GitHub Actions.
+name: slack-build-notifier
+description: A Slack-notifier focused on the build status
 author: 8398a7
 inputs:
   status:
     description: Specify success or failure or cancelled or custom.
+    default: ${{ job.status }}
   payload:
     description: |
       json payload

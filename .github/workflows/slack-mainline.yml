@@ -32,7 +32,6 @@ jobs:
       - name: Bells and whistles
         uses: ./
         with:
-          status: ${{ job.status }}
           username: foobar
           text: Some additional text
           icon_emoji: octocat
