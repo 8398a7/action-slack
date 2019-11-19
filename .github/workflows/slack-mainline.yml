@@ -29,9 +29,10 @@ jobs:
                    "and check in all changes" \
               && exit 1)
 
-      - name: Bells and whistles (and default status)
+      - name: Bells and whistles
         uses: ./
         with:
+          status: ${{ job.status }}
           username: foobar
           text: Some additional text
           icon_emoji: octocat
