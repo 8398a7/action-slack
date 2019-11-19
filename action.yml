@@ -1,6 +1,6 @@
 name: slack-build-notifier
 description: A Slack-notifier focused on the build status
-author: 8398a7
+author: hennejg (based on 8398a7/action-slack)
 inputs:
   status:
     description: Specify success or failure or cancelled or custom.
@@ -40,5 +40,5 @@ runs:
   using: node12
   main: lib/main.js
 branding:
-  icon: bell
-  color: blue
+  icon: slack
+  color: purple
