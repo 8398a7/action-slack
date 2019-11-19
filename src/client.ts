@@ -1,5 +1,6 @@
 import * as core from '@actions/core';
 import * as github from '@actions/github';
+import Octokit from '@octokit/rest';
 import { IncomingWebhook, IncomingWebhookSendArguments } from '@slack/webhook';
 
 interface With {
@@ -53,7 +54,7 @@ export class Client {
   public async cancel(text: string) {
     const template = await this.payloadTemplate();
     template.attachments[0].color = 'warning';
-    template.text += `:warning: Canceled Github Actions ${this.actionLink}\n`;
+    template.text += `:warning: Canceled Github Action ${this.actionLink}\n`;
     template.text += text;
 
     this.send(template);
@@ -74,10 +75,19 @@ export class Client {
   }
 
   private async payloadTemplate() {
+    if (this.github === undefined) {
+      throw Error('Specify secrets.GITHUB_TOKEN');
+    }
+
     let text = '';
     if (this.with.mention !== '') {
       text += `<!${this.with.mention}> `;
     }
+
+    const { sha } = github.context;
+    const { owner, repo } = github.context.repo;
+    const commit = await this.github.repos.getCommit({ owner, repo, ref: sha });
+    const { author } = commit.data.commit;
 
     return {
       text: text,
@@ -87,30 +97,27 @@ export class Client {
       attachments: [
         {
           color: '',
-          author_name: this.with.author_name,
+          author_name: this.with.author_name !== '__COMMITTER__' ? this.with.author_name : `${author.name}<${author.email}>`,
           channel: this.with.channel,
-          fields: await this.fields(),
+          fields: await this.fields(commit),
         },
       ],
     };
   }
 
-  private async fields() {
+  private fields(commit: Octokit.Response<Octokit.ReposGetCommitResponse>) {
     if (this.github === undefined) {
       throw Error('Specify secrets.GITHUB_TOKEN');
     }
-    const { sha } = github.context;
-    const { owner, repo } = github.context.repo;
-    const commit = await this.github.repos.getCommit({ owner, repo, ref: sha });
     const { author } = commit.data.commit;
 
     return [
-      this.repo,
       {
         title: 'message',
         value: commit.data.commit.message,
-        short: true,
+        short: false,
       },
+      this.repo,
       this.commit,
       {
         title: 'author',
