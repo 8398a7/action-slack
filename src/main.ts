@@ -6,12 +6,9 @@ async function run() {
   try {
     let status: string = core.getInput('status', { required: true });
     status = status.toLowerCase();
-    const mention = core.getInput('mention') as '' | 'channel' | 'here';
+    const mention = core.getInput('mention') as string;
     const author_name = core.getInput('author_name');
-    const only_mention_fail = core.getInput('only_mention_fail') as
-      | ''
-      | 'channel'
-      | 'here';
+    const only_mention_fail = core.getInput('only_mention_fail') as string;
     const text = core.getInput('text');
     const username = core.getInput('username');
     const icon_emoji = core.getInput('icon_emoji');
