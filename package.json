@@ -6,8 +6,8 @@
   "main": "lib/main.js",
   "scripts": {
     "build": "tsc",
-    "format": "prettier --write **/*.ts",
-    "format-check": "prettier --check **/*.ts",
+    "fmt-write": "prettier --write **/*.ts",
+    "fmt": "prettier -c **/*.ts",
     "test": "jest",
     "publish": "npm run build && npm prune --production"
   },
