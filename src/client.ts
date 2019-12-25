@@ -169,7 +169,7 @@ export class Client {
   private mentionText(mention: string) {
     if (groupMention.includes(mention)) {
       return `<!${mention}> `;
-    } else if (this.with.mention !== '') {
+    } else if (mention !== '') {
       return `<@${mention}> `;
     }
     return '';
