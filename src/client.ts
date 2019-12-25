@@ -4,14 +4,16 @@ import { IncomingWebhook, IncomingWebhookSendArguments } from '@slack/webhook';
 
 interface With {
   status: string;
-  mention: '' | 'channel' | 'here';
+  mention: string;
   author_name: string;
-  only_mention_fail: '' | 'channel' | 'here';
+  only_mention_fail: string;
   username: string;
   icon_emoji: string;
   icon_url: string;
   channel: string;
 }
+
+const groupMention = ['here', 'channel'];
 
 export class Client {
   private webhook: IncomingWebhook;
@@ -46,9 +48,7 @@ export class Client {
   public async fail(text: string) {
     const template = await this.payloadTemplate();
     template.attachments[0].color = 'danger';
-    if (this.with.only_mention_fail !== '') {
-      template.text += `<!${this.with.only_mention_fail}> `;
-    }
+    template.text += this.mentionText(this.with.only_mention_fail);
     template.text += ':no_entry: Failed Github Actions\n';
     template.text += text;
 
@@ -58,7 +58,7 @@ export class Client {
   public async cancel(text: string) {
     const template = await this.payloadTemplate();
     template.attachments[0].color = 'warning';
-    template.text += ':warning: Cancelded Github Actions\n';
+    template.text += ':warning: Canceled Github Actions\n';
     template.text += text;
 
     this.send(template);
@@ -71,10 +71,7 @@ export class Client {
   }
 
   private async payloadTemplate() {
-    let text = '';
-    if (this.with.mention !== '') {
-      text += `<!${this.with.mention}> `;
-    }
+    let text = this.mentionText(this.with.mention);
 
     return {
       text: text,
@@ -167,5 +164,14 @@ export class Client {
 
   private get workflow() {
     return { title: 'workflow', value: github.context.workflow, short: true };
+  }
+
+  private mentionText(mention: string) {
+    if (groupMention.includes(mention)) {
+      return `<!${mention}> `;
+    } else if (this.with.mention !== '') {
+      return `<@${mention}> `;
+    }
+    return '';
   }
 }

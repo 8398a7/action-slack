@@ -52,7 +52,7 @@ When adding to text, write as follows.
 ```yaml
 - uses: 8398a7/action-slack@v2
   with:
-    type: ${{ job.status }}
+    status: ${{ job.status }}
     text: overwrite text
   env:
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # required
@@ -121,7 +121,7 @@ The payload format can pass javascript object.
         }]
       }
   env:
-    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # required
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # optional
     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
 ```
 
