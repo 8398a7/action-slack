@@ -1,9 +1,9 @@
 # Action Slack
 
-<p align="left">
-  <a href="https://github.com/8398a7/action-slack"><img alt="GitHub Actions status" src="https://github.com/8398a7/action-slack/workflows/build-test/badge.svg"></a>
-  <a href="https://github.com/8398a7/action-slack"><img alt="GitHub Actions status" src="https://github.com/8398a7/action-slack/workflows/Slack%20Mainline/badge.svg"></a>
-</p>
+![](https://github.com/8398a7/action-slack/workflows/build-test/badge.svg)
+![](https://github.com/8398a7/action-slack/workflows/Slack%20Mainline/badge.svg)
+![](https://img.shields.io/github/license/8398a7/action-slack?color=brightgreen)
+![](https://img.shields.io/github/v/release/8398a7/action-slack?color=brightgreen)
 
 You can notify slack of GitHub Actions.
 
