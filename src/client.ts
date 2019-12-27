@@ -36,7 +36,7 @@ export class Client {
     this.webhook = new IncomingWebhook(webhookUrl);
   }
 
-  public async success(text: string) {
+  async success(text: string) {
     const template = await this.payloadTemplate();
     template.attachments[0].color = 'good';
     template.text += ':white_check_mark: Succeeded GitHub Actions\n';
@@ -45,7 +45,7 @@ export class Client {
     return template;
   }
 
-  public async fail(text: string) {
+  async fail(text: string) {
     const template = await this.payloadTemplate();
     template.attachments[0].color = 'danger';
     template.text += this.mentionText(this.with.only_mention_fail);
@@ -55,7 +55,7 @@ export class Client {
     return template;
   }
 
-  public async cancel(text: string) {
+  async cancel(text: string) {
     const template = await this.payloadTemplate();
     template.attachments[0].color = 'warning';
     template.text += ':warning: Canceled GitHub Actions\n';
@@ -64,17 +64,17 @@ export class Client {
     return template;
   }
 
-  public async send(payload: string | IncomingWebhookSendArguments) {
+  async send(payload: string | IncomingWebhookSendArguments) {
     core.debug(JSON.stringify(github.context, null, 2));
     await this.webhook.send(payload);
     core.debug('send message');
   }
 
   private async payloadTemplate() {
-    let text = this.mentionText(this.with.mention);
+    const text = this.mentionText(this.with.mention);
 
     return {
-      text: text,
+      text,
       attachments: [
         {
           color: '',
@@ -94,7 +94,6 @@ export class Client {
       throw Error('Specify secrets.GITHUB_TOKEN');
     }
     const { sha } = github.context;
-    debugger;
     const { owner, repo } = github.context.repo;
     const commit = await this.github.repos.getCommit({ owner, repo, ref: sha });
     const { author } = commit.data.commit;
@@ -171,12 +170,11 @@ export class Client {
     if (groupMention.includes(mention)) {
       return `<!${mention}> `;
     } else if (mention !== '') {
-      return (
-        mention
-          .split(',')
-          .map(userId => `<@${userId}>`)
-          .join(' ') + ' '
-      );
+      const text = mention
+        .split(',')
+        .map(userId => `<@${userId}>`)
+        .join(' ');
+      return `${text} `;
     }
     return '';
   }

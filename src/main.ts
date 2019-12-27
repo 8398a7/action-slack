@@ -2,13 +2,13 @@ import * as core from '@actions/core';
 import { Client } from './client';
 import { IncomingWebhookSendArguments } from '@slack/webhook';
 
-async function run() {
+async function run(): Promise<void> {
   try {
     let status: string = core.getInput('status', { required: true });
     status = status.toLowerCase();
-    const mention = core.getInput('mention') as string;
+    const mention = core.getInput('mention');
     const author_name = core.getInput('author_name');
-    const only_mention_fail = core.getInput('only_mention_fail') as string;
+    const only_mention_fail = core.getInput('only_mention_fail');
     const text = core.getInput('text');
     const username = core.getInput('username');
     const icon_emoji = core.getInput('icon_emoji');
@@ -53,9 +53,11 @@ async function run() {
         await client.send(await client.cancel(text));
         break;
       case 'custom':
+        /* eslint-disable no-var */
         var payload: IncomingWebhookSendArguments = eval(
           `payload = ${rawPayload}`,
         );
+        /* eslint-enable */
         await client.send(payload);
         break;
       default:
