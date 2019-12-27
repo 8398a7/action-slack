@@ -9,6 +9,8 @@ jobs:
       - run: npm ci
       - run: npm run build
       - run: npm run test
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: check for uncommitted changes
         # Ensure no changes, but ignore node_modules dir since dev/fresh ci deps installed.
         run: |
