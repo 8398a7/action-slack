@@ -38,7 +38,7 @@ inputs:
     default: ''
 runs:
   using: node12
-  main: lib/main.js
+  main: dist/index.js
 branding:
   icon: bell
   color: blue

@@ -2,7 +2,7 @@ import * as core from '@actions/core';
 import * as github from '@actions/github';
 import { IncomingWebhook, IncomingWebhookSendArguments } from '@slack/webhook';
 
-interface With {
+export interface With {
   status: string;
   mention: string;
   author_name: string;
@@ -20,61 +20,61 @@ export class Client {
   private github?: github.GitHub;
   private with: With;
 
-  constructor(props: With) {
+  constructor(props: With, token?: string, webhookUrl?: string) {
     this.with = props;
 
     if (props.status !== 'custom') {
-      if (process.env.GITHUB_TOKEN === undefined) {
+      if (token === undefined) {
         throw new Error('Specify secrets.GITHUB_TOKEN');
       }
-      this.github = new github.GitHub(process.env.GITHUB_TOKEN);
+      this.github = new github.GitHub(token);
     }
 
-    if (process.env.SLACK_WEBHOOK_URL === undefined) {
+    if (webhookUrl === undefined) {
       throw new Error('Specify secrets.SLACK_WEBHOOK_URL');
     }
-    this.webhook = new IncomingWebhook(process.env.SLACK_WEBHOOK_URL);
+    this.webhook = new IncomingWebhook(webhookUrl);
   }
 
-  public async success(text: string) {
+  async success(text: string) {
     const template = await this.payloadTemplate();
     template.attachments[0].color = 'good';
-    template.text += ':white_check_mark: Succeeded Github Actions\n';
+    template.text += ':white_check_mark: Succeeded GitHub Actions\n';
     template.text += text;
 
-    this.send(template);
+    return template;
   }
 
-  public async fail(text: string) {
+  async fail(text: string) {
     const template = await this.payloadTemplate();
     template.attachments[0].color = 'danger';
     template.text += this.mentionText(this.with.only_mention_fail);
-    template.text += ':no_entry: Failed Github Actions\n';
+    template.text += ':no_entry: Failed GitHub Actions\n';
     template.text += text;
 
-    this.send(template);
+    return template;
   }
 
-  public async cancel(text: string) {
+  async cancel(text: string) {
     const template = await this.payloadTemplate();
     template.attachments[0].color = 'warning';
-    template.text += ':warning: Canceled Github Actions\n';
+    template.text += ':warning: Canceled GitHub Actions\n';
     template.text += text;
 
-    this.send(template);
+    return template;
   }
 
-  public async send(payload: string | IncomingWebhookSendArguments) {
+  async send(payload: string | IncomingWebhookSendArguments) {
     core.debug(JSON.stringify(github.context, null, 2));
     await this.webhook.send(payload);
     core.debug('send message');
   }
 
   private async payloadTemplate() {
-    let text = this.mentionText(this.with.mention);
+    const text = this.mentionText(this.with.mention);
 
     return {
-      text: text,
+      text,
       attachments: [
         {
           color: '',
@@ -170,7 +170,11 @@ export class Client {
     if (groupMention.includes(mention)) {
       return `<!${mention}> `;
     } else if (mention !== '') {
-      return `<@${mention}> `;
+      const text = mention
+        .split(',')
+        .map(userId => `<@${userId}>`)
+        .join(' ');
+      return `${text} `;
     }
     return '';
   }

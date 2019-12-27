@@ -2,13 +2,13 @@ import * as core from '@actions/core';
 import { Client } from './client';
 import { IncomingWebhookSendArguments } from '@slack/webhook';
 
-async function run() {
+async function run(): Promise<void> {
   try {
     let status: string = core.getInput('status', { required: true });
     status = status.toLowerCase();
-    const mention = core.getInput('mention') as string;
+    const mention = core.getInput('mention');
     const author_name = core.getInput('author_name');
-    const only_mention_fail = core.getInput('only_mention_fail') as string;
+    const only_mention_fail = core.getInput('only_mention_fail');
     const text = core.getInput('text');
     const username = core.getInput('username');
     const icon_emoji = core.getInput('icon_emoji');
@@ -27,31 +27,37 @@ async function run() {
     core.debug(`channel: ${channel}`);
     core.debug(`rawPayload: ${rawPayload}`);
 
-    const client = new Client({
-      status,
-      mention,
-      author_name,
-      only_mention_fail,
-      username,
-      icon_emoji,
-      icon_url,
-      channel,
-    });
+    const client = new Client(
+      {
+        status,
+        mention,
+        author_name,
+        only_mention_fail,
+        username,
+        icon_emoji,
+        icon_url,
+        channel,
+      },
+      process.env.GITHUB_TOKEN,
+      process.env.SLACK_WEBHOOK_URL,
+    );
 
     switch (status) {
       case 'success':
-        await client.success(text);
+        await client.send(await client.success(text));
         break;
       case 'failure':
-        await client.fail(text);
+        await client.send(await client.fail(text));
         break;
       case 'cancelled':
-        await client.cancel(text);
+        await client.send(await client.cancel(text));
         break;
       case 'custom':
+        /* eslint-disable no-var */
         var payload: IncomingWebhookSendArguments = eval(
           `payload = ${rawPayload}`,
         );
+        /* eslint-enable */
         await client.send(payload);
         break;
       default:
