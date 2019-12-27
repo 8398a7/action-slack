@@ -6,10 +6,12 @@
   "main": "lib/main.js",
   "scripts": {
     "build": "tsc",
-    "fmt-write": "prettier --write **/*.ts",
-    "fmt": "prettier -c **/*.ts",
+    "format": "prettier --write **/*.ts",
+    "format-check": "prettier --check **/*.ts",
+    "lint": "eslint src/**/*.ts",
+    "pack": "ncc build",
     "test": "jest",
-    "publish": "npm run build && npm prune --production"
+    "all": "npm run build && npm run format && npm run lint && npm run pack && npm test"
   },
   "repository": {
     "type": "git",
@@ -37,6 +39,12 @@
     "@types/jest": "^24.0.25",
     "@types/node": "^13.1.1",
     "@types/semver": "^6.2.0",
+    "@typescript-eslint/parser": "^2.13.0",
+    "@zeit/ncc": "^0.20.5",
+    "eslint": "^6.8.0",
+    "eslint-plugin-github": "^3.4.0",
+    "eslint-plugin-jest": "^23.1.1",
+    "js-yaml": "^3.13.1",
     "prettier": "^1.19.1",
     "jest": "^24.9.0",
     "jest-circus": "^24.9.0",
