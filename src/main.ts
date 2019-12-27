@@ -27,26 +27,30 @@ async function run() {
     core.debug(`channel: ${channel}`);
     core.debug(`rawPayload: ${rawPayload}`);
 
-    const client = new Client({
-      status,
-      mention,
-      author_name,
-      only_mention_fail,
-      username,
-      icon_emoji,
-      icon_url,
-      channel,
-    });
+    const client = new Client(
+      {
+        status,
+        mention,
+        author_name,
+        only_mention_fail,
+        username,
+        icon_emoji,
+        icon_url,
+        channel,
+      },
+      process.env.GITHUB_TOKEN,
+      process.env.SLACK_WEBHOOK_URL,
+    );
 
     switch (status) {
       case 'success':
-        await client.success(text);
+        await client.send(await client.success(text));
         break;
       case 'failure':
-        await client.fail(text);
+        await client.send(await client.fail(text));
         break;
       case 'cancelled':
-        await client.cancel(text);
+        await client.send(await client.cancel(text));
         break;
       case 'custom':
         var payload: IncomingWebhookSendArguments = eval(
