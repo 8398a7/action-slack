@@ -170,7 +170,12 @@ export class Client {
     if (groupMention.includes(mention)) {
       return `<!${mention}> `;
     } else if (mention !== '') {
-      return `<@${mention}> `;
+      return (
+        mention
+          .split(',')
+          .map(userId => `<@${userId}>`)
+          .join(' ') + ' '
+      );
     }
     return '';
   }
