@@ -1,0 +1,20 @@
+name: Check for uncommitted changes
+on:
+  push:
+    branches:
+      - master
+      - 'v*'
+
+jobs:
+  uncommitted:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: npm ci
+      - run: npm run pack
+      - name: check for uncommitted changes
+        run: |
+          git diff --exit-code --stat -- . ':!node_modules' \
+          || (echo "##[error] found changed files after build. please 'npm run build && npm run format'" \
+                   "and check in all changes" \
+              && exit 1)
