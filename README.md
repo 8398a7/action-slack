@@ -10,7 +10,7 @@ You can notify slack of GitHub Actions.
 
 ## Usage
 
-See [action.yml](action.yml), [checkin.yml](.github/workflows/checkin.yml)
+See [action.yml](action.yml), [test.yml](.github/workflows/test.yml)
 
 ### with Parameters
 
