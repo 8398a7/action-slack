@@ -1,22 +1,26 @@
-name: build-test
-on: [pull_request, push]
+on:
+  push:
+    tags:
+      - 'v*'
+
+name: Create Release
 
 jobs:
-  check_pr:
+  build:
+    name: Create Release
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/cache@v1
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-      - run: npm install
-      - run: npm run all
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
       - uses: 8398a7/action-slack@v2
         with:
           status: ${{ job.status }}
