@@ -18,7 +18,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
       - run: npm install
-      - run: npm run pack
+      - run: npm run build && npm run pack
       - name: check for uncommitted changes
         run: |
           git diff --exit-code --stat -- . ':!node_modules' \
