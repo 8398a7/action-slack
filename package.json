@@ -11,7 +11,8 @@
     "lint": "eslint src/**/*.ts",
     "pack": "ncc build",
     "test": "jest && codecov",
-    "all": "npm run build && npm run format && npm run lint && npm run pack && npm test"
+    "all": "npm run build && npm run format && npm run lint && npm run pack && npm test",
+    "release": "npm run build && npm run pack"
   },
   "repository": {
     "type": "git",
