@@ -2,6 +2,7 @@ name: Check for uncommitted changes
 on:
   push:
     branches:
+      - pre
       - master
       - 'v*'
 
