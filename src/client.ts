@@ -167,10 +167,11 @@ export class Client {
   }
 
   private mentionText(mention: string) {
-    if (groupMention.includes(mention)) {
-      return `<!${mention}> `;
-    } else if (mention !== '') {
-      const text = mention
+    const normalized = mention.replace(/ /g, '');
+    if (groupMention.includes(normalized)) {
+      return `<!${normalized}> `;
+    } else if (normalized !== '') {
+      const text = normalized
         .split(',')
         .map(userId => `<@${userId}>`)
         .join(' ');

@@ -246,6 +246,39 @@ describe('8398a7/action-slack', () => {
     });
   });
 
+  it('removes csv space', async () => {
+    const withParams: With = {
+      status: '',
+      mention: 'user_id, user_id2',
+      author_name: '',
+      only_mention_fail: '',
+      username: '',
+      icon_emoji: '',
+      icon_url: '',
+      channel: '',
+    };
+    let client = new Client(withParams, process.env.GITHUB_TOKEN, '');
+    const msg = 'hello';
+
+    let text = `<@user_id> <@user_id2> ${successMsg}\n${msg}`;
+    attachments[0].color = 'good';
+    expect(await client.success(msg)).toStrictEqual({
+      attachments,
+      text,
+    });
+
+    withParams.mention = '';
+    withParams.only_mention_fail = 'user_id, user_id2';
+    client = new Client(withParams, process.env.GITHUB_TOKEN, '');
+
+    text = `<@user_id> <@user_id2> ${failMsg}\n${msg}`;
+    attachments[0].color = 'danger';
+    expect(await client.fail(msg)).toStrictEqual({
+      attachments,
+      text,
+    });
+  });
+
   it('returns the expected template', async () => {
     const withParams: With = {
       status: '',
