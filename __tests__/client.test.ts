@@ -36,17 +36,22 @@ const fixedFields = () => {
   ];
 };
 
-const attachments = [
-  {
-    author_name: '',
-    channel: '',
-    color: '',
-    fields: fixedFields(),
+const getTemplate: any = (text: string) => {
+  return {
+    text,
+    attachments: [
+      {
+        author_name: '',
+        color: '',
+        fields: fixedFields(),
+      },
+    ],
+    username: '',
     icon_emoji: '',
     icon_url: '',
-    username: '',
-  },
-];
+    channel: '',
+  };
+};
 
 const successMsg = ':white_check_mark: Succeeded GitHub Actions';
 const cancelMsg = ':warning: Canceled GitHub Actions';
@@ -70,12 +75,9 @@ describe('8398a7/action-slack', () => {
     };
     const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
     const msg = 'mention test';
-    let text = `<@user_id> ${successMsg}\n${msg}`;
-    attachments[0].color = 'good';
-    expect(await client.success(msg)).toStrictEqual({
-      attachments,
-      text,
-    });
+    const payload = getTemplate(`<@user_id> ${successMsg}\n${msg}`);
+    payload.attachments[0].color = 'good';
+    expect(await client.success(msg)).toStrictEqual(payload);
   });
 
   it('mentions multiple users on failure', async () => {
@@ -91,12 +93,9 @@ describe('8398a7/action-slack', () => {
     };
     const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
     const msg = 'mention test';
-    let text = `<@user_id> ${failMsg}\n${msg}`;
-    attachments[0].color = 'danger';
-    expect(await client.fail(msg)).toStrictEqual({
-      attachments,
-      text,
-    });
+    const payload = getTemplate(`<@user_id> ${failMsg}\n${msg}`);
+    payload.attachments[0].color = 'danger';
+    expect(await client.fail(msg)).toStrictEqual(payload);
   });
 
   it('does not mention the user unless it is a failure', async () => {
@@ -112,12 +111,9 @@ describe('8398a7/action-slack', () => {
     };
     const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
     const msg = 'mention test';
-    let text = `${successMsg}\n${msg}`;
-    attachments[0].color = 'good';
-    expect(await client.success(msg)).toStrictEqual({
-      attachments,
-      text,
-    });
+    const payload = getTemplate(`${successMsg}\n${msg}`);
+    payload.attachments[0].color = 'good';
+    expect(await client.success(msg)).toStrictEqual(payload);
   });
 
   it('can be mentioned here', async () => {
@@ -133,12 +129,9 @@ describe('8398a7/action-slack', () => {
     };
     const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
     const msg = 'mention test';
-    let text = `<!here> ${successMsg}\n${msg}`;
-    attachments[0].color = 'good';
-    expect(await client.success(msg)).toStrictEqual({
-      attachments,
-      text,
-    });
+    const payload = getTemplate(`<!here> ${successMsg}\n${msg}`);
+    payload.attachments[0].color = 'good';
+    expect(await client.success(msg)).toStrictEqual(payload);
   });
 
   it('can be mentioned channel', async () => {
@@ -154,12 +147,9 @@ describe('8398a7/action-slack', () => {
     };
     const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
     const msg = 'mention test';
-    let text = `<!channel> ${successMsg}\n${msg}`;
-    attachments[0].color = 'good';
-    expect(await client.success(msg)).toStrictEqual({
-      attachments,
-      text,
-    });
+    const payload = getTemplate(`<!channel> ${successMsg}\n${msg}`);
+    payload.attachments[0].color = 'good';
+    expect(await client.success(msg)).toStrictEqual(payload);
   });
 
   it('mentions multiple users', async () => {
@@ -175,12 +165,9 @@ describe('8398a7/action-slack', () => {
     };
     const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
     const msg = 'mention test';
-    let text = `<@user_id> <@user_id2> ${successMsg}\n${msg}`;
-    attachments[0].color = 'good';
-    expect(await client.success(msg)).toStrictEqual({
-      attachments,
-      text,
-    });
+    const payload = getTemplate(`<@user_id> <@user_id2> ${successMsg}\n${msg}`);
+    payload.attachments[0].color = 'good';
+    expect(await client.success(msg)).toStrictEqual(payload);
   });
 
   it('mentions multiple users on failure', async () => {
@@ -196,12 +183,9 @@ describe('8398a7/action-slack', () => {
     };
     const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
     const msg = 'mention test';
-    let text = `<@user_id> <@user_id2> ${failMsg}\n${msg}`;
-    attachments[0].color = 'danger';
-    expect(await client.fail(msg)).toStrictEqual({
-      attachments,
-      text,
-    });
+    const payload = getTemplate(`<@user_id> <@user_id2> ${failMsg}\n${msg}`);
+    payload.attachments[0].color = 'danger';
+    expect(await client.fail(msg)).toStrictEqual(payload);
   });
 
   it('can be mentioned here on failure', async () => {
@@ -217,12 +201,9 @@ describe('8398a7/action-slack', () => {
     };
     const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
     const msg = 'mention test';
-    let text = `<!here> ${failMsg}\n${msg}`;
-    attachments[0].color = 'danger';
-    expect(await client.fail(msg)).toStrictEqual({
-      attachments,
-      text,
-    });
+    const payload = getTemplate(`<!here> ${failMsg}\n${msg}`);
+    payload.attachments[0].color = 'danger';
+    expect(await client.fail(msg)).toStrictEqual(payload);
   });
 
   it('can be mentioned channel on failure', async () => {
@@ -238,12 +219,36 @@ describe('8398a7/action-slack', () => {
     };
     const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
     const msg = 'mention test';
-    let text = `<!channel> ${failMsg}\n${msg}`;
-    attachments[0].color = 'danger';
-    expect(await client.fail(msg)).toStrictEqual({
-      attachments,
-      text,
-    });
+    const payload = getTemplate(`<!channel> ${failMsg}\n${msg}`);
+    payload.attachments[0].color = 'danger';
+    expect(await client.fail(msg)).toStrictEqual(payload);
+  });
+
+  it('removes csv space', async () => {
+    const withParams: With = {
+      status: '',
+      mention: 'user_id, user_id2',
+      author_name: '',
+      only_mention_fail: '',
+      username: '',
+      icon_emoji: '',
+      icon_url: '',
+      channel: '',
+    };
+    let client = new Client(withParams, process.env.GITHUB_TOKEN, '');
+    const msg = 'hello';
+
+    let payload = getTemplate(`<@user_id> <@user_id2> ${successMsg}\n${msg}`);
+    payload.attachments[0].color = 'good';
+    expect(await client.success(msg)).toStrictEqual(payload);
+
+    withParams.mention = '';
+    withParams.only_mention_fail = 'user_id, user_id2';
+    client = new Client(withParams, process.env.GITHUB_TOKEN, '');
+
+    payload = getTemplate(`<@user_id> <@user_id2> ${failMsg}\n${msg}`);
+    payload.attachments[0].color = 'danger';
+    expect(await client.fail(msg)).toStrictEqual(payload);
   });
 
   it('returns the expected template', async () => {
@@ -261,27 +266,18 @@ describe('8398a7/action-slack', () => {
     const msg = 'hello';
 
     // for success
-    let text = `${successMsg}\n${msg}`;
-    attachments[0].color = 'good';
-    expect(await client.success(msg)).toStrictEqual({
-      attachments,
-      text,
-    });
+    let payload = getTemplate(`${successMsg}\n${msg}`);
+    payload.attachments[0].color = 'good';
+    expect(await client.success(msg)).toStrictEqual(payload);
 
     // for cancel
-    text = `${cancelMsg}\n${msg}`;
-    attachments[0].color = 'warning';
-    expect(await client.cancel(msg)).toStrictEqual({
-      attachments,
-      text,
-    });
+    payload = getTemplate(`${cancelMsg}\n${msg}`);
+    payload.attachments[0].color = 'warning';
+    expect(await client.cancel(msg)).toStrictEqual(payload);
 
     // for fail
-    text = `${failMsg}\n${msg}`;
-    attachments[0].color = 'danger';
-    expect(await client.fail(msg)).toStrictEqual({
-      attachments,
-      text,
-    });
+    payload = getTemplate(`${failMsg}\n${msg}`);
+    payload.attachments[0].color = 'danger';
+    expect(await client.fail(msg)).toStrictEqual(payload);
   });
 });

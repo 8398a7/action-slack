@@ -10376,16 +10376,17 @@ class Client {
     payloadTemplate() {
         return __awaiter(this, void 0, void 0, function* () {
             const text = this.mentionText(this.with.mention);
+            const { username, icon_emoji, icon_url, channel } = this.with;
             return {
                 text,
+                username,
+                icon_emoji,
+                icon_url,
+                channel,
                 attachments: [
                     {
                         color: '',
                         author_name: this.with.author_name,
-                        username: this.with.username,
-                        icon_emoji: this.with.icon_emoji,
-                        icon_url: this.with.icon_url,
-                        channel: this.with.channel,
                         fields: yield this.fields(),
                     },
                 ],
@@ -10461,11 +10462,12 @@ class Client {
         return { title: 'workflow', value: github.context.workflow, short: true };
     }
     mentionText(mention) {
-        if (groupMention.includes(mention)) {
-            return `<!${mention}> `;
+        const normalized = mention.replace(/ /g, '');
+        if (groupMention.includes(normalized)) {
+            return `<!${normalized}> `;
         }
-        else if (mention !== '') {
-            const text = mention
+        else if (normalized !== '') {
+            const text = normalized
                 .split(',')
                 .map(userId => `<@${userId}>`)
                 .join(' ');

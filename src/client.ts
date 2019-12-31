@@ -72,17 +72,18 @@ export class Client {
 
   private async payloadTemplate() {
     const text = this.mentionText(this.with.mention);
+    const { username, icon_emoji, icon_url, channel } = this.with;
 
     return {
       text,
+      username,
+      icon_emoji,
+      icon_url,
+      channel,
       attachments: [
         {
           color: '',
           author_name: this.with.author_name,
-          username: this.with.username,
-          icon_emoji: this.with.icon_emoji,
-          icon_url: this.with.icon_url,
-          channel: this.with.channel,
           fields: await this.fields(),
         },
       ],
@@ -167,10 +168,11 @@ export class Client {
   }
 
   private mentionText(mention: string) {
-    if (groupMention.includes(mention)) {
-      return `<!${mention}> `;
-    } else if (mention !== '') {
-      const text = mention
+    const normalized = mention.replace(/ /g, '');
+    if (groupMention.includes(normalized)) {
+      return `<!${normalized}> `;
+    } else if (normalized !== '') {
+      const text = normalized
         .split(',')
         .map(userId => `<@${userId}>`)
         .join(' ');
