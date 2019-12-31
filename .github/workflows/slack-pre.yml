@@ -31,7 +31,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_FOR_INTEGRATION_TEST }}
       - name: Legacy Check
-        uses: 8398a7/action-slack@v2
+        uses: 8398a7/action-slack@pre
         with:
           status: ${{ job.status }}
           username: legacy user
