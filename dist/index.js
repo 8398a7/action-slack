@@ -10376,16 +10376,17 @@ class Client {
     payloadTemplate() {
         return __awaiter(this, void 0, void 0, function* () {
             const text = this.mentionText(this.with.mention);
+            const { username, icon_emoji, icon_url, channel } = this.with;
             return {
                 text,
+                username,
+                icon_emoji,
+                icon_url,
+                channel,
                 attachments: [
                     {
                         color: '',
                         author_name: this.with.author_name,
-                        username: this.with.username,
-                        icon_emoji: this.with.icon_emoji,
-                        icon_url: this.with.icon_url,
-                        channel: this.with.channel,
                         fields: yield this.fields(),
                     },
                 ],
