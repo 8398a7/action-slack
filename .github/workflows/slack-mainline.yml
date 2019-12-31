@@ -4,7 +4,6 @@ on:
     branches:
       - master
       - v2
-      - feature/34
 
 jobs:
   notification:
