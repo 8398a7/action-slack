@@ -4,6 +4,7 @@ on:
     branches:
       - master
       - v2
+      - feature/34
 
 jobs:
   notification:
@@ -37,6 +38,15 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_FOR_INTEGRATION_TEST }}
+      - name: Legacy Check
+        uses: 8398a7/action-slack@v2
+        with:
+          status: ${{ job.status }}
+          username: legacy user
+          icon_emoji: ':octocat:'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_LEGACY_WEBHOOK_URL_FOR_INTEGRATION_TEST }}
       - name: Custom Field Check
         uses: 8398a7/action-slack@v2
         with:
