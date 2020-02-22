@@ -13,6 +13,12 @@ export interface With {
   channel: string;
 }
 
+interface Field {
+  title: string;
+  value: string;
+  short: boolean;
+}
+
 const groupMention = ['here', 'channel'];
 
 export class Client {
@@ -23,10 +29,7 @@ export class Client {
   constructor(props: With, token?: string, webhookUrl?: string) {
     this.with = props;
 
-    if (props.status !== 'custom') {
-      if (token === undefined) {
-        throw new Error('Specify secrets.GITHUB_TOKEN');
-      }
+    if (token !== undefined) {
       this.github = new github.GitHub(token);
     }
 
@@ -90,36 +93,45 @@ export class Client {
     };
   }
 
-  private async fields() {
-    if (this.github === undefined) {
-      throw Error('Specify secrets.GITHUB_TOKEN');
-    }
+  private async fields(): Promise<Field[]> {
     const { sha } = github.context;
     const { owner, repo } = github.context.repo;
-    const commit = await this.github.repos.getCommit({ owner, repo, ref: sha });
-    const { author } = commit.data.commit;
 
-    return [
-      this.repo,
-      {
-        title: 'message',
-        value: commit.data.commit.message,
-        short: true,
-      },
-      this.commit,
-      {
-        title: 'author',
-        value: `${author.name}<${author.email}>`,
-        short: true,
-      },
-      this.action,
-      this.eventName,
-      this.ref,
-      this.workflow,
-    ];
+    const commit = await this.github?.repos.getCommit({
+      owner,
+      repo,
+      ref: sha,
+    });
+    const author = commit?.data.commit.author;
+
+    return this.filterField(
+      [
+        this.repo,
+        commit
+          ? {
+              title: 'message',
+              value: commit.data.commit.message,
+              short: true,
+            }
+          : undefined,
+        this.commit,
+        author
+          ? {
+              title: 'author',
+              value: `${author.name}<${author.email}>`,
+              short: true,
+            }
+          : undefined,
+        this.action,
+        this.eventName,
+        this.ref,
+        this.workflow,
+      ],
+      undefined,
+    );
   }
 
-  private get commit() {
+  private get commit(): Field {
     const { sha } = github.context;
     const { owner, repo } = github.context.repo;
 
@@ -130,7 +142,7 @@ export class Client {
     };
   }
 
-  private get repo() {
+  private get repo(): Field {
     const { owner, repo } = github.context.repo;
 
     return {
@@ -140,7 +152,7 @@ export class Client {
     };
   }
 
-  private get action() {
+  private get action(): Field {
     const { sha } = github.context;
     const { owner, repo } = github.context.repo;
 
@@ -151,7 +163,7 @@ export class Client {
     };
   }
 
-  private get eventName() {
+  private get eventName(): Field {
     return {
       title: 'eventName',
       value: github.context.eventName,
@@ -159,11 +171,11 @@ export class Client {
     };
   }
 
-  private get ref() {
+  private get ref(): Field {
     return { title: 'ref', value: github.context.ref, short: true };
   }
 
-  private get workflow() {
+  private get workflow(): Field {
     return { title: 'workflow', value: github.context.workflow, short: true };
   }
 
@@ -179,5 +191,15 @@ export class Client {
       return `${text} `;
     }
     return '';
+  }
+
+  private filterField<T extends Array<Field | undefined>, U extends undefined>(
+    array: T,
+    diff: U,
+  ) {
+    return array.filter(item => item !== diff) as Exclude<
+      T extends { [K in keyof T]: infer U } ? U : never,
+      U
+    >[];
   }
 }
