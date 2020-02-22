@@ -280,4 +280,24 @@ describe('8398a7/action-slack', () => {
     payload.attachments[0].color = 'danger';
     expect(await client.fail(msg)).toStrictEqual(payload);
   });
+
+  it('works without GITHUB_TOKEN', async () => {
+    const withParams: With = {
+      status: '',
+      mention: '',
+      author_name: '',
+      only_mention_fail: '',
+      username: '',
+      icon_emoji: '',
+      icon_url: '',
+      channel: '',
+    };
+    const client = new Client(withParams, undefined, '');
+    const payload = getTemplate(`${successMsg}\n`);
+    payload.attachments[0].color = 'good';
+    payload.attachments[0].fields = payload.attachments[0].fields.filter(
+      (field: any) => !['message', 'author'].includes(field.title),
+    );
+    expect(await client.success('')).toStrictEqual(payload);
+  });
 });

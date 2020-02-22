@@ -23,10 +23,7 @@ export class Client {
   constructor(props: With, token?: string, webhookUrl?: string) {
     this.with = props;
 
-    if (props.status !== 'custom') {
-      if (token === undefined) {
-        throw new Error('Specify secrets.GITHUB_TOKEN');
-      }
+    if (token !== undefined) {
       this.github = new github.GitHub(token);
     }
 
@@ -91,32 +88,38 @@ export class Client {
   }
 
   private async fields() {
-    if (this.github === undefined) {
-      throw Error('Specify secrets.GITHUB_TOKEN');
-    }
     const { sha } = github.context;
     const { owner, repo } = github.context.repo;
-    const commit = await this.github.repos.getCommit({ owner, repo, ref: sha });
-    const { author } = commit.data.commit;
+
+    const commit = await this.github?.repos.getCommit({
+      owner,
+      repo,
+      ref: sha,
+    });
+    const author = commit?.data.commit.author;
 
     return [
       this.repo,
-      {
-        title: 'message',
-        value: commit.data.commit.message,
-        short: true,
-      },
+      commit
+        ? {
+            title: 'message',
+            value: commit.data.commit.message,
+            short: true,
+          }
+        : undefined,
       this.commit,
-      {
-        title: 'author',
-        value: `${author.name}<${author.email}>`,
-        short: true,
-      },
+      author
+        ? {
+            title: 'author',
+            value: `${author.name}<${author.email}>`,
+            short: true,
+          }
+        : undefined,
       this.action,
       this.eventName,
       this.ref,
       this.workflow,
-    ];
+    ].filter(field => field !== undefined);
   }
 
   private get commit() {
