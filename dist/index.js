@@ -10327,10 +10327,7 @@ const groupMention = ['here', 'channel'];
 class Client {
     constructor(props, token, webhookUrl) {
         this.with = props;
-        if (props.status !== 'custom') {
-            if (token === undefined) {
-                throw new Error('Specify secrets.GITHUB_TOKEN');
-            }
+        if (token !== undefined) {
             this.github = new github.GitHub(token);
         }
         if (webhookUrl === undefined) {
@@ -10394,32 +10391,38 @@ class Client {
         });
     }
     fields() {
+        var _a, _b;
         return __awaiter(this, void 0, void 0, function* () {
-            if (this.github === undefined) {
-                throw Error('Specify secrets.GITHUB_TOKEN');
-            }
             const { sha } = github.context;
             const { owner, repo } = github.context.repo;
-            const commit = yield this.github.repos.getCommit({ owner, repo, ref: sha });
-            const { author } = commit.data.commit;
-            return [
+            const commit = yield ((_a = this.github) === null || _a === void 0 ? void 0 : _a.repos.getCommit({
+                owner,
+                repo,
+                ref: sha,
+            }));
+            const author = (_b = commit) === null || _b === void 0 ? void 0 : _b.data.commit.author;
+            return this.filterField([
                 this.repo,
-                {
-                    title: 'message',
-                    value: commit.data.commit.message,
-                    short: true,
-                },
+                commit
+                    ? {
+                        title: 'message',
+                        value: commit.data.commit.message,
+                        short: true,
+                    }
+                    : undefined,
                 this.commit,
-                {
-                    title: 'author',
-                    value: `${author.name}<${author.email}>`,
-                    short: true,
-                },
+                author
+                    ? {
+                        title: 'author',
+                        value: `${author.name}<${author.email}>`,
+                        short: true,
+                    }
+                    : undefined,
                 this.action,
                 this.eventName,
                 this.ref,
                 this.workflow,
-            ];
+            ], undefined);
         });
     }
     get commit() {
@@ -10474,6 +10477,9 @@ class Client {
             return `${text} `;
         }
         return '';
+    }
+    filterField(array, diff) {
+        return array.filter(item => item !== diff);
     }
 }
 exports.Client = Client;
