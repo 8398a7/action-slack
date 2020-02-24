@@ -13,10 +13,11 @@ inputs:
       Specify channel or here or `user_id`.
       refs: https://api.slack.com/reference/surfaces/formatting#mentioning-users
     default: ''
-  only_mention_fail:
+  if_mention:
     description: |
-      Specify channel or here or `user_id`.
-      refs: https://api.slack.com/reference/surfaces/formatting#mentioning-users
+      Specify success or failure or cancelled or custom.
+      Multiple statuses can be specified in csv format.
+      e.g. success,failure
     default: ''
   author_name:
     description: User name for slack notification.

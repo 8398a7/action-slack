@@ -2,11 +2,16 @@ import * as core from '@actions/core';
 import * as github from '@actions/github';
 import { IncomingWebhook, IncomingWebhookSendArguments } from '@slack/webhook';
 
+export const Success = 'success';
+export const Failure = 'failure';
+export const Cancelled = 'cancelled';
+export const Custom = 'custom';
+
 export interface With {
   status: string;
   mention: string;
   author_name: string;
-  only_mention_fail: string;
+  if_mention: string;
   username: string;
   icon_emoji: string;
   icon_url: string;
@@ -42,6 +47,9 @@ export class Client {
   async success(text: string) {
     const template = await this.payloadTemplate();
     template.attachments[0].color = 'good';
+    if (this.with.if_mention.includes(Success)) {
+      template.text += this.mentionText(this.with.mention);
+    }
     template.text += ':white_check_mark: Succeeded GitHub Actions\n';
     template.text += text;
 
@@ -51,7 +59,9 @@ export class Client {
   async fail(text: string) {
     const template = await this.payloadTemplate();
     template.attachments[0].color = 'danger';
-    template.text += this.mentionText(this.with.only_mention_fail);
+    if (this.with.if_mention.includes(Failure)) {
+      template.text += this.mentionText(this.with.mention);
+    }
     template.text += ':no_entry: Failed GitHub Actions\n';
     template.text += text;
 
@@ -61,6 +71,9 @@ export class Client {
   async cancel(text: string) {
     const template = await this.payloadTemplate();
     template.attachments[0].color = 'warning';
+    if (this.with.if_mention.includes(Cancelled)) {
+      template.text += this.mentionText(this.with.mention);
+    }
     template.text += ':warning: Canceled GitHub Actions\n';
     template.text += text;
 
@@ -74,7 +87,7 @@ export class Client {
   }
 
   private async payloadTemplate() {
-    const text = this.mentionText(this.with.mention);
+    const text = '';
     const { username, icon_emoji, icon_url, channel } = this.with;
 
     return {
