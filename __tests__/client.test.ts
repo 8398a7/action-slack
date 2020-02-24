@@ -3,7 +3,14 @@ process.env.GITHUB_SHA = 'b24f03a32e093fe8d55e23cfd0bb314069633b2f';
 process.env.GITHUB_REF = 'refs/heads/feature/19';
 process.env.GITHUB_EVENT_NAME = 'push';
 
-import { Client, With, Success, Failure, Cancelled } from '../src/client';
+import {
+  Client,
+  With,
+  Success,
+  Failure,
+  Cancelled,
+  Always,
+} from '../src/client';
 
 const fixedFields = () => {
   return [
@@ -172,6 +179,32 @@ describe('8398a7/action-slack', () => {
     const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
     const msg = 'mention test';
     const payload = getTemplate(`<!here> ${cancelMsg}\n${msg}`);
+    payload.attachments[0].color = 'warning';
+    expect(await client.cancel(msg)).toStrictEqual(payload);
+  });
+
+  it('can be mentioned on always', async () => {
+    const withParams: With = {
+      status: '',
+      mention: 'here',
+      author_name: '',
+      if_mention: Always,
+      username: '',
+      icon_emoji: '',
+      icon_url: '',
+      channel: '',
+    };
+    const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
+    const msg = 'mention test';
+    let payload = getTemplate(`<!here> ${successMsg}\n${msg}`);
+    payload.attachments[0].color = 'good';
+    expect(await client.success(msg)).toStrictEqual(payload);
+
+    payload = getTemplate(`<!here> ${failMsg}\n${msg}`);
+    payload.attachments[0].color = 'danger';
+    expect(await client.fail(msg)).toStrictEqual(payload);
+
+    payload = getTemplate(`<!here> ${cancelMsg}\n${msg}`);
     payload.attachments[0].color = 'warning';
     expect(await client.cancel(msg)).toStrictEqual(payload);
   });

@@ -3,9 +3,14 @@ import * as github from '@actions/github';
 import { IncomingWebhook, IncomingWebhookSendArguments } from '@slack/webhook';
 
 export const Success = 'success';
+type SuccessType = 'success';
 export const Failure = 'failure';
+type FailureType = 'failure';
 export const Cancelled = 'cancelled';
+type CancelledType = 'cancelled';
 export const Custom = 'custom';
+export const Always = 'always';
+type AlwaysType = 'always';
 
 export interface With {
   status: string;
@@ -47,9 +52,7 @@ export class Client {
   async success(text: string) {
     const template = await this.payloadTemplate();
     template.attachments[0].color = 'good';
-    if (this.with.if_mention.includes(Success)) {
-      template.text += this.mentionText(this.with.mention);
-    }
+    template.text += this.mentionText(this.with.mention, Success);
     template.text += ':white_check_mark: Succeeded GitHub Actions\n';
     template.text += text;
 
@@ -59,9 +62,7 @@ export class Client {
   async fail(text: string) {
     const template = await this.payloadTemplate();
     template.attachments[0].color = 'danger';
-    if (this.with.if_mention.includes(Failure)) {
-      template.text += this.mentionText(this.with.mention);
-    }
+    template.text += this.mentionText(this.with.mention, Failure);
     template.text += ':no_entry: Failed GitHub Actions\n';
     template.text += text;
 
@@ -71,9 +72,7 @@ export class Client {
   async cancel(text: string) {
     const template = await this.payloadTemplate();
     template.attachments[0].color = 'warning';
-    if (this.with.if_mention.includes(Cancelled)) {
-      template.text += this.mentionText(this.with.mention);
-    }
+    template.text += this.mentionText(this.with.mention, Cancelled);
     template.text += ':warning: Canceled GitHub Actions\n';
     template.text += text;
 
@@ -192,7 +191,17 @@ export class Client {
     return { title: 'workflow', value: github.context.workflow, short: true };
   }
 
-  private mentionText(mention: string) {
+  private mentionText(
+    mention: string,
+    status: SuccessType | FailureType | CancelledType | AlwaysType,
+  ) {
+    if (
+      !this.with.if_mention.includes(status) &&
+      this.with.if_mention !== Always
+    ) {
+      return '';
+    }
+
     const normalized = mention.replace(/ /g, '');
     if (groupMention.includes(normalized)) {
       return `<!${normalized}> `;
