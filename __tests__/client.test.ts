@@ -91,11 +91,17 @@ describe('8398a7/action-slack', () => {
       icon_url: '',
       channel: '',
     };
-    const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
+    let client = new Client(withParams, process.env.GITHUB_TOKEN, '');
     const msg = 'mention test';
-    const payload = getTemplate(`${successMsg}\n${msg}`);
+    let payload = getTemplate(`${successMsg}\n${msg}`);
     payload.attachments[0].color = 'good';
     expect(await client.success(msg)).toStrictEqual(payload);
+
+    withParams.mention = '';
+    client = new Client(withParams, process.env.GITHUB_TOKEN, '');
+    payload = getTemplate(`${failMsg}\n${msg}`);
+    payload.attachments[0].color = 'danger';
+    expect(await client.fail(msg)).toStrictEqual(payload);
   });
 
   it('matches some of the conditions of the mention', async () => {
