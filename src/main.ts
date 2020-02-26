@@ -1,14 +1,13 @@
 import * as core from '@actions/core';
-import { Client } from './client';
+import { Client, Success, Failure, Cancelled, Custom } from './client';
 import { IncomingWebhookSendArguments } from '@slack/webhook';
 
 async function run(): Promise<void> {
   try {
-    let status: string = core.getInput('status', { required: true });
-    status = status.toLowerCase();
+    const status = core.getInput('status', { required: true }).toLowerCase();
     const mention = core.getInput('mention');
     const author_name = core.getInput('author_name');
-    const only_mention_fail = core.getInput('only_mention_fail');
+    const if_mention = core.getInput('if_mention').toLowerCase();
     const text = core.getInput('text');
     const username = core.getInput('username');
     const icon_emoji = core.getInput('icon_emoji');
@@ -19,7 +18,7 @@ async function run(): Promise<void> {
     core.debug(`status: ${status}`);
     core.debug(`mention: ${mention}`);
     core.debug(`author_name: ${author_name}`);
-    core.debug(`only_mention_fail: ${only_mention_fail}`);
+    core.debug(`if_mention: ${if_mention}`);
     core.debug(`text: ${text}`);
     core.debug(`username: ${username}`);
     core.debug(`icon_emoji: ${icon_emoji}`);
@@ -32,7 +31,7 @@ async function run(): Promise<void> {
         status,
         mention,
         author_name,
-        only_mention_fail,
+        if_mention,
         username,
         icon_emoji,
         icon_url,
@@ -43,16 +42,16 @@ async function run(): Promise<void> {
     );
 
     switch (status) {
-      case 'success':
+      case Success:
         await client.send(await client.success(text));
         break;
-      case 'failure':
+      case Failure:
         await client.send(await client.fail(text));
         break;
-      case 'cancelled':
+      case Cancelled:
         await client.send(await client.cancel(text));
         break;
-      case 'custom':
+      case Custom:
         /* eslint-disable no-var */
         var payload: IncomingWebhookSendArguments = eval(
           `payload = ${rawPayload}`,

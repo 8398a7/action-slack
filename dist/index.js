@@ -3902,11 +3902,10 @@ const client_1 = __webpack_require__(718);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            let status = core.getInput('status', { required: true });
-            status = status.toLowerCase();
+            const status = core.getInput('status', { required: true }).toLowerCase();
             const mention = core.getInput('mention');
             const author_name = core.getInput('author_name');
-            const only_mention_fail = core.getInput('only_mention_fail');
+            const if_mention = core.getInput('if_mention').toLowerCase();
             const text = core.getInput('text');
             const username = core.getInput('username');
             const icon_emoji = core.getInput('icon_emoji');
@@ -3916,7 +3915,7 @@ function run() {
             core.debug(`status: ${status}`);
             core.debug(`mention: ${mention}`);
             core.debug(`author_name: ${author_name}`);
-            core.debug(`only_mention_fail: ${only_mention_fail}`);
+            core.debug(`if_mention: ${if_mention}`);
             core.debug(`text: ${text}`);
             core.debug(`username: ${username}`);
             core.debug(`icon_emoji: ${icon_emoji}`);
@@ -3927,23 +3926,23 @@ function run() {
                 status,
                 mention,
                 author_name,
-                only_mention_fail,
+                if_mention,
                 username,
                 icon_emoji,
                 icon_url,
                 channel,
             }, process.env.GITHUB_TOKEN, process.env.SLACK_WEBHOOK_URL);
             switch (status) {
-                case 'success':
+                case client_1.Success:
                     yield client.send(yield client.success(text));
                     break;
-                case 'failure':
+                case client_1.Failure:
                     yield client.send(yield client.fail(text));
                     break;
-                case 'cancelled':
+                case client_1.Cancelled:
                     yield client.send(yield client.cancel(text));
                     break;
-                case 'custom':
+                case client_1.Custom:
                     /* eslint-disable no-var */
                     var payload = eval(`payload = ${rawPayload}`);
                     /* eslint-enable */
@@ -10323,6 +10322,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const core = __importStar(__webpack_require__(470));
 const github = __importStar(__webpack_require__(469));
 const webhook_1 = __webpack_require__(736);
+exports.Success = 'success';
+exports.Failure = 'failure';
+exports.Cancelled = 'cancelled';
+exports.Custom = 'custom';
 const groupMention = ['here', 'channel'];
 class Client {
     constructor(props, token, webhookUrl) {
@@ -10339,6 +10342,9 @@ class Client {
         return __awaiter(this, void 0, void 0, function* () {
             const template = yield this.payloadTemplate();
             template.attachments[0].color = 'good';
+            if (this.with.if_mention.includes(exports.Success)) {
+                template.text += this.mentionText(this.with.mention);
+            }
             template.text += ':white_check_mark: Succeeded GitHub Actions\n';
             template.text += text;
             return template;
@@ -10348,7 +10354,9 @@ class Client {
         return __awaiter(this, void 0, void 0, function* () {
             const template = yield this.payloadTemplate();
             template.attachments[0].color = 'danger';
-            template.text += this.mentionText(this.with.only_mention_fail);
+            if (this.with.if_mention.includes(exports.Failure)) {
+                template.text += this.mentionText(this.with.mention);
+            }
             template.text += ':no_entry: Failed GitHub Actions\n';
             template.text += text;
             return template;
@@ -10358,6 +10366,9 @@ class Client {
         return __awaiter(this, void 0, void 0, function* () {
             const template = yield this.payloadTemplate();
             template.attachments[0].color = 'warning';
+            if (this.with.if_mention.includes(exports.Cancelled)) {
+                template.text += this.mentionText(this.with.mention);
+            }
             template.text += ':warning: Canceled GitHub Actions\n';
             template.text += text;
             return template;
@@ -10372,7 +10383,7 @@ class Client {
     }
     payloadTemplate() {
         return __awaiter(this, void 0, void 0, function* () {
-            const text = this.mentionText(this.with.mention);
+            const text = '';
             const { username, icon_emoji, icon_url, channel } = this.with;
             return {
                 text,

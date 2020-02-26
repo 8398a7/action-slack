@@ -12,30 +12,31 @@ inputs:
     description: |
       Specify channel or here or `user_id`.
       refs: https://api.slack.com/reference/surfaces/formatting#mentioning-users
-    default: ''
-  only_mention_fail:
+    default: ""
+  if_mention:
     description: |
-      Specify channel or here or `user_id`.
-      refs: https://api.slack.com/reference/surfaces/formatting#mentioning-users
-    default: ''
+      Specify success or failure or cancelled or custom or always.
+      Multiple statuses can be specified in csv format.
+      e.g. success,failure
+    default: ""
   author_name:
     description: User name for slack notification.
     default: 8398a7@action-slack
   text:
     description: You can overwrite text.
-    default: ''
+    default: ""
   username:
     description: override the legacy integration's default name.
-    default: ''
+    default: ""
   icon_emoji:
     description: an emoji code string to use in place of the default icon.
-    default: ''
+    default: ""
   icon_url:
     description: an icon image URL string to use in place of the default icon.
-    default: ''
+    default: ""
   channel:
     description: override the legacy integration's default channel. This should be an ID, such as C8UJ12P4P.
-    default: ''
+    default: ""
 runs:
   using: node12
   main: dist/index.js
