@@ -1,32 +1,31 @@
 ---
-title: "Introduction"
-metaTitle: "This is the title tag of this page"
-metaDescription: "This is the meta description"
+title: Introduction
+metaTitle: This is the title tag of this page
+metaDescription: This is the meta description
 ---
 
-Some introduction text. Lists out all the headings from h1 to h6. Easy to customise.
+![](https://github.com/8398a7/action-slack/workflows/build-test/badge.svg)
+![](https://github.com/8398a7/action-slack/workflows/Slack%20Mainline/badge.svg)
+![](https://img.shields.io/github/license/8398a7/action-slack?color=brightgreen)
+![](https://img.shields.io/github/v/release/8398a7/action-slack?color=brightgreen)
+[![codecov](https://codecov.io/gh/8398a7/action-slack/branch/master/graph/badge.svg)](https://codecov.io/gh/8398a7/action-slack)
 
-# Heading H1
-Heading 1 text
+You can notify slack of GitHub Actions.
 
-## Heading H2
-Heading 2 text
+# Usage
 
-### Heading H3
-Heading 3 text
+```yaml
+steps:
+  - uses: 8398a7/action-slack@v3
+    with:
+      status: ${{ job.status }}
+      author_name: Integration Test # default: 8398a7@action-slack
+      mention: here
+      if_mention: failure,cancelled
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # optional
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
+    if: always() # Pick up events even if the job fails or is canceled.
+```
 
-#### Heading H4
-Heading 4 text
-
-##### Heading H5
-Heading 5 text
-
-###### Heading H6
-Heading 6 text
-
-## Lists
-- Item 1
-- Item 2
-- Item 3
-- Item 4
-- Item 5
+<img width="480" alt="success" src="https://user-images.githubusercontent.com/8043276/64882150-7c942480-d697-11e9-9fc8-85e6c02f6aeb.png" />
