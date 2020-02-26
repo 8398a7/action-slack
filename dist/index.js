@@ -10326,6 +10326,7 @@ exports.Success = 'success';
 exports.Failure = 'failure';
 exports.Cancelled = 'cancelled';
 exports.Custom = 'custom';
+exports.Always = 'always';
 const groupMention = ['here', 'channel'];
 class Client {
     constructor(props, token, webhookUrl) {
@@ -10342,9 +10343,7 @@ class Client {
         return __awaiter(this, void 0, void 0, function* () {
             const template = yield this.payloadTemplate();
             template.attachments[0].color = 'good';
-            if (this.with.if_mention.includes(exports.Success)) {
-                template.text += this.mentionText(this.with.mention);
-            }
+            template.text += this.mentionText(this.with.mention, exports.Success);
             template.text += ':white_check_mark: Succeeded GitHub Actions\n';
             template.text += text;
             return template;
@@ -10354,9 +10353,7 @@ class Client {
         return __awaiter(this, void 0, void 0, function* () {
             const template = yield this.payloadTemplate();
             template.attachments[0].color = 'danger';
-            if (this.with.if_mention.includes(exports.Failure)) {
-                template.text += this.mentionText(this.with.mention);
-            }
+            template.text += this.mentionText(this.with.mention, exports.Failure);
             template.text += ':no_entry: Failed GitHub Actions\n';
             template.text += text;
             return template;
@@ -10366,9 +10363,7 @@ class Client {
         return __awaiter(this, void 0, void 0, function* () {
             const template = yield this.payloadTemplate();
             template.attachments[0].color = 'warning';
-            if (this.with.if_mention.includes(exports.Cancelled)) {
-                template.text += this.mentionText(this.with.mention);
-            }
+            template.text += this.mentionText(this.with.mention, exports.Cancelled);
             template.text += ':warning: Canceled GitHub Actions\n';
             template.text += text;
             return template;
@@ -10475,7 +10470,11 @@ class Client {
     get workflow() {
         return { title: 'workflow', value: github.context.workflow, short: true };
     }
-    mentionText(mention) {
+    mentionText(mention, status) {
+        if (!this.with.if_mention.includes(status) &&
+            this.with.if_mention !== exports.Always) {
+            return '';
+        }
         const normalized = mention.replace(/ /g, '');
         if (groupMention.includes(normalized)) {
             return `<!${normalized}> `;
