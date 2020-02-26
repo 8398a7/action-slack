@@ -1,7 +1,7 @@
 ---
 title: Next Action
-metaTitle: This is the title tag of this page
-metaDescription: This is the meta description
+metaTitle: Next Action | action-slack
+metaDescription: This explains the next action-slack move.
 ---
 
 # Selectable Field

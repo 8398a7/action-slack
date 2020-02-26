@@ -1,7 +1,7 @@
 ---
 title: With Parameters
-metaTitle: This is the title tag of this page
-metaDescription: This is the meta description
+metaTitle: With Parameters | action-slack
+metaDescription: This is a description of the parameters that can be specified in action-slack.
 ---
 
 This page describes the elements that can be specified in with.

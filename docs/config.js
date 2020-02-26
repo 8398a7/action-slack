@@ -23,13 +23,7 @@ const config = {
     },
   },
   sidebar: {
-    forcedNavOrder: [
-      '/introduction', // add trailing slash if enabled above
-      '/with',
-      '/advanced',
-      '/next_action',
-      '/contributors',
-    ],
+    forcedNavOrder: ['/with', '/advanced', '/next_action', '/contributors'],
     collapsedNav: [
       '/advanced', // add trailing slash if enabled above
     ],

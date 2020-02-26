@@ -1,7 +1,7 @@
 ---
 title: Usecase
-metaTitle: This is the title tag of this page
-metaDescription: This is the meta description
+metaTitle: Usecase | action-slack
+metaDescription: This describes the usecase of action-slack.
 ---
 
 usecase

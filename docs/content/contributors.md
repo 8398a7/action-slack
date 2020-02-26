@@ -1,7 +1,7 @@
 ---
 title: Contributors
 metaTitle: Contributors | action-slack
-metaDescription: This is the meta description
+metaDescription: This describes how to contribute to action-slack.
 ---
 
 ### Checkin
