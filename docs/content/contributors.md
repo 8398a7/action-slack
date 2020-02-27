@@ -1,4 +1,8 @@
-# Contributors
+---
+title: Contributors
+metaTitle: Contributors | action-slack
+metaDescription: This describes how to contribute to action-slack.
+---
 
 ### Checkin
 
