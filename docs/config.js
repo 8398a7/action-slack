@@ -1,14 +1,13 @@
 const config = {
   gatsby: {
     pathPrefix: '/',
-    siteUrl: 'http://localhost:8080',
+    siteUrl: 'https://action-slack.netlify.com',
     gaTrackingId: null,
     trailingSlash: false,
   },
   header: {
-    logo:
-      'https://graphql-engine-cdn.hasura.io/learn-hasura/assets/homepage/favicon.png',
-    logoLink: 'https://learn.hasura.io',
+    logo: '',
+    logoLink: '',
     title: 'action-slack',
     githubUrl: 'https://github.com/8398a7/action-slack',
     helpUrl: '',
@@ -23,9 +22,15 @@ const config = {
     },
   },
   sidebar: {
-    forcedNavOrder: ['/with', '/advanced', '/next_action', '/contributors'],
+    forcedNavOrder: [
+      '/usage',
+      '/with',
+      '/usecase',
+      '/next_action',
+      '/contributors',
+    ],
     collapsedNav: [
-      '/advanced', // add trailing slash if enabled above
+      '/usecase', // add trailing slash if enabled above
     ],
     links: [{ text: 'GitHub', link: 'https://github.com/8398a7/action-slack' }],
     frontline: false,
@@ -33,11 +38,11 @@ const config = {
   },
   siteMetadata: {
     title: 'action-slack | 8398a7',
-    description: 'Documentation built with mdx. Powering learn.hasura.io ',
+    description: '',
     ogImage: null,
     docsLocation:
       'https://github.com/8398a7/action-slack/tree/master/docs/content',
-    favicon: 'https://graphql-engine-cdn.hasura.io/img/hasura_icon_black.svg',
+    favicon: 'This is the action-slack documentation site.',
   },
   pwa: {
     enabled: false, // disabling this will also remove the existing service worker.
