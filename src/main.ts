@@ -13,7 +13,8 @@ async function run(): Promise<void> {
     const icon_emoji = core.getInput('icon_emoji');
     const icon_url = core.getInput('icon_url');
     const channel = core.getInput('channel');
-    const rawPayload = core.getInput('payload');
+    const custom_payload = core.getInput('custom_payload');
+    const payload = core.getInput('payload');
 
     core.debug(`status: ${status}`);
     core.debug(`mention: ${mention}`);
@@ -24,7 +25,8 @@ async function run(): Promise<void> {
     core.debug(`icon_emoji: ${icon_emoji}`);
     core.debug(`icon_url: ${icon_url}`);
     core.debug(`channel: ${channel}`);
-    core.debug(`rawPayload: ${rawPayload}`);
+    core.debug(`custom_payload: ${custom_payload}`);
+    core.debug(`payload: ${payload}`);
 
     const client = new Client(
       {
@@ -53,11 +55,11 @@ async function run(): Promise<void> {
         break;
       case Custom:
         /* eslint-disable no-var */
-        var payload: IncomingWebhookSendArguments = eval(
-          `payload = ${rawPayload}`,
+        var evalPayload: IncomingWebhookSendArguments = eval(
+          `eval_payload = ${custom_payload}`,
         );
         /* eslint-enable */
-        await client.send(payload);
+        await client.send(evalPayload);
         break;
       default:
         throw new Error(
