@@ -3911,7 +3911,8 @@ function run() {
             const icon_emoji = core.getInput('icon_emoji');
             const icon_url = core.getInput('icon_url');
             const channel = core.getInput('channel');
-            const rawPayload = core.getInput('payload');
+            const custom_payload = core.getInput('custom_payload');
+            const payload = core.getInput('payload');
             core.debug(`status: ${status}`);
             core.debug(`mention: ${mention}`);
             core.debug(`author_name: ${author_name}`);
@@ -3921,7 +3922,8 @@ function run() {
             core.debug(`icon_emoji: ${icon_emoji}`);
             core.debug(`icon_url: ${icon_url}`);
             core.debug(`channel: ${channel}`);
-            core.debug(`rawPayload: ${rawPayload}`);
+            core.debug(`custom_payload: ${custom_payload}`);
+            core.debug(`payload: ${payload}`);
             const client = new client_1.Client({
                 status,
                 mention,
@@ -3944,9 +3946,9 @@ function run() {
                     break;
                 case client_1.Custom:
                     /* eslint-disable no-var */
-                    var payload = eval(`payload = ${rawPayload}`);
+                    var evalPayload = eval(`eval_payload = ${custom_payload}`);
                     /* eslint-enable */
-                    yield client.send(payload);
+                    yield client.send(evalPayload);
                     break;
                 default:
                     throw new Error('You can specify success or failure or cancelled or custom');
