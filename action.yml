@@ -4,7 +4,7 @@ author: 8398a7
 inputs:
   status:
     description: Specify success or failure or cancelled or custom.
-  payload:
+  custom_payload:
     description: |
       json payload
       refs https://github.com/slackapi/node-slack-sdk/blob/v5.0.0/packages/webhook/src/IncomingWebhook.ts#L91-L106)

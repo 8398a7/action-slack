@@ -19,7 +19,7 @@ This page describes the elements that can be specified in with.
 |[icon_emoji](/with#icon_emoji)|[emoji code](https://www.webfx.com/tools/emoji-cheat-sheet/) string to use in place of the default icon.|`''`|
 |[icon_url](/with#icon_url)|icon image URL string to use in place of the default icon.|`''`|
 |[channel](/with#channel)|Override the legacy integration's default channel. This should be an ID, such as `C8UJ12P4P`.|`''`|
-|[payload](/with#payload)|e.g. `{"text": "Custom Field Check", obj: 'LOWER CASE'.toLowerCase()}`|`''`|
+|[custom_payload](/with#custom_payload)|e.g. `{"text": "Custom Field Check", obj: 'LOWER CASE'.toLowerCase()}`|`''`|
 
 # status
 
@@ -147,14 +147,14 @@ steps:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
 ```
 
-# payload
+# custom_payload
 
 ```yaml
 steps:
   - uses: 8398a7/action-slack@v3
     with:
       status: custom
-      payload: |
+      custom_payload: |
         {
           text: "Custom Field Check",
           attachments: [{
@@ -187,7 +187,7 @@ steps:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
 ```
 
-See here for `payload` reference or [Custom Notification](https://github.com/8398a7/action-slack#custom-notification).
+See here for `custom_payload` reference.
 
 - [Message Formatting](https://api.slack.com/docs/messages/builder)
   - Enter json and check in preview.
