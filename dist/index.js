@@ -3946,7 +3946,7 @@ function run() {
                     break;
                 case client_1.Custom:
                     /* eslint-disable no-var */
-                    var evalPayload = eval(`eval_payload = ${custom_payload}`);
+                    var evalPayload = eval(`evalPayload = ${custom_payload}`);
                     /* eslint-enable */
                     yield client.send(evalPayload);
                     break;

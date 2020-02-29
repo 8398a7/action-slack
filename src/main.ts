@@ -56,7 +56,7 @@ async function run(): Promise<void> {
       case Custom:
         /* eslint-disable no-var */
         var evalPayload: IncomingWebhookSendArguments = eval(
-          `eval_payload = ${custom_payload}`,
+          `evalPayload = ${custom_payload}`,
         );
         /* eslint-enable */
         await client.send(evalPayload);
