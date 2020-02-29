@@ -3902,52 +3902,53 @@ const client_1 = __webpack_require__(718);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            let status = core.getInput('status', { required: true });
-            status = status.toLowerCase();
+            const status = core.getInput('status', { required: true }).toLowerCase();
             const mention = core.getInput('mention');
             const author_name = core.getInput('author_name');
-            const only_mention_fail = core.getInput('only_mention_fail');
+            const if_mention = core.getInput('if_mention').toLowerCase();
             const text = core.getInput('text');
             const username = core.getInput('username');
             const icon_emoji = core.getInput('icon_emoji');
             const icon_url = core.getInput('icon_url');
             const channel = core.getInput('channel');
-            const rawPayload = core.getInput('payload');
+            const custom_payload = core.getInput('custom_payload');
+            const payload = core.getInput('payload');
             core.debug(`status: ${status}`);
             core.debug(`mention: ${mention}`);
             core.debug(`author_name: ${author_name}`);
-            core.debug(`only_mention_fail: ${only_mention_fail}`);
+            core.debug(`if_mention: ${if_mention}`);
             core.debug(`text: ${text}`);
             core.debug(`username: ${username}`);
             core.debug(`icon_emoji: ${icon_emoji}`);
             core.debug(`icon_url: ${icon_url}`);
             core.debug(`channel: ${channel}`);
-            core.debug(`rawPayload: ${rawPayload}`);
+            core.debug(`custom_payload: ${custom_payload}`);
+            core.debug(`payload: ${payload}`);
             const client = new client_1.Client({
                 status,
                 mention,
                 author_name,
-                only_mention_fail,
+                if_mention,
                 username,
                 icon_emoji,
                 icon_url,
                 channel,
             }, process.env.GITHUB_TOKEN, process.env.SLACK_WEBHOOK_URL);
             switch (status) {
-                case 'success':
+                case client_1.Success:
                     yield client.send(yield client.success(text));
                     break;
-                case 'failure':
+                case client_1.Failure:
                     yield client.send(yield client.fail(text));
                     break;
-                case 'cancelled':
+                case client_1.Cancelled:
                     yield client.send(yield client.cancel(text));
                     break;
-                case 'custom':
+                case client_1.Custom:
                     /* eslint-disable no-var */
-                    var payload = eval(`payload = ${rawPayload}`);
+                    var evalPayload = eval(`eval_payload = ${custom_payload}`);
                     /* eslint-enable */
-                    yield client.send(payload);
+                    yield client.send(evalPayload);
                     break;
                 default:
                     throw new Error('You can specify success or failure or cancelled or custom');
@@ -10323,14 +10324,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const core = __importStar(__webpack_require__(470));
 const github = __importStar(__webpack_require__(469));
 const webhook_1 = __webpack_require__(736);
+exports.Success = 'success';
+exports.Failure = 'failure';
+exports.Cancelled = 'cancelled';
+exports.Custom = 'custom';
+exports.Always = 'always';
 const groupMention = ['here', 'channel'];
 class Client {
     constructor(props, token, webhookUrl) {
         this.with = props;
-        if (props.status !== 'custom') {
-            if (token === undefined) {
-                throw new Error('Specify secrets.GITHUB_TOKEN');
-            }
+        if (token !== undefined) {
             this.github = new github.GitHub(token);
         }
         if (webhookUrl === undefined) {
@@ -10342,6 +10345,7 @@ class Client {
         return __awaiter(this, void 0, void 0, function* () {
             const template = yield this.payloadTemplate();
             template.attachments[0].color = 'good';
+            template.text += this.mentionText(this.with.mention, exports.Success);
             template.text += ':white_check_mark: Succeeded GitHub Actions\n';
             template.text += text;
             return template;
@@ -10351,7 +10355,7 @@ class Client {
         return __awaiter(this, void 0, void 0, function* () {
             const template = yield this.payloadTemplate();
             template.attachments[0].color = 'danger';
-            template.text += this.mentionText(this.with.only_mention_fail);
+            template.text += this.mentionText(this.with.mention, exports.Failure);
             template.text += ':no_entry: Failed GitHub Actions\n';
             template.text += text;
             return template;
@@ -10361,6 +10365,7 @@ class Client {
         return __awaiter(this, void 0, void 0, function* () {
             const template = yield this.payloadTemplate();
             template.attachments[0].color = 'warning';
+            template.text += this.mentionText(this.with.mention, exports.Cancelled);
             template.text += ':warning: Canceled GitHub Actions\n';
             template.text += text;
             return template;
@@ -10375,7 +10380,7 @@ class Client {
     }
     payloadTemplate() {
         return __awaiter(this, void 0, void 0, function* () {
-            const text = this.mentionText(this.with.mention);
+            const text = '';
             const { username, icon_emoji, icon_url, channel } = this.with;
             return {
                 text,
@@ -10394,32 +10399,38 @@ class Client {
         });
     }
     fields() {
+        var _a, _b;
         return __awaiter(this, void 0, void 0, function* () {
-            if (this.github === undefined) {
-                throw Error('Specify secrets.GITHUB_TOKEN');
-            }
             const { sha } = github.context;
             const { owner, repo } = github.context.repo;
-            const commit = yield this.github.repos.getCommit({ owner, repo, ref: sha });
-            const { author } = commit.data.commit;
-            return [
+            const commit = yield ((_a = this.github) === null || _a === void 0 ? void 0 : _a.repos.getCommit({
+                owner,
+                repo,
+                ref: sha,
+            }));
+            const author = (_b = commit) === null || _b === void 0 ? void 0 : _b.data.commit.author;
+            return this.filterField([
                 this.repo,
-                {
-                    title: 'message',
-                    value: commit.data.commit.message,
-                    short: true,
-                },
+                commit
+                    ? {
+                        title: 'message',
+                        value: commit.data.commit.message,
+                        short: true,
+                    }
+                    : undefined,
                 this.commit,
-                {
-                    title: 'author',
-                    value: `${author.name}<${author.email}>`,
-                    short: true,
-                },
+                author
+                    ? {
+                        title: 'author',
+                        value: `${author.name}<${author.email}>`,
+                        short: true,
+                    }
+                    : undefined,
                 this.action,
                 this.eventName,
                 this.ref,
                 this.workflow,
-            ];
+            ], undefined);
         });
     }
     get commit() {
@@ -10461,7 +10472,11 @@ class Client {
     get workflow() {
         return { title: 'workflow', value: github.context.workflow, short: true };
     }
-    mentionText(mention) {
+    mentionText(mention, status) {
+        if (!this.with.if_mention.includes(status) &&
+            this.with.if_mention !== exports.Always) {
+            return '';
+        }
         const normalized = mention.replace(/ /g, '');
         if (groupMention.includes(normalized)) {
             return `<!${normalized}> `;
@@ -10474,6 +10489,9 @@ class Client {
             return `${text} `;
         }
         return '';
+    }
+    filterField(array, diff) {
+        return array.filter(item => item !== diff);
     }
 }
 exports.Client = Client;

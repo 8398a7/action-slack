@@ -2,15 +2,31 @@ import * as core from '@actions/core';
 import * as github from '@actions/github';
 import { IncomingWebhook, IncomingWebhookSendArguments } from '@slack/webhook';
 
+export const Success = 'success';
+type SuccessType = 'success';
+export const Failure = 'failure';
+type FailureType = 'failure';
+export const Cancelled = 'cancelled';
+type CancelledType = 'cancelled';
+export const Custom = 'custom';
+export const Always = 'always';
+type AlwaysType = 'always';
+
 export interface With {
   status: string;
   mention: string;
   author_name: string;
-  only_mention_fail: string;
+  if_mention: string;
   username: string;
   icon_emoji: string;
   icon_url: string;
   channel: string;
+}
+
+interface Field {
+  title: string;
+  value: string;
+  short: boolean;
 }
 
 const groupMention = ['here', 'channel'];
@@ -23,10 +39,7 @@ export class Client {
   constructor(props: With, token?: string, webhookUrl?: string) {
     this.with = props;
 
-    if (props.status !== 'custom') {
-      if (token === undefined) {
-        throw new Error('Specify secrets.GITHUB_TOKEN');
-      }
+    if (token !== undefined) {
       this.github = new github.GitHub(token);
     }
 
@@ -39,6 +52,7 @@ export class Client {
   async success(text: string) {
     const template = await this.payloadTemplate();
     template.attachments[0].color = 'good';
+    template.text += this.mentionText(this.with.mention, Success);
     template.text += ':white_check_mark: Succeeded GitHub Actions\n';
     template.text += text;
 
@@ -48,7 +62,7 @@ export class Client {
   async fail(text: string) {
     const template = await this.payloadTemplate();
     template.attachments[0].color = 'danger';
-    template.text += this.mentionText(this.with.only_mention_fail);
+    template.text += this.mentionText(this.with.mention, Failure);
     template.text += ':no_entry: Failed GitHub Actions\n';
     template.text += text;
 
@@ -58,6 +72,7 @@ export class Client {
   async cancel(text: string) {
     const template = await this.payloadTemplate();
     template.attachments[0].color = 'warning';
+    template.text += this.mentionText(this.with.mention, Cancelled);
     template.text += ':warning: Canceled GitHub Actions\n';
     template.text += text;
 
@@ -71,7 +86,7 @@ export class Client {
   }
 
   private async payloadTemplate() {
-    const text = this.mentionText(this.with.mention);
+    const text = '';
     const { username, icon_emoji, icon_url, channel } = this.with;
 
     return {
@@ -90,36 +105,45 @@ export class Client {
     };
   }
 
-  private async fields() {
-    if (this.github === undefined) {
-      throw Error('Specify secrets.GITHUB_TOKEN');
-    }
+  private async fields(): Promise<Field[]> {
     const { sha } = github.context;
     const { owner, repo } = github.context.repo;
-    const commit = await this.github.repos.getCommit({ owner, repo, ref: sha });
-    const { author } = commit.data.commit;
 
-    return [
-      this.repo,
-      {
-        title: 'message',
-        value: commit.data.commit.message,
-        short: true,
-      },
-      this.commit,
-      {
-        title: 'author',
-        value: `${author.name}<${author.email}>`,
-        short: true,
-      },
-      this.action,
-      this.eventName,
-      this.ref,
-      this.workflow,
-    ];
+    const commit = await this.github?.repos.getCommit({
+      owner,
+      repo,
+      ref: sha,
+    });
+    const author = commit?.data.commit.author;
+
+    return this.filterField(
+      [
+        this.repo,
+        commit
+          ? {
+              title: 'message',
+              value: commit.data.commit.message,
+              short: true,
+            }
+          : undefined,
+        this.commit,
+        author
+          ? {
+              title: 'author',
+              value: `${author.name}<${author.email}>`,
+              short: true,
+            }
+          : undefined,
+        this.action,
+        this.eventName,
+        this.ref,
+        this.workflow,
+      ],
+      undefined,
+    );
   }
 
-  private get commit() {
+  private get commit(): Field {
     const { sha } = github.context;
     const { owner, repo } = github.context.repo;
 
@@ -130,7 +154,7 @@ export class Client {
     };
   }
 
-  private get repo() {
+  private get repo(): Field {
     const { owner, repo } = github.context.repo;
 
     return {
@@ -140,7 +164,7 @@ export class Client {
     };
   }
 
-  private get action() {
+  private get action(): Field {
     const { sha } = github.context;
     const { owner, repo } = github.context.repo;
 
@@ -151,7 +175,7 @@ export class Client {
     };
   }
 
-  private get eventName() {
+  private get eventName(): Field {
     return {
       title: 'eventName',
       value: github.context.eventName,
@@ -159,15 +183,25 @@ export class Client {
     };
   }
 
-  private get ref() {
+  private get ref(): Field {
     return { title: 'ref', value: github.context.ref, short: true };
   }
 
-  private get workflow() {
+  private get workflow(): Field {
     return { title: 'workflow', value: github.context.workflow, short: true };
   }
 
-  private mentionText(mention: string) {
+  private mentionText(
+    mention: string,
+    status: SuccessType | FailureType | CancelledType | AlwaysType,
+  ) {
+    if (
+      !this.with.if_mention.includes(status) &&
+      this.with.if_mention !== Always
+    ) {
+      return '';
+    }
+
     const normalized = mention.replace(/ /g, '');
     if (groupMention.includes(normalized)) {
       return `<!${normalized}> `;
@@ -179,5 +213,15 @@ export class Client {
       return `${text} `;
     }
     return '';
+  }
+
+  private filterField<T extends Array<Field | undefined>, U extends undefined>(
+    array: T,
+    diff: U,
+  ) {
+    return array.filter(item => item !== diff) as Exclude<
+      T extends { [K in keyof T]: infer U } ? U : never,
+      U
+    >[];
   }
 }

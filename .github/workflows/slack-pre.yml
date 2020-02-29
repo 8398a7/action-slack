@@ -8,29 +8,28 @@ jobs:
   notification:
     runs-on: ubuntu-latest
     steps:
-      - name: Succeeded Check
+      - name: Succeeded
         uses: 8398a7/action-slack@pre
         with:
           status: Success
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_FOR_INTEGRATION_TEST }}
-      - name: Failed Check
+      - name: Failed
         uses: 8398a7/action-slack@pre
         with:
           status: Failure
-          only_mention_fail: here
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_FOR_INTEGRATION_TEST }}
-      - name: Canceled Check
+      - name: Canceled
         uses: 8398a7/action-slack@pre
         with:
           status: Cancelled
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_FOR_INTEGRATION_TEST }}
-      - name: Legacy Check
+      - name: Legacy Webhook URL
         uses: 8398a7/action-slack@pre
         with:
           status: ${{ job.status }}
@@ -39,11 +38,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_LEGACY_WEBHOOK_URL_FOR_INTEGRATION_TEST }}
-      - name: Custom Field Check
+      - name: Custom Field
         uses: 8398a7/action-slack@pre
         with:
           status: custom
-          payload: |
+          custom_payload: |
             {
               text: "Custom Field Check",
               attachments: [{
@@ -74,8 +73,22 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_FOR_INTEGRATION_TEST }}
-      - name: Check
+      - name: No GITHUB_TOKEN
         uses: 8398a7/action-slack@pre
+        with:
+          status: ${{ job.status }}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_FOR_INTEGRATION_TEST }}
+      - name: if_mention
+        uses: 8398a7/action-slack@pre
+        with:
+          status: ${{ job.status }}
+          mention: here
+          if_mention: always
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_FOR_INTEGRATION_TEST }}
+      - uses: 8398a7/action-slack@pre
         with:
           status: ${{ job.status }}
         env:
