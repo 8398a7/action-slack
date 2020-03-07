@@ -74,7 +74,7 @@ beforeAll(() => {
   nock.disableNetConnect();
   nock('https://api.github.com')
       .persist()
-      .get('/repos/8398a7/action-slack/commits/b24f03a32e093fe8d55e23cfd0bb314069633b2f')
+      .get(`/repos/8398a7/action-slack/commits/${process.env.GITHUB_SHA}`)
       .reply(200, () => getApiFixture('repos.commits.get'));
 });
 afterAll(() => {
