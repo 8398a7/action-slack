@@ -456,4 +456,50 @@ describe('8398a7/action-slack', () => {
     payload.attachments[0].color = 'good';
     expect(await client.success(msg)).toStrictEqual(payload);
   });
+
+  it('throws error', () => {
+    const withParams: With = {
+      status: '',
+      mention: '',
+      author_name: '',
+      if_mention: '',
+      username: '',
+      icon_emoji: '',
+      icon_url: '',
+      channel: '',
+    };
+    expect(() => new Client(withParams, undefined)).toThrow('Specify secrets.SLACK_WEBHOOK_URL');
+  });
+
+  it('send payload', async() => {
+    const fn1 = jest.fn();
+    const fn2 = jest.fn();
+    const spy = jest.spyOn(require('@actions/core'), 'debug').mockImplementation(fn1);
+    nock('http://example.com')
+        .persist()
+        .post('/', body => {
+          fn2();
+          expect(body).toStrictEqual({"text": "payload"});
+          return body;
+        })
+        .reply(200, () => getApiFixture('repos.commits.get'));
+
+    const withParams: With = {
+      status: '',
+      mention: '',
+      author_name: '',
+      if_mention: '',
+      username: '',
+      icon_emoji: '',
+      icon_url: '',
+      channel: '',
+    };
+    const client = new Client(withParams, undefined, 'http://example.com');
+
+    await client.send('payload');
+
+    expect(fn1).toBeCalledTimes(2);
+    expect(fn2).toBeCalledTimes(1);
+    spy.mockRestore();
+  })
 });
