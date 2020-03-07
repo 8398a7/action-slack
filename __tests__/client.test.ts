@@ -33,7 +33,7 @@ const fixedFields = (sha?: string) => {
       short: true,
       title: 'commit',
       value:
-        `<https://github.com/8398a7/action-slack/commit/${sha ?? process.env.GITHUB_SHA}|${sha ?? process.env.GITHUB_SHA}>`,
+        `<https://github.com/8398a7/action-slack/commit/${process.env.GITHUB_SHA}|${process.env.GITHUB_SHA}>`,
     },
     { short: true, title: 'author', value: '839<8398a7@gmail.com>' },
     {
@@ -425,7 +425,7 @@ describe('8398a7/action-slack', () => {
   it('works on pull request event', async () => {
     nock('https://api.github.com')
         .persist()
-        .get('/repos/8398a7/action-slack/commits/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+        .get('/repos/8398a7/action-slack/commits/b24f03a32e093fe8d55e23cfd0bb314069633b2f')
         .reply(200, () => getApiFixture('repos.commits.get'));
 
     process.env.GITHUB_EVENT_NAME = 'pull_request';
