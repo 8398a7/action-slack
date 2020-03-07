@@ -30,12 +30,17 @@
   "license": "MIT",
   "dependencies": {
     "@actions/core": "^1.2.0",
+    "@actions/exec": "^1.0.2",
     "@actions/github": "^2.0.0",
-    "@slack/webhook": "^5.0.2"
+    "@actions/io": "^1.0.1",
+    "@actions/tool-cache": "^1.1.2",
+    "@slack/webhook": "^5.0.2",
+    "semver": "^7.1.1"
   },
   "devDependencies": {
     "@types/jest": "^24.0.25",
     "@types/node": "^13.1.1",
+    "@types/semver": "^6.2.0",
     "@typescript-eslint/parser": "^2.13.0",
     "@zeit/ncc": "^0.20.5",
     "codecov": "^3.6.5",
