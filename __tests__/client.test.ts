@@ -1,7 +1,12 @@
+import nock from 'nock';
+import { readFileSync } from 'fs';
+import { resolve } from 'path';
+
 process.env.GITHUB_WORKFLOW = 'PR Checks';
 process.env.GITHUB_SHA = 'b24f03a32e093fe8d55e23cfd0bb314069633b2f';
 process.env.GITHUB_REF = 'refs/heads/feature/19';
 process.env.GITHUB_EVENT_NAME = 'push';
+process.env.GITHUB_TOKEN = 'test-token';
 
 import {
   Client,
@@ -63,13 +68,25 @@ const getTemplate: any = (text: string) => {
 const successMsg = ':white_check_mark: Succeeded GitHub Actions';
 const cancelMsg = ':warning: Canceled GitHub Actions';
 const failMsg = ':no_entry: Failed GitHub Actions';
+const fixturesDir = resolve(__dirname, 'fixtures');
+
+const getApiFixture = (name: string): string => JSON.parse(readFileSync(resolve(fixturesDir, `${name}.json`)).toString());
 
 describe('8398a7/action-slack', () => {
   beforeEach(() => {
     process.env.GITHUB_REPOSITORY = '8398a7/action-slack';
+    nock.disableNetConnect();
+  });
+  afterEach(() => {
+    nock.cleanAll();
+    nock.enableNetConnect();
   });
 
   it('has no mention', async () => {
+    nock('https://api.github.com')
+        .persist()
+        .get('/repos/8398a7/action-slack/commits/b24f03a32e093fe8d55e23cfd0bb314069633b2f')
+        .reply(200, () => getApiFixture('repos.commits.get'));
     const withParams: With = {
       status: '',
       mention: '',
@@ -88,6 +105,10 @@ describe('8398a7/action-slack', () => {
   });
 
   it('does not match the requirements of the mention', async () => {
+    nock('https://api.github.com')
+        .persist()
+        .get('/repos/8398a7/action-slack/commits/b24f03a32e093fe8d55e23cfd0bb314069633b2f')
+        .reply(200, () => getApiFixture('repos.commits.get'));
     const withParams: With = {
       status: '',
       mention: 'here',
@@ -112,6 +133,10 @@ describe('8398a7/action-slack', () => {
   });
 
   it('matches some of the conditions of the mention', async () => {
+    nock('https://api.github.com')
+        .persist()
+        .get('/repos/8398a7/action-slack/commits/b24f03a32e093fe8d55e23cfd0bb314069633b2f')
+        .reply(200, () => getApiFixture('repos.commits.get'));
     const withParams: With = {
       status: '',
       mention: 'here',
@@ -130,6 +155,10 @@ describe('8398a7/action-slack', () => {
   });
 
   it('can be mentioned on success', async () => {
+    nock('https://api.github.com')
+        .persist()
+        .get('/repos/8398a7/action-slack/commits/b24f03a32e093fe8d55e23cfd0bb314069633b2f')
+        .reply(200, () => getApiFixture('repos.commits.get'));
     const withParams: With = {
       status: '',
       mention: 'here',
@@ -148,6 +177,10 @@ describe('8398a7/action-slack', () => {
   });
 
   it('can be mentioned on failure', async () => {
+    nock('https://api.github.com')
+        .persist()
+        .get('/repos/8398a7/action-slack/commits/b24f03a32e093fe8d55e23cfd0bb314069633b2f')
+        .reply(200, () => getApiFixture('repos.commits.get'));
     const withParams: With = {
       status: '',
       mention: 'here',
@@ -166,6 +199,10 @@ describe('8398a7/action-slack', () => {
   });
 
   it('can be mentioned on cancelled', async () => {
+    nock('https://api.github.com')
+        .persist()
+        .get('/repos/8398a7/action-slack/commits/b24f03a32e093fe8d55e23cfd0bb314069633b2f')
+        .reply(200, () => getApiFixture('repos.commits.get'));
     const withParams: With = {
       status: '',
       mention: 'here',
@@ -184,6 +221,10 @@ describe('8398a7/action-slack', () => {
   });
 
   it('can be mentioned on always', async () => {
+    nock('https://api.github.com')
+        .persist()
+        .get('/repos/8398a7/action-slack/commits/b24f03a32e093fe8d55e23cfd0bb314069633b2f')
+        .reply(200, () => getApiFixture('repos.commits.get'));
     const withParams: With = {
       status: '',
       mention: 'here',
@@ -210,6 +251,10 @@ describe('8398a7/action-slack', () => {
   });
 
   it('mentions one user', async () => {
+    nock('https://api.github.com')
+        .persist()
+        .get('/repos/8398a7/action-slack/commits/b24f03a32e093fe8d55e23cfd0bb314069633b2f')
+        .reply(200, () => getApiFixture('repos.commits.get'));
     const withParams: With = {
       status: '',
       mention: 'user_id',
@@ -228,6 +273,10 @@ describe('8398a7/action-slack', () => {
   });
 
   it('can be mentioned here', async () => {
+    nock('https://api.github.com')
+        .persist()
+        .get('/repos/8398a7/action-slack/commits/b24f03a32e093fe8d55e23cfd0bb314069633b2f')
+        .reply(200, () => getApiFixture('repos.commits.get'));
     const withParams: With = {
       status: '',
       mention: 'here',
@@ -246,6 +295,10 @@ describe('8398a7/action-slack', () => {
   });
 
   it('can be mentioned channel', async () => {
+    nock('https://api.github.com')
+        .persist()
+        .get('/repos/8398a7/action-slack/commits/b24f03a32e093fe8d55e23cfd0bb314069633b2f')
+        .reply(200, () => getApiFixture('repos.commits.get'));
     const withParams: With = {
       status: '',
       mention: 'channel',
@@ -264,6 +317,10 @@ describe('8398a7/action-slack', () => {
   });
 
   it('mentions multiple users', async () => {
+    nock('https://api.github.com')
+        .persist()
+        .get('/repos/8398a7/action-slack/commits/b24f03a32e093fe8d55e23cfd0bb314069633b2f')
+        .reply(200, () => getApiFixture('repos.commits.get'));
     const withParams: With = {
       status: '',
       mention: 'user_id,user_id2',
@@ -282,6 +339,10 @@ describe('8398a7/action-slack', () => {
   });
 
   it('removes csv space', async () => {
+    nock('https://api.github.com')
+        .persist()
+        .get('/repos/8398a7/action-slack/commits/b24f03a32e093fe8d55e23cfd0bb314069633b2f')
+        .reply(200, () => getApiFixture('repos.commits.get'));
     const withParams: With = {
       status: '',
       mention: 'user_id, user_id2',
@@ -301,6 +362,10 @@ describe('8398a7/action-slack', () => {
   });
 
   it('returns the expected template', async () => {
+    nock('https://api.github.com')
+        .persist()
+        .get('/repos/8398a7/action-slack/commits/b24f03a32e093fe8d55e23cfd0bb314069633b2f')
+        .reply(200, () => getApiFixture('repos.commits.get'));
     const withParams: With = {
       status: '',
       mention: '',
@@ -331,6 +396,10 @@ describe('8398a7/action-slack', () => {
   });
 
   it('works without GITHUB_TOKEN', async () => {
+    nock('https://api.github.com')
+        .persist()
+        .get('/repos/8398a7/action-slack/commits/b24f03a32e093fe8d55e23cfd0bb314069633b2f')
+        .reply(200, () => getApiFixture('repos.commits.get'));
     const withParams: With = {
       status: '',
       mention: '',
