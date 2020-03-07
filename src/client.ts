@@ -105,8 +105,12 @@ export class Client {
     };
   }
 
+  private getSha(): string {
+    return github.context.payload.pull_request?.head.sha ?? github.context.sha;
+  }
+
   private async fields(): Promise<Field[]> {
-    const { sha } = github.context;
+    const sha = this.getSha();
     const { owner, repo } = github.context.repo;
 
     const commit = await this.github?.repos.getCommit({
@@ -144,7 +148,7 @@ export class Client {
   }
 
   private get commit(): Field {
-    const { sha } = github.context;
+    const sha = this.getSha();
     const { owner, repo } = github.context.repo;
 
     return {
@@ -165,7 +169,7 @@ export class Client {
   }
 
   private get action(): Field {
-    const { sha } = github.context;
+    const sha = this.getSha();
     const { owner, repo } = github.context.repo;
 
     return {

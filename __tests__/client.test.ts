@@ -33,14 +33,14 @@ const fixedFields = () => {
       short: true,
       title: 'commit',
       value:
-        '<https://github.com/8398a7/action-slack/commit/b24f03a32e093fe8d55e23cfd0bb314069633b2f|b24f03a32e093fe8d55e23cfd0bb314069633b2f>',
+        `<https://github.com/8398a7/action-slack/commit/${process.env.GITHUB_SHA}|${process.env.GITHUB_SHA}>`,
     },
     { short: true, title: 'author', value: '839<8398a7@gmail.com>' },
     {
       short: true,
       title: 'action',
       value:
-        '<https://github.com/8398a7/action-slack/commit/b24f03a32e093fe8d55e23cfd0bb314069633b2f/checks|action>',
+        `<https://github.com/8398a7/action-slack/commit/${process.env.GITHUB_SHA}/checks|action>`,
     },
     { short: true, title: 'eventName', value: process.env.GITHUB_EVENT_NAME },
     { short: true, title: 'ref', value: process.env.GITHUB_REF },
@@ -75,6 +75,10 @@ const getApiFixture = (name: string): string => JSON.parse(readFileSync(resolve(
 describe('8398a7/action-slack', () => {
   beforeEach(() => {
     process.env.GITHUB_REPOSITORY = '8398a7/action-slack';
+    process.env.GITHUB_EVENT_NAME = 'push';
+    process.env.GITHUB_SHA = 'b24f03a32e093fe8d55e23cfd0bb314069633b2f';
+    const github = require('@actions/github');
+    github.context.payload = {};
     nock.disableNetConnect();
   });
   afterEach(() => {
@@ -417,5 +421,41 @@ describe('8398a7/action-slack', () => {
       (field: any) => !['message', 'author'].includes(field.title),
     );
     expect(await client.success('')).toStrictEqual(payload);
+  });
+
+  it('works on pull request event', async () => {
+    nock('https://api.github.com')
+        .persist()
+        .get('/repos/8398a7/action-slack/commits/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+        .reply(200, () => getApiFixture('repos.commits.get'));
+
+    process.env.GITHUB_EVENT_NAME = 'pull_request';
+    process.env.GITHUB_SHA = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
+    const github = require('@actions/github');
+    github.context.payload = {
+      'pull_request': {
+        number: 123,
+        head: {
+          sha: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+        }
+      }
+    };
+    github.context.eventName = 'pull_request';
+
+    const withParams: With = {
+      status: '',
+      mention: 'user_id',
+      author_name: '',
+      if_mention: Success,
+      username: '',
+      icon_emoji: '',
+      icon_url: '',
+      channel: '',
+    };
+    const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
+    const msg = 'mention test';
+    const payload = getTemplate(`<@user_id> ${successMsg}\n${msg}`);
+    payload.attachments[0].color = 'good';
+    expect(await client.success(msg)).toStrictEqual(payload);
   });
 });
