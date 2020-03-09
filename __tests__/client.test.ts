@@ -416,13 +416,11 @@ describe('8398a7/action-slack', () => {
   });
 
   it('send payload', async() => {
-    const fn1 = jest.fn();
-    const fn2 = jest.fn();
-    const spy = jest.spyOn(require('@actions/core'), 'debug').mockImplementation(fn1);
+    const fn = jest.fn();
+    jest.spyOn(require('@actions/core'), 'debug').mockImplementation(jest.fn());
     nock('http://example.com')
-        .persist()
         .post('/', body => {
-          fn2();
+          fn();
           expect(body).toStrictEqual({"text": "payload"});
           return body;
         })
@@ -442,8 +440,6 @@ describe('8398a7/action-slack', () => {
 
     await client.send('payload');
 
-    expect(fn1).toBeCalledTimes(2);
-    expect(fn2).toBeCalledTimes(1);
-    spy.mockRestore();
+    expect(fn).toBeCalledTimes(1);
   })
 });
