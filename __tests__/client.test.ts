@@ -374,12 +374,11 @@ describe('8398a7/action-slack', () => {
   it('works on pull request event', async () => {
     process.env.GITHUB_EVENT_NAME = 'pull_request';
     const github = require('@actions/github');
+    const sha = 'expected-sha-for-pull_request_event';
     github.context.payload = {
       'pull_request': {
         number: 123,
-        head: {
-          sha: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
-        }
+        head: { sha },
       }
     };
     github.context.eventName = 'pull_request';
@@ -396,7 +395,7 @@ describe('8398a7/action-slack', () => {
     };
     const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
     const msg = 'mention test';
-    const payload = getTemplate(`<@user_id> ${successMsg}\n${msg}`, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
+    const payload = getTemplate(`<@user_id> ${successMsg}\n${msg}`, sha);
     payload.attachments[0].color = 'good';
     expect(await client.success(msg)).toStrictEqual(payload);
   });
