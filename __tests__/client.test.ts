@@ -416,6 +416,7 @@ describe('8398a7/action-slack', () => {
 
   it('send payload', async() => {
     const fn = jest.fn();
+    // テストのログに表示されないようにログをモック
     jest.spyOn(require('@actions/core'), 'debug').mockImplementation(jest.fn());
     nock('http://example.com')
         .post('/', body => {
