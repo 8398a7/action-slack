@@ -420,9 +420,10 @@ describe('8398a7/action-slack', () => {
 
   it('send payload', async () => {
     const fn = jest.fn();
-    // テストのログに表示されないようにログをモック
+    // Mock logs so they don't show up in test logs.
     jest.spyOn(require('@actions/core'), 'debug').mockImplementation(jest.fn());
-    nock('http://example.com')
+    const mockSlackWebhookUrl = 'http://example.com';
+    nock(mockSlackWebhookUrl)
       .post('/', body => {
         fn();
         expect(body).toStrictEqual({ text: 'payload' });
@@ -440,7 +441,7 @@ describe('8398a7/action-slack', () => {
       icon_url: '',
       channel: '',
     };
-    const client = new Client(withParams, undefined, 'http://example.com');
+    const client = new Client(withParams, undefined, mockSlackWebhookUrl);
 
     await client.send('payload');
 
