@@ -1,7 +1,12 @@
+import nock from 'nock';
+import { readFileSync } from 'fs';
+import { resolve } from 'path';
+
 process.env.GITHUB_WORKFLOW = 'PR Checks';
 process.env.GITHUB_SHA = 'b24f03a32e093fe8d55e23cfd0bb314069633b2f';
 process.env.GITHUB_REF = 'refs/heads/feature/19';
 process.env.GITHUB_EVENT_NAME = 'push';
+process.env.GITHUB_TOKEN = 'test-token';
 
 import {
   Client,
@@ -12,7 +17,7 @@ import {
   Always,
 } from '../src/client';
 
-const fixedFields = () => {
+const fixedFields = (sha?: string) => {
   return [
     {
       short: true,
@@ -28,14 +33,14 @@ const fixedFields = () => {
       short: true,
       title: 'commit',
       value:
-        '<https://github.com/8398a7/action-slack/commit/b24f03a32e093fe8d55e23cfd0bb314069633b2f|b24f03a32e093fe8d55e23cfd0bb314069633b2f>',
+        `<https://github.com/8398a7/action-slack/commit/${process.env.GITHUB_SHA}|${process.env.GITHUB_SHA}>`,
     },
     { short: true, title: 'author', value: '839<8398a7@gmail.com>' },
     {
       short: true,
       title: 'action',
       value:
-        '<https://github.com/8398a7/action-slack/commit/b24f03a32e093fe8d55e23cfd0bb314069633b2f/checks|action>',
+        `<https://github.com/8398a7/action-slack/commit/${sha ?? process.env.GITHUB_SHA}/checks|action>`,
     },
     { short: true, title: 'eventName', value: process.env.GITHUB_EVENT_NAME },
     { short: true, title: 'ref', value: process.env.GITHUB_REF },
@@ -43,14 +48,14 @@ const fixedFields = () => {
   ];
 };
 
-const getTemplate: any = (text: string) => {
+const getTemplate: any = (text: string, sha?: string) => {
   return {
     text,
     attachments: [
       {
         author_name: '',
         color: '',
-        fields: fixedFields(),
+        fields: fixedFields(sha),
       },
     ],
     username: '',
@@ -63,10 +68,26 @@ const getTemplate: any = (text: string) => {
 const successMsg = ':white_check_mark: Succeeded GitHub Actions';
 const cancelMsg = ':warning: Canceled GitHub Actions';
 const failMsg = ':no_entry: Failed GitHub Actions';
+const getApiFixture = (name: string): string => JSON.parse(readFileSync(resolve(__dirname, 'fixtures', `${name}.json`)).toString());
+
+beforeAll(() => {
+  nock.disableNetConnect();
+  nock('https://api.github.com')
+      .persist()
+      .get(`/repos/8398a7/action-slack/commits/${process.env.GITHUB_SHA}`)
+      .reply(200, () => getApiFixture('repos.commits.get'));
+});
+afterAll(() => {
+  nock.cleanAll();
+  nock.enableNetConnect();
+});
 
 describe('8398a7/action-slack', () => {
   beforeEach(() => {
     process.env.GITHUB_REPOSITORY = '8398a7/action-slack';
+    process.env.GITHUB_EVENT_NAME = 'push';
+    const github = require('@actions/github');
+    github.context.payload = {};
   });
 
   it('has no mention', async () => {
@@ -349,4 +370,76 @@ describe('8398a7/action-slack', () => {
     );
     expect(await client.success('')).toStrictEqual(payload);
   });
+
+  it('works on pull request event', async () => {
+    process.env.GITHUB_EVENT_NAME = 'pull_request';
+    const github = require('@actions/github');
+    const sha = 'expected-sha-for-pull_request_event';
+    github.context.payload = {
+      'pull_request': {
+        number: 123,
+        head: { sha },
+      }
+    };
+    github.context.eventName = 'pull_request';
+
+    const withParams: With = {
+      status: '',
+      mention: 'user_id',
+      author_name: '',
+      if_mention: Success,
+      username: '',
+      icon_emoji: '',
+      icon_url: '',
+      channel: '',
+    };
+    const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
+    const msg = 'mention test';
+    const payload = getTemplate(`<@user_id> ${successMsg}\n${msg}`, sha);
+    payload.attachments[0].color = 'good';
+    expect(await client.success(msg)).toStrictEqual(payload);
+  });
+
+  it('throws error', () => {
+    const withParams: With = {
+      status: '',
+      mention: '',
+      author_name: '',
+      if_mention: '',
+      username: '',
+      icon_emoji: '',
+      icon_url: '',
+      channel: '',
+    };
+    expect(() => new Client(withParams, undefined)).toThrow('Specify secrets.SLACK_WEBHOOK_URL');
+  });
+
+  it('send payload', async() => {
+    const fn = jest.fn();
+    // テストのログに表示されないようにログをモック
+    jest.spyOn(require('@actions/core'), 'debug').mockImplementation(jest.fn());
+    nock('http://example.com')
+        .post('/', body => {
+          fn();
+          expect(body).toStrictEqual({"text": "payload"});
+          return body;
+        })
+        .reply(200, () => getApiFixture('repos.commits.get'));
+
+    const withParams: With = {
+      status: '',
+      mention: '',
+      author_name: '',
+      if_mention: '',
+      username: '',
+      icon_emoji: '',
+      icon_url: '',
+      channel: '',
+    };
+    const client = new Client(withParams, undefined, 'http://example.com');
+
+    await client.send('payload');
+
+    expect(fn).toBeCalledTimes(1);
+  })
 });

@@ -165,7 +165,7 @@ export class Client {
   }
 
   private get action(): Field {
-    const { sha } = github.context;
+    const sha = github.context.payload.pull_request?.head.sha ?? github.context.sha;
     const { owner, repo } = github.context.repo;
 
     return {
