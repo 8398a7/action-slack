@@ -43,7 +43,10 @@ Corresponding types are as follows.
 
 - repo
 - commit
+- message
+  - required GITHUB_TOKEN
 - author
+  - required GITHUB_TOKEN
 - action
 - eventName
 - ref
