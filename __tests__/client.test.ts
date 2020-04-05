@@ -52,8 +52,9 @@ const action = (sha?: string): Field => {
   return {
     short: true,
     title: 'action',
-    value: `<https://github.com/8398a7/action-slack/commit/${sha ??
-      process.env.GITHUB_SHA}/checks|action>`,
+    value: `<https://github.com/8398a7/action-slack/commit/${
+      sha ?? process.env.GITHUB_SHA
+    }/checks|action>`,
   };
 };
 
