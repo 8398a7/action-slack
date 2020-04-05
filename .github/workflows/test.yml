@@ -17,7 +17,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-      - uses: 8398a7/action-slack@v2
+      - uses: 8398a7/action-slack@v3
         with:
           status: ${{ job.status }}
         env:
