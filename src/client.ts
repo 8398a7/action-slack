@@ -39,6 +39,7 @@ export class Client {
 
   constructor(props: With, token?: string, webhookUrl?: string) {
     this.with = props;
+    if (this.with.fields === '') this.with.fields = 'repo,commit';
 
     if (token !== undefined) {
       this.github = new github.GitHub(token);
@@ -174,7 +175,10 @@ export class Client {
 
     return {
       title: 'commit',
-      value: `<https://github.com/${owner}/${repo}/commit/${sha}|${sha}>`,
+      value: `<https://github.com/${owner}/${repo}/commit/${sha}|${sha.slice(
+        0,
+        8,
+      )}>`,
       short: true,
     };
   }
