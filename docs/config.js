@@ -25,12 +25,13 @@ const config = {
     forcedNavOrder: [
       '/usage',
       '/with',
+      '/migration',
       '/usecase',
-      '/next_action',
       '/contributors',
     ],
     collapsedNav: [
       '/usecase', // add trailing slash if enabled above
+      '/migration',
     ],
     links: [{ text: 'GitHub', link: 'https://github.com/8398a7/action-slack' }],
     frontline: false,
