@@ -4,45 +4,56 @@ author: 8398a7
 inputs:
   status:
     description: Specify success or failure or cancelled or custom.
+    required: true
   fields:
     description: |
       You can choose the items you want to add to the fields at the time of notification.
       If you have more than one, please enter it in csv format.
       e.g. commit,repo
     default: ""
+    required: false
   custom_payload:
     description: |
       json payload
       refs https://github.com/slackapi/node-slack-sdk/blob/v5.0.0/packages/webhook/src/IncomingWebhook.ts#L91-L106)
+    required: false
   mention:
     description: |
       Specify channel or here or `user_id`.
       refs: https://api.slack.com/reference/surfaces/formatting#mentioning-users
     default: ""
+    required: false
   if_mention:
     description: |
       Specify success or failure or cancelled or custom or always.
       Multiple statuses can be specified in csv format.
       e.g. success,failure
     default: ""
+    required: false
   author_name:
     description: User name for slack notification.
     default: 8398a7@action-slack
+    required: false
   text:
     description: You can overwrite text.
     default: ""
+    required: false
   username:
     description: override the legacy integration's default name.
     default: ""
+    required: false
   icon_emoji:
     description: an emoji code string to use in place of the default icon.
     default: ""
+    required: false
   icon_url:
     description: an icon image URL string to use in place of the default icon.
     default: ""
+    required: false
   channel:
     description: override the legacy integration's default channel. This should be an ID, such as C8UJ12P4P.
     default: ""
+    required: false
 runs:
   using: node12
   main: dist/index.js
