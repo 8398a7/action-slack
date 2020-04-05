@@ -136,6 +136,26 @@ describe('8398a7/action-slack', () => {
     github.context.payload = {};
   });
 
+  describe('fields', () => {
+    it('is full fields', async () => {
+      const withParams: With = {
+        status: '',
+        mention: '',
+        author_name: '',
+        if_mention: '',
+        username: '',
+        icon_emoji: '',
+        icon_url: '',
+        channel: '',
+        fields: 'repo,message,commit,author,action,eventName,ref,workflow',
+      };
+      const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
+      const payload = getTemplate(client, `${successMsg}\n`);
+      payload.attachments[0].color = 'good';
+      expect(await client.success('')).toStrictEqual(payload);
+    });
+  });
+
   describe('text is not specified', () => {
     it('is success', async () => {
       const withParams: With = {
@@ -474,7 +494,7 @@ describe('8398a7/action-slack', () => {
       icon_emoji: '',
       icon_url: '',
       channel: '',
-      fields: '',
+      fields: 'message,author',
     };
     const client = new Client(withParams, undefined, '');
     const payload = getTemplate(client, `${successMsg}\n`);
@@ -513,7 +533,7 @@ describe('8398a7/action-slack', () => {
         icon_emoji: '',
         icon_url: '',
         channel: '',
-        fields: '',
+        fields: 'action',
       };
       const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
       const msg = 'mention test';
