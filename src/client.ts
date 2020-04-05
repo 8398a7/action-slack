@@ -21,6 +21,7 @@ export interface With {
   icon_emoji: string;
   icon_url: string;
   channel: string;
+  fields: string;
 }
 
 interface Field {
@@ -125,7 +126,7 @@ export class Client {
     return this.filterField(
       [
         this.repo,
-        commit
+        commit && this.includesField('message')
           ? {
               title: 'message',
               value: commit.data.commit.message,
@@ -133,7 +134,7 @@ export class Client {
             }
           : undefined,
         this.commit,
-        author
+        author && this.includesField('author')
           ? {
               title: 'author',
               value: `${author.name}<${author.email}>`,
@@ -149,7 +150,9 @@ export class Client {
     );
   }
 
-  private get commit(): Field {
+  private get commit(): Field | undefined {
+    if (!this.includesField('commit')) return undefined;
+
     const { sha } = github.context;
     const { owner, repo } = github.context.repo;
 
@@ -160,7 +163,9 @@ export class Client {
     };
   }
 
-  private get repo(): Field {
+  private get repo(): Field | undefined {
+    if (!this.includesField('repo')) return undefined;
+
     const { owner, repo } = github.context.repo;
 
     return {
@@ -170,7 +175,9 @@ export class Client {
     };
   }
 
-  private get action(): Field {
+  private get action(): Field | undefined {
+    if (!this.includesField('action')) return undefined;
+
     const sha =
       github.context.payload.pull_request?.head.sha ?? github.context.sha;
     const { owner, repo } = github.context.repo;
@@ -182,7 +189,9 @@ export class Client {
     };
   }
 
-  private get eventName(): Field {
+  private get eventName(): Field | undefined {
+    if (!this.includesField('eventName')) return undefined;
+
     return {
       title: 'eventName',
       value: github.context.eventName,
@@ -190,11 +199,15 @@ export class Client {
     };
   }
 
-  private get ref(): Field {
+  private get ref(): Field | undefined {
+    if (!this.includesField('ref')) return undefined;
+
     return { title: 'ref', value: github.context.ref, short: true };
   }
 
-  private get workflow(): Field {
+  private get workflow(): Field | undefined {
+    if (!this.includesField('workflow')) return undefined;
+
     return { title: 'workflow', value: github.context.workflow, short: true };
   }
 
@@ -234,5 +247,11 @@ export class Client {
 
   private insertText(defaultText: string, text: string) {
     return text === '' ? defaultText : text;
+  }
+
+  private includesField(field: string) {
+    const { fields } = this.with;
+    const normalized = fields.replace(/ /g, '').split(',');
+    return normalized.includes(field);
   }
 }
