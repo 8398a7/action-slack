@@ -3976,6 +3976,7 @@ function run() {
             const channel = core.getInput('channel');
             const custom_payload = core.getInput('custom_payload');
             const payload = core.getInput('payload');
+            const fields = core.getInput('fields');
             core.debug(`status: ${status}`);
             core.debug(`mention: ${mention}`);
             core.debug(`author_name: ${author_name}`);
@@ -3996,6 +3997,7 @@ function run() {
                 icon_emoji,
                 icon_url,
                 channel,
+                fields,
             }, process.env.GITHUB_TOKEN, process.env.SLACK_WEBHOOK_URL);
             switch (status) {
                 case client_1.Success:
@@ -10487,6 +10489,14 @@ class Client {
             core.debug('send message');
         });
     }
+    includesField(field) {
+        const { fields } = this.with;
+        const normalized = fields.replace(/ /g, '').split(',');
+        return normalized.includes(field);
+    }
+    filterField(array, diff) {
+        return array.filter(item => item !== diff);
+    }
     payloadTemplate() {
         return __awaiter(this, void 0, void 0, function* () {
             const text = '';
@@ -10520,7 +10530,7 @@ class Client {
             const author = (_b = commit) === null || _b === void 0 ? void 0 : _b.data.commit.author;
             return this.filterField([
                 this.repo,
-                commit
+                commit && this.includesField('message')
                     ? {
                         title: 'message',
                         value: commit.data.commit.message,
@@ -10528,7 +10538,7 @@ class Client {
                     }
                     : undefined,
                 this.commit,
-                author
+                author && this.includesField('author')
                     ? {
                         title: 'author',
                         value: `${author.name}<${author.email}>`,
@@ -10543,6 +10553,8 @@ class Client {
         });
     }
     get commit() {
+        if (!this.includesField('commit'))
+            return undefined;
         const { sha } = github.context;
         const { owner, repo } = github.context.repo;
         return {
@@ -10552,6 +10564,8 @@ class Client {
         };
     }
     get repo() {
+        if (!this.includesField('repo'))
+            return undefined;
         const { owner, repo } = github.context.repo;
         return {
             title: 'repo',
@@ -10561,6 +10575,8 @@ class Client {
     }
     get action() {
         var _a, _b;
+        if (!this.includesField('action'))
+            return undefined;
         const sha = (_b = (_a = github.context.payload.pull_request) === null || _a === void 0 ? void 0 : _a.head.sha, (_b !== null && _b !== void 0 ? _b : github.context.sha));
         const { owner, repo } = github.context.repo;
         return {
@@ -10570,6 +10586,8 @@ class Client {
         };
     }
     get eventName() {
+        if (!this.includesField('eventName'))
+            return undefined;
         return {
             title: 'eventName',
             value: github.context.eventName,
@@ -10577,9 +10595,13 @@ class Client {
         };
     }
     get ref() {
+        if (!this.includesField('ref'))
+            return undefined;
         return { title: 'ref', value: github.context.ref, short: true };
     }
     get workflow() {
+        if (!this.includesField('workflow'))
+            return undefined;
         return { title: 'workflow', value: github.context.workflow, short: true };
     }
     mentionText(mention, status) {
@@ -10599,9 +10621,6 @@ class Client {
             return `${text} `;
         }
         return '';
-    }
-    filterField(array, diff) {
-        return array.filter(item => item !== diff);
     }
     insertText(defaultText, text) {
         return text === '' ? defaultText : text;
