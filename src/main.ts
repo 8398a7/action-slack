@@ -28,6 +28,7 @@ async function run(): Promise<void> {
     core.debug(`channel: ${channel}`);
     core.debug(`custom_payload: ${custom_payload}`);
     core.debug(`payload: ${payload}`);
+    core.debug(`fields: ${fields}`);
 
     const client = new Client(
       {

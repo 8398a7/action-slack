@@ -39,6 +39,7 @@ export class Client {
 
   constructor(props: With, token?: string, webhookUrl?: string) {
     this.with = props;
+    if (this.with.fields === '') this.with.fields = 'repo,commit';
 
     if (token !== undefined) {
       this.github = new github.GitHub(token);
