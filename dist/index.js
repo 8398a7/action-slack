@@ -10458,8 +10458,7 @@ class Client {
             const template = yield this.payloadTemplate();
             template.attachments[0].color = 'good';
             template.text += this.mentionText(this.with.mention, exports.Success);
-            template.text += ':white_check_mark: Succeeded GitHub Actions\n';
-            template.text += text;
+            template.text += this.insertText(':white_check_mark: Succeeded GitHub Actions\n', text);
             return template;
         });
     }
@@ -10468,8 +10467,7 @@ class Client {
             const template = yield this.payloadTemplate();
             template.attachments[0].color = 'danger';
             template.text += this.mentionText(this.with.mention, exports.Failure);
-            template.text += ':no_entry: Failed GitHub Actions\n';
-            template.text += text;
+            template.text += this.insertText(':no_entry: Failed GitHub Actions\n', text);
             return template;
         });
     }
@@ -10478,8 +10476,7 @@ class Client {
             const template = yield this.payloadTemplate();
             template.attachments[0].color = 'warning';
             template.text += this.mentionText(this.with.mention, exports.Cancelled);
-            template.text += ':warning: Canceled GitHub Actions\n';
-            template.text += text;
+            template.text += this.insertText(':warning: Canceled GitHub Actions\n', text);
             return template;
         });
     }
@@ -10605,6 +10602,9 @@ class Client {
     }
     filterField(array, diff) {
         return array.filter(item => item !== diff);
+    }
+    insertText(defaultText, text) {
+        return text === '' ? defaultText : text;
     }
 }
 exports.Client = Client;
