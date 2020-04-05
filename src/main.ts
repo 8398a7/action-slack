@@ -15,6 +15,7 @@ async function run(): Promise<void> {
     const channel = core.getInput('channel');
     const custom_payload = core.getInput('custom_payload');
     const payload = core.getInput('payload');
+    const fields = core.getInput('fields');
 
     core.debug(`status: ${status}`);
     core.debug(`mention: ${mention}`);
@@ -38,6 +39,7 @@ async function run(): Promise<void> {
         icon_emoji,
         icon_url,
         channel,
+        fields,
       },
       process.env.GITHUB_TOKEN,
       process.env.SLACK_WEBHOOK_URL,
