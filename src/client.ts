@@ -53,8 +53,10 @@ export class Client {
     const template = await this.payloadTemplate();
     template.attachments[0].color = 'good';
     template.text += this.mentionText(this.with.mention, Success);
-    template.text += ':white_check_mark: Succeeded GitHub Actions\n';
-    template.text += text;
+    template.text += this.insertText(
+      ':white_check_mark: Succeeded GitHub Actions\n',
+      text,
+    );
 
     return template;
   }
@@ -63,8 +65,10 @@ export class Client {
     const template = await this.payloadTemplate();
     template.attachments[0].color = 'danger';
     template.text += this.mentionText(this.with.mention, Failure);
-    template.text += ':no_entry: Failed GitHub Actions\n';
-    template.text += text;
+    template.text += this.insertText(
+      ':no_entry: Failed GitHub Actions\n',
+      text,
+    );
 
     return template;
   }
@@ -73,8 +77,10 @@ export class Client {
     const template = await this.payloadTemplate();
     template.attachments[0].color = 'warning';
     template.text += this.mentionText(this.with.mention, Cancelled);
-    template.text += ':warning: Canceled GitHub Actions\n';
-    template.text += text;
+    template.text += this.insertText(
+      ':warning: Canceled GitHub Actions\n',
+      text,
+    );
 
     return template;
   }
@@ -224,5 +230,9 @@ export class Client {
       T extends { [K in keyof T]: infer U } ? U : never,
       U
     >[];
+  }
+
+  private insertText(defaultText: string, text: string) {
+    return text === '' ? defaultText : text;
   }
 }
