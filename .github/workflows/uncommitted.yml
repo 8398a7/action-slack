@@ -3,8 +3,7 @@ on:
   push:
     branches:
       - pre
-      - master
-      - 'v*'
+      - "v*"
 
 jobs:
   uncommitted:
