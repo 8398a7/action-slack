@@ -24,7 +24,7 @@ export interface With {
   fields: string;
 }
 
-interface Field {
+export interface Field {
   title: string;
   value: string;
   short: boolean;
@@ -90,6 +90,22 @@ export class Client {
     core.debug(JSON.stringify(github.context, null, 2));
     await this.webhook.send(payload);
     core.debug('send message');
+  }
+
+  includesField(field: string) {
+    const { fields } = this.with;
+    const normalized = fields.replace(/ /g, '').split(',');
+    return normalized.includes(field);
+  }
+
+  filterField<T extends Array<Field | undefined>, U extends undefined>(
+    array: T,
+    diff: U,
+  ) {
+    return array.filter(item => item !== diff) as Exclude<
+      T extends { [K in keyof T]: infer U } ? U : never,
+      U
+    >[];
   }
 
   private async payloadTemplate() {
@@ -235,23 +251,7 @@ export class Client {
     return '';
   }
 
-  private filterField<T extends Array<Field | undefined>, U extends undefined>(
-    array: T,
-    diff: U,
-  ) {
-    return array.filter(item => item !== diff) as Exclude<
-      T extends { [K in keyof T]: infer U } ? U : never,
-      U
-    >[];
-  }
-
   private insertText(defaultText: string, text: string) {
     return text === '' ? defaultText : text;
-  }
-
-  private includesField(field: string) {
-    const { fields } = this.with;
-    const normalized = fields.replace(/ /g, '').split(',');
-    return normalized.includes(field);
   }
 }
