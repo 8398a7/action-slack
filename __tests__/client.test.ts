@@ -38,7 +38,9 @@ const commit = (): Field => {
   return {
     short: true,
     title: 'commit',
-    value: `<https://github.com/8398a7/action-slack/commit/${process.env.GITHUB_SHA}|${process.env.GITHUB_SHA}>`,
+    value: `<https://github.com/8398a7/action-slack/commit/${
+      process.env.GITHUB_SHA
+    }|${process.env.GITHUB_SHA?.slice(0, 8)}>`,
   };
 };
 
