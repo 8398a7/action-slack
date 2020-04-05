@@ -27,7 +27,6 @@ const config = {
       '/with',
       '/migration',
       '/usecase',
-      '/next_action',
       '/contributors',
     ],
     collapsedNav: [
