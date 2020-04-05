@@ -11,7 +11,7 @@ This page describes the elements that can be specified in with.
 |key|value|default|
 |---|---|---|
 |[status](/with#status)|`'success'` or `'failure'` or `'cancelled'` or `'custom'`|`''`|
-|[fields](/with#fields)|You can choose the items you want to add to the fields at the time of notification.|`''`|
+|[fields](/with#fields)|You can choose the items you want to add to the fields at the time of notification.|`'repo,commit'`|
 |[text](/with#text)|Specify the text you want to add.|`''`|
 |[author_name](/with#author_name)|It can be overwritten by specifying. The job name is recommend.|`'8398a7@action-slack'`|
 |[mention](/with#mention)|`'here'` or `'channel'` or [user_id](https://api.slack.com/reference/surfaces/formatting#mentioning-users)|`''`|
@@ -53,7 +53,7 @@ Corresponding types are as follows.
 steps:
   - uses: 8398a7/action-slack@v3
     with:
-      fields: commit,repo
+      fields: repo,commit
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # optional
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
