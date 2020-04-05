@@ -3988,6 +3988,7 @@ function run() {
             core.debug(`channel: ${channel}`);
             core.debug(`custom_payload: ${custom_payload}`);
             core.debug(`payload: ${payload}`);
+            core.debug(`fields: ${fields}`);
             const client = new client_1.Client({
                 status,
                 mention,
@@ -10447,6 +10448,8 @@ const groupMention = ['here', 'channel'];
 class Client {
     constructor(props, token, webhookUrl) {
         this.with = props;
+        if (this.with.fields === '')
+            this.with.fields = 'repo,commit';
         if (token !== undefined) {
             this.github = new github.GitHub(token);
         }
@@ -10559,7 +10562,7 @@ class Client {
         const { owner, repo } = github.context.repo;
         return {
             title: 'commit',
-            value: `<https://github.com/${owner}/${repo}/commit/${sha}|${sha}>`,
+            value: `<https://github.com/${owner}/${repo}/commit/${sha}|${sha.slice(0, 8)}>`,
             short: true,
         };
     }
