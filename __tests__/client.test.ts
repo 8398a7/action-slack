@@ -92,6 +92,57 @@ describe('8398a7/action-slack', () => {
     github.context.payload = {};
   });
 
+  describe('text is not specified', () => {
+    it('is success', async () => {
+      const withParams: With = {
+        status: '',
+        mention: '',
+        author_name: '',
+        if_mention: '',
+        username: '',
+        icon_emoji: '',
+        icon_url: '',
+        channel: '',
+      };
+      const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
+      const payload = getTemplate(`${successMsg}\n`);
+      payload.attachments[0].color = 'good';
+      expect(await client.success('')).toStrictEqual(payload);
+    });
+    it('is failure', async () => {
+      const withParams: With = {
+        status: '',
+        mention: '',
+        author_name: '',
+        if_mention: '',
+        username: '',
+        icon_emoji: '',
+        icon_url: '',
+        channel: '',
+      };
+      const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
+      const payload = getTemplate(`${failMsg}\n`);
+      payload.attachments[0].color = 'danger';
+      expect(await client.fail('')).toStrictEqual(payload);
+    });
+    it('is cancel', async () => {
+      const withParams: With = {
+        status: '',
+        mention: '',
+        author_name: '',
+        if_mention: '',
+        username: '',
+        icon_emoji: '',
+        icon_url: '',
+        channel: '',
+      };
+      const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
+      const payload = getTemplate(`${cancelMsg}\n`);
+      payload.attachments[0].color = 'warning';
+      expect(await client.cancel('')).toStrictEqual(payload);
+    });
+  });
+
   it('has no mention', async () => {
     const withParams: With = {
       status: '',
@@ -105,7 +156,7 @@ describe('8398a7/action-slack', () => {
     };
     const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
     const msg = 'mention test';
-    const payload = getTemplate(`${successMsg}\n${msg}`);
+    const payload = getTemplate(msg);
     payload.attachments[0].color = 'good';
     expect(await client.success(msg)).toStrictEqual(payload);
   });
@@ -123,13 +174,13 @@ describe('8398a7/action-slack', () => {
     };
     let client = new Client(withParams, process.env.GITHUB_TOKEN, '');
     const msg = 'mention test';
-    let payload = getTemplate(`${successMsg}\n${msg}`);
+    let payload = getTemplate(msg);
     payload.attachments[0].color = 'good';
     expect(await client.success(msg)).toStrictEqual(payload);
 
     withParams.mention = '';
     client = new Client(withParams, process.env.GITHUB_TOKEN, '');
-    payload = getTemplate(`${failMsg}\n${msg}`);
+    payload = getTemplate(msg);
     payload.attachments[0].color = 'danger';
     expect(await client.fail(msg)).toStrictEqual(payload);
   });
@@ -147,7 +198,7 @@ describe('8398a7/action-slack', () => {
     };
     const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
     const msg = 'mention test';
-    const payload = getTemplate(`<!here> ${successMsg}\n${msg}`);
+    const payload = getTemplate(`<!here> ${msg}`);
     payload.attachments[0].color = 'good';
     expect(await client.success(msg)).toStrictEqual(payload);
   });
@@ -165,7 +216,7 @@ describe('8398a7/action-slack', () => {
     };
     const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
     const msg = 'mention test';
-    const payload = getTemplate(`<!here> ${successMsg}\n${msg}`);
+    const payload = getTemplate(`<!here> ${msg}`);
     payload.attachments[0].color = 'good';
     expect(await client.success(msg)).toStrictEqual(payload);
   });
@@ -183,7 +234,7 @@ describe('8398a7/action-slack', () => {
     };
     const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
     const msg = 'mention test';
-    const payload = getTemplate(`<!here> ${failMsg}\n${msg}`);
+    const payload = getTemplate(`<!here> ${msg}`);
     payload.attachments[0].color = 'danger';
     expect(await client.fail(msg)).toStrictEqual(payload);
   });
@@ -201,7 +252,7 @@ describe('8398a7/action-slack', () => {
     };
     const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
     const msg = 'mention test';
-    const payload = getTemplate(`<!here> ${cancelMsg}\n${msg}`);
+    const payload = getTemplate(`<!here> ${msg}`);
     payload.attachments[0].color = 'warning';
     expect(await client.cancel(msg)).toStrictEqual(payload);
   });
@@ -219,15 +270,15 @@ describe('8398a7/action-slack', () => {
     };
     const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
     const msg = 'mention test';
-    let payload = getTemplate(`<!here> ${successMsg}\n${msg}`);
+    let payload = getTemplate(`<!here> ${msg}`);
     payload.attachments[0].color = 'good';
     expect(await client.success(msg)).toStrictEqual(payload);
 
-    payload = getTemplate(`<!here> ${failMsg}\n${msg}`);
+    payload = getTemplate(`<!here> ${msg}`);
     payload.attachments[0].color = 'danger';
     expect(await client.fail(msg)).toStrictEqual(payload);
 
-    payload = getTemplate(`<!here> ${cancelMsg}\n${msg}`);
+    payload = getTemplate(`<!here> ${msg}`);
     payload.attachments[0].color = 'warning';
     expect(await client.cancel(msg)).toStrictEqual(payload);
   });
@@ -245,7 +296,7 @@ describe('8398a7/action-slack', () => {
     };
     const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
     const msg = 'mention test';
-    const payload = getTemplate(`<@user_id> ${successMsg}\n${msg}`);
+    const payload = getTemplate(`<@user_id> ${msg}`);
     payload.attachments[0].color = 'good';
     expect(await client.success(msg)).toStrictEqual(payload);
   });
@@ -263,7 +314,7 @@ describe('8398a7/action-slack', () => {
     };
     const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
     const msg = 'mention test';
-    const payload = getTemplate(`<!here> ${successMsg}\n${msg}`);
+    const payload = getTemplate(`<!here> ${msg}`);
     payload.attachments[0].color = 'good';
     expect(await client.success(msg)).toStrictEqual(payload);
   });
@@ -281,7 +332,7 @@ describe('8398a7/action-slack', () => {
     };
     const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
     const msg = 'mention test';
-    const payload = getTemplate(`<!channel> ${successMsg}\n${msg}`);
+    const payload = getTemplate(`<!channel> ${msg}`);
     payload.attachments[0].color = 'good';
     expect(await client.success(msg)).toStrictEqual(payload);
   });
@@ -299,7 +350,7 @@ describe('8398a7/action-slack', () => {
     };
     const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
     const msg = 'mention test';
-    const payload = getTemplate(`<@user_id> <@user_id2> ${successMsg}\n${msg}`);
+    const payload = getTemplate(`<@user_id> <@user_id2> ${msg}`);
     payload.attachments[0].color = 'good';
     expect(await client.success(msg)).toStrictEqual(payload);
   });
@@ -318,7 +369,7 @@ describe('8398a7/action-slack', () => {
     let client = new Client(withParams, process.env.GITHUB_TOKEN, '');
     const msg = 'hello';
 
-    let payload = getTemplate(`<@user_id> <@user_id2> ${successMsg}\n${msg}`);
+    let payload = getTemplate(`<@user_id> <@user_id2> ${msg}`);
     payload.attachments[0].color = 'good';
     expect(await client.success(msg)).toStrictEqual(payload);
   });
@@ -338,17 +389,17 @@ describe('8398a7/action-slack', () => {
     const msg = 'hello';
 
     // for success
-    let payload = getTemplate(`${successMsg}\n${msg}`);
+    let payload = getTemplate(msg);
     payload.attachments[0].color = 'good';
     expect(await client.success(msg)).toStrictEqual(payload);
 
     // for cancel
-    payload = getTemplate(`${cancelMsg}\n${msg}`);
+    payload = getTemplate(msg);
     payload.attachments[0].color = 'warning';
     expect(await client.cancel(msg)).toStrictEqual(payload);
 
     // for fail
-    payload = getTemplate(`${failMsg}\n${msg}`);
+    payload = getTemplate(msg);
     payload.attachments[0].color = 'danger';
     expect(await client.fail(msg)).toStrictEqual(payload);
   });
@@ -373,33 +424,41 @@ describe('8398a7/action-slack', () => {
     expect(await client.success('')).toStrictEqual(payload);
   });
 
-  it('works on pull request event', async () => {
-    process.env.GITHUB_EVENT_NAME = 'pull_request';
-    const github = require('@actions/github');
-    const sha = 'expected-sha-for-pull_request_event';
-    github.context.payload = {
-      pull_request: {
-        number: 123,
-        head: { sha },
-      },
-    };
-    github.context.eventName = 'pull_request';
+  describe('pull request event', () => {
+    beforeEach(() => {
+      process.env.GITHUB_EVENT_NAME = 'pull_request';
+    });
+    afterAll(() => {
+      process.env.GITHUB_EVENT_NAME = 'push';
+    });
 
-    const withParams: With = {
-      status: '',
-      mention: 'user_id',
-      author_name: '',
-      if_mention: Success,
-      username: '',
-      icon_emoji: '',
-      icon_url: '',
-      channel: '',
-    };
-    const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
-    const msg = 'mention test';
-    const payload = getTemplate(`<@user_id> ${successMsg}\n${msg}`, sha);
-    payload.attachments[0].color = 'good';
-    expect(await client.success(msg)).toStrictEqual(payload);
+    it('works on pull request event', async () => {
+      const github = require('@actions/github');
+      const sha = 'expected-sha-for-pull_request_event';
+      github.context.payload = {
+        pull_request: {
+          number: 123,
+          head: { sha },
+        },
+      };
+      github.context.eventName = 'pull_request';
+
+      const withParams: With = {
+        status: '',
+        mention: 'user_id',
+        author_name: '',
+        if_mention: Success,
+        username: '',
+        icon_emoji: '',
+        icon_url: '',
+        channel: '',
+      };
+      const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
+      const msg = 'mention test';
+      const payload = getTemplate(`<@user_id> ${msg}`, sha);
+      payload.attachments[0].color = 'good';
+      expect(await client.success(msg)).toStrictEqual(payload);
+    });
   });
 
   it('throws error', () => {
