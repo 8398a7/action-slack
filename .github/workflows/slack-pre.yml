@@ -34,7 +34,7 @@ jobs:
         with:
           status: ${{ job.status }}
           username: legacy user
-          icon_emoji: ':octocat:'
+          icon_emoji: ":octocat:"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_LEGACY_WEBHOOK_URL_FOR_INTEGRATION_TEST }}
@@ -91,6 +91,7 @@ jobs:
       - uses: 8398a7/action-slack@pre
         with:
           status: ${{ job.status }}
+          fields: repo,message
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

@@ -27,10 +27,11 @@ const repo = (): Field => {
 };
 
 const message = (): Field => {
+  const obj: any = getApiFixture('repos.commits.get');
   return {
     short: true,
     title: 'message',
-    value: '[#19] support for multiple user mentions',
+    value: `<${obj.html_url}|[#19] support for multiple user mentions>`,
   };
 };
 
