@@ -27,10 +27,11 @@ const repo = (): Field => {
 };
 
 const message = (): Field => {
+  const obj: any = getApiFixture('repos.commits.get');
   return {
     short: true,
     title: 'message',
-    value: '[#19] support for multiple user mentions',
+    value: `<${obj.html_url}|[#19] support for multiple user mentions>`,
   };
 };
 
@@ -38,7 +39,9 @@ const commit = (): Field => {
   return {
     short: true,
     title: 'commit',
-    value: `<https://github.com/8398a7/action-slack/commit/${process.env.GITHUB_SHA}|${process.env.GITHUB_SHA}>`,
+    value: `<https://github.com/8398a7/action-slack/commit/${
+      process.env.GITHUB_SHA
+    }|${process.env.GITHUB_SHA?.slice(0, 8)}>`,
   };
 };
 
@@ -50,8 +53,9 @@ const action = (sha?: string): Field => {
   return {
     short: true,
     title: 'action',
-    value: `<https://github.com/8398a7/action-slack/commit/${sha ??
-      process.env.GITHUB_SHA}/checks|action>`,
+    value: `<https://github.com/8398a7/action-slack/commit/${
+      sha ?? process.env.GITHUB_SHA
+    }/checks|action>`,
   };
 };
 
