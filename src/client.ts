@@ -146,7 +146,7 @@ export class Client {
         commit && this.includesField('message')
           ? {
               title: 'message',
-              value: commit.data.commit.message,
+              value: `<${commit.data.html_url}|${commit.data.commit.message}>`,
               short: true,
             }
           : undefined,
