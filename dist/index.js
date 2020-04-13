@@ -11532,7 +11532,7 @@ class Client {
                 commit && this.includesField('message')
                     ? {
                         title: 'message',
-                        value: `<${commit.data.html_url}|${commit.data.commit.message}>`,
+                        value: `<${commit.data.html_url}|${commit.data.commit.message.split('\n')[0]}>`,
                         short: true,
                     }
                     : undefined,
