@@ -7,6 +7,8 @@ process.env.GITHUB_SHA = 'b24f03a32e093fe8d55e23cfd0bb314069633b2f';
 process.env.GITHUB_REF = 'refs/heads/feature/19';
 process.env.GITHUB_EVENT_NAME = 'push';
 process.env.GITHUB_TOKEN = 'test-token';
+process.env.GITHUB_RUN_ID = '1';
+process.env.GITHUB_JOB = 'notification';
 
 import {
   Client,
@@ -79,6 +81,14 @@ const workflow = (): Field => {
   };
 };
 
+const job = (): Field => {
+  return {
+    short: true,
+    title: 'job',
+    value: `<https://github.com/8398a7/action-slack/runs/762195612|${process.env.GITHUB_JOB}>`,
+  };
+};
+
 const fixedFields = (client: Client, sha?: string) => {
   return client.filterField(
     [
@@ -86,6 +96,7 @@ const fixedFields = (client: Client, sha?: string) => {
       client.includesField('message') ? message() : undefined,
       client.includesField('commit') ? commit() : undefined,
       client.includesField('author') ? author() : undefined,
+      client.includesField('job') ? job() : undefined,
       client.includesField('action') ? action(sha) : undefined,
       client.includesField('eventName') ? eventName() : undefined,
       client.includesField('ref') ? ref() : undefined,
@@ -126,6 +137,12 @@ beforeAll(() => {
     .persist()
     .get(`/repos/8398a7/action-slack/commits/${process.env.GITHUB_SHA}`)
     .reply(200, () => getApiFixture('repos.commits.get'));
+  nock('https://api.github.com')
+    .persist()
+    .get(
+      `/repos/8398a7/action-slack/actions/runs/${process.env.GITHUB_RUN_ID}/jobs`,
+    )
+    .reply(200, () => getApiFixture('actions.runs.jobs'));
 });
 afterAll(() => {
   nock.cleanAll();
@@ -151,7 +168,7 @@ describe('8398a7/action-slack', () => {
         icon_emoji: '',
         icon_url: '',
         channel: '',
-        fields: 'repo,message,commit,author,action,eventName,ref,workflow',
+        fields: 'repo,message,commit,author,action,eventName,ref,workflow,job',
       };
       const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
       const payload = getTemplate(client, `${successMsg}\n`);
