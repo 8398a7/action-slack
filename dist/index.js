@@ -11543,7 +11543,7 @@ class Client {
         });
     }
     fields() {
-        var _a;
+        var _a, _b, _c;
         return __awaiter(this, void 0, void 0, function* () {
             const { sha } = github.context;
             const { owner, repo } = github.context.repo;
@@ -11553,6 +11553,13 @@ class Client {
                 ref: sha,
             }));
             const author = commit === null || commit === void 0 ? void 0 : commit.data.commit.author;
+            const runId = process.env.GITHUB_RUN_ID;
+            const resp = yield ((_b = this.github) === null || _b === void 0 ? void 0 : _b.actions.listJobsForWorkflowRun({
+                owner,
+                repo,
+                run_id: parseInt(runId, 10),
+            }));
+            const jobId = (_c = resp === null || resp === void 0 ? void 0 : resp.data.jobs.find(job => job.name === process.env.GITHUB_JOB)) === null || _c === void 0 ? void 0 : _c.id;
             return this.filterField([
                 this.repo,
                 commit && this.includesField('message')
@@ -11567,6 +11574,13 @@ class Client {
                     ? {
                         title: 'author',
                         value: `${author.name}<${author.email}>`,
+                        short: true,
+                    }
+                    : undefined,
+                jobId && this.includesField('job')
+                    ? {
+                        title: 'job',
+                        value: `<https://github.com/${owner}/${repo}/runs/${jobId}|${process.env.GITHUB_JOB}>`,
                         short: true,
                     }
                     : undefined,
