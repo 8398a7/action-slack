@@ -51,16 +51,6 @@ const author = (): Field => {
   return { short: true, title: 'author', value: '839<8398a7@gmail.com>' };
 };
 
-const action = (sha?: string): Field => {
-  return {
-    short: true,
-    title: 'action',
-    value: `<https://github.com/8398a7/action-slack/commit/${
-      sha ?? process.env.GITHUB_SHA
-    }/checks|action>`,
-  };
-};
-
 const eventName = (): Field => {
   return {
     short: true,
@@ -73,11 +63,13 @@ const ref = (): Field => {
   return { short: true, title: 'ref', value: process.env.GITHUB_REF as string };
 };
 
-const workflow = (): Field => {
+const workflow = (sha?: string): Field => {
   return {
     short: true,
     title: 'workflow',
-    value: process.env.GITHUB_WORKFLOW as string,
+    value: `<https://github.com/8398a7/action-slack/commit/${
+      sha ?? process.env.GITHUB_SHA
+    }/checks|${process.env.GITHUB_WORKFLOW as string}>`,
   };
 };
 
@@ -97,10 +89,9 @@ const fixedFields = (client: Client, sha?: string) => {
       client.includesField('commit') ? commit() : undefined,
       client.includesField('author') ? author() : undefined,
       client.includesField('job') ? job() : undefined,
-      client.includesField('action') ? action(sha) : undefined,
       client.includesField('eventName') ? eventName() : undefined,
       client.includesField('ref') ? ref() : undefined,
-      client.includesField('workflow') ? workflow() : undefined,
+      client.includesField('workflow') ? workflow(sha) : undefined,
     ],
     undefined,
   );
@@ -168,7 +159,7 @@ describe('8398a7/action-slack', () => {
         icon_emoji: '',
         icon_url: '',
         channel: '',
-        fields: 'repo,message,commit,author,action,eventName,ref,workflow,job',
+        fields: 'repo,message,commit,author,job,eventName,ref,workflow',
       };
       const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
       const payload = getTemplate(client, `${successMsg}\n`);

@@ -161,7 +161,6 @@ export class Client {
             }
           : undefined,
         await this.job(),
-        this.action,
         this.eventName,
         this.ref,
         this.workflow,
@@ -219,20 +218,6 @@ export class Client {
     };
   }
 
-  private get action(): Field | undefined {
-    if (!this.includesField('action')) return undefined;
-
-    const sha =
-      github.context.payload.pull_request?.head.sha ?? github.context.sha;
-    const { owner, repo } = github.context.repo;
-
-    return {
-      title: 'action',
-      value: `<https://github.com/${owner}/${repo}/commit/${sha}/checks|action>`,
-      short: true,
-    };
-  }
-
   private get eventName(): Field | undefined {
     if (!this.includesField('eventName')) return undefined;
 
@@ -252,7 +237,15 @@ export class Client {
   private get workflow(): Field | undefined {
     if (!this.includesField('workflow')) return undefined;
 
-    return { title: 'workflow', value: github.context.workflow, short: true };
+    const sha =
+      github.context.payload.pull_request?.head.sha ?? github.context.sha;
+    const { owner, repo } = github.context.repo;
+
+    return {
+      title: 'workflow',
+      value: `<https://github.com/${owner}/${repo}/commit/${sha}/checks|${github.context.workflow}>`,
+      short: true,
+    };
   }
 
   private mentionText(
