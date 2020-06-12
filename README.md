@@ -14,7 +14,7 @@ steps:
   - uses: 8398a7/action-slack@v3
     with:
       status: ${{ job.status }}
-      fields: repo,message,commit,author,action,eventName,ref,workflow # selectable (default: repo,message)
+      fields: repo,message,commit,author,action,eventName,ref,workflow,job # selectable (default: repo,message)
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # optional
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
