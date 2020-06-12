@@ -140,16 +140,6 @@ export class Client {
     });
     const author = commit?.data.commit.author;
 
-    const runId = process.env.GITHUB_RUN_ID as string;
-    const resp = await this.github?.actions.listJobsForWorkflowRun({
-      owner,
-      repo,
-      run_id: parseInt(runId, 10),
-    });
-    const jobId = resp?.data.jobs.find(
-      job => job.name === process.env.GITHUB_JOB,
-    )?.id;
-
     return this.filterField(
       [
         this.repo,
@@ -170,13 +160,7 @@ export class Client {
               short: true,
             }
           : undefined,
-        jobId && this.includesField('job')
-          ? {
-              title: 'job',
-              value: `<https://github.com/${owner}/${repo}/runs/${jobId}|${process.env.GITHUB_JOB}>`,
-              short: true,
-            }
-          : undefined,
+        await this.job(),
         this.action,
         this.eventName,
         this.ref,
@@ -184,6 +168,27 @@ export class Client {
       ],
       undefined,
     );
+  }
+
+  private async job(): Promise<Field | undefined> {
+    if (!this.includesField('job')) return undefined;
+
+    const { owner, repo } = github.context.repo;
+    const runId = process.env.GITHUB_RUN_ID as string;
+    const resp = await this.github?.actions.listJobsForWorkflowRun({
+      owner,
+      repo,
+      run_id: parseInt(runId, 10),
+    });
+    const jobId = resp?.data.jobs.find(
+      job => job.name === process.env.GITHUB_JOB,
+    )?.id;
+
+    return {
+      title: 'job',
+      value: `<https://github.com/${owner}/${repo}/runs/${jobId}|${process.env.GITHUB_JOB}>`,
+      short: true,
+    };
   }
 
   private get commit(): Field | undefined {
