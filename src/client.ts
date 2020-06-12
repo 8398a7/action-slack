@@ -141,14 +141,14 @@ export class Client {
     const author = commit?.data.commit.author;
 
     const runId = process.env.GITHUB_RUN_ID as string;
-    let jobId: number | undefined;
     const resp = await this.github?.actions.listJobsForWorkflowRun({
       owner,
       repo,
       run_id: parseInt(runId, 10),
     });
-    jobId = resp?.data.jobs.find(job => job.name === process.env.GITHUB_JOB)
-      ?.id;
+    const jobId = resp?.data.jobs.find(
+      job => job.name === process.env.GITHUB_JOB,
+    )?.id;
 
     return this.filterField(
       [
