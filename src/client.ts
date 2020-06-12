@@ -140,6 +140,16 @@ export class Client {
     });
     const author = commit?.data.commit.author;
 
+    const runId = process.env.GITHUB_RUN_ID as string;
+    const resp = await this.github?.actions.listJobsForWorkflowRun({
+      owner,
+      repo,
+      run_id: parseInt(runId, 10),
+    });
+    const jobId = resp?.data.jobs.find(
+      job => job.name === process.env.GITHUB_JOB,
+    )?.id;
+
     return this.filterField(
       [
         this.repo,
@@ -157,6 +167,13 @@ export class Client {
           ? {
               title: 'author',
               value: `${author.name}<${author.email}>`,
+              short: true,
+            }
+          : undefined,
+        jobId && this.includesField('job')
+          ? {
+              title: 'job',
+              value: `<https://github.com/${owner}/${repo}/runs/${jobId}|${process.env.GITHUB_JOB}>`,
               short: true,
             }
           : undefined,
