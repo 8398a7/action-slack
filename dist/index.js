@@ -11571,10 +11571,47 @@ class Client {
                     }
                     : undefined,
                 yield this.job(),
+                yield this.took(),
                 this.eventName,
                 this.ref,
                 this.workflow,
             ], undefined);
+        });
+    }
+    took() {
+        var _a, _b;
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!this.includesField('took'))
+                return undefined;
+            const { owner, repo } = github.context.repo;
+            const runId = process.env.GITHUB_RUN_ID;
+            const resp = yield ((_a = this.github) === null || _a === void 0 ? void 0 : _a.actions.listJobsForWorkflowRun({
+                owner,
+                repo,
+                run_id: parseInt(runId, 10),
+            }));
+            const currentJob = resp === null || resp === void 0 ? void 0 : resp.data.jobs.find(job => job.name === process.env.GITHUB_JOB);
+            let time = new Date().getTime() - new Date((_b = currentJob === null || currentJob === void 0 ? void 0 : currentJob.started_at) !== null && _b !== void 0 ? _b : '').getTime();
+            const h = Math.floor(time / (1000 * 60 * 60));
+            time -= h * 1000 * 60 * 60;
+            const m = Math.floor(time / (1000 * 60));
+            time -= m * 1000 * 60;
+            const s = Math.floor(time / 1000);
+            let value = '';
+            if (h > 0) {
+                value += `${h} hour `;
+            }
+            if (m > 0) {
+                value += `${m} min `;
+            }
+            if (s > 0) {
+                value += `${s} sec`;
+            }
+            return {
+                value,
+                title: 'took',
+                short: true,
+            };
         });
     }
     job() {
