@@ -11543,7 +11543,7 @@ class Client {
         });
     }
     fields() {
-        var _a, _b, _c;
+        var _a;
         return __awaiter(this, void 0, void 0, function* () {
             const { sha } = github.context;
             const { owner, repo } = github.context.repo;
@@ -11553,13 +11553,6 @@ class Client {
                 ref: sha,
             }));
             const author = commit === null || commit === void 0 ? void 0 : commit.data.commit.author;
-            const runId = process.env.GITHUB_RUN_ID;
-            const resp = yield ((_b = this.github) === null || _b === void 0 ? void 0 : _b.actions.listJobsForWorkflowRun({
-                owner,
-                repo,
-                run_id: parseInt(runId, 10),
-            }));
-            const jobId = (_c = resp === null || resp === void 0 ? void 0 : resp.data.jobs.find(job => job.name === process.env.GITHUB_JOB)) === null || _c === void 0 ? void 0 : _c.id;
             return this.filterField([
                 this.repo,
                 commit && this.includesField('message')
@@ -11577,18 +11570,68 @@ class Client {
                         short: true,
                     }
                     : undefined,
-                jobId && this.includesField('job')
-                    ? {
-                        title: 'job',
-                        value: `<https://github.com/${owner}/${repo}/runs/${jobId}|${process.env.GITHUB_JOB}>`,
-                        short: true,
-                    }
-                    : undefined,
-                this.action,
+                yield this.job(),
+                yield this.took(),
                 this.eventName,
                 this.ref,
                 this.workflow,
             ], undefined);
+        });
+    }
+    took() {
+        var _a, _b;
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!this.includesField('took'))
+                return undefined;
+            const { owner, repo } = github.context.repo;
+            const runId = process.env.GITHUB_RUN_ID;
+            const resp = yield ((_a = this.github) === null || _a === void 0 ? void 0 : _a.actions.listJobsForWorkflowRun({
+                owner,
+                repo,
+                run_id: parseInt(runId, 10),
+            }));
+            const currentJob = resp === null || resp === void 0 ? void 0 : resp.data.jobs.find(job => job.name === process.env.GITHUB_JOB);
+            let time = new Date().getTime() - new Date((_b = currentJob === null || currentJob === void 0 ? void 0 : currentJob.started_at) !== null && _b !== void 0 ? _b : '').getTime();
+            const h = Math.floor(time / (1000 * 60 * 60));
+            time -= h * 1000 * 60 * 60;
+            const m = Math.floor(time / (1000 * 60));
+            time -= m * 1000 * 60;
+            const s = Math.floor(time / 1000);
+            let value = '';
+            if (h > 0) {
+                value += `${h} hour `;
+            }
+            if (m > 0) {
+                value += `${m} min `;
+            }
+            if (s > 0) {
+                value += `${s} sec`;
+            }
+            return {
+                value,
+                title: 'took',
+                short: true,
+            };
+        });
+    }
+    job() {
+        var _a, _b;
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!this.includesField('job'))
+                return undefined;
+            const { owner, repo } = github.context.repo;
+            const runId = process.env.GITHUB_RUN_ID;
+            const resp = yield ((_a = this.github) === null || _a === void 0 ? void 0 : _a.actions.listJobsForWorkflowRun({
+                owner,
+                repo,
+                run_id: parseInt(runId, 10),
+            }));
+            const jobId = (_b = resp === null || resp === void 0 ? void 0 : resp.data.jobs.find(job => job.name === process.env.GITHUB_JOB)) === null || _b === void 0 ? void 0 : _b.id;
+            return {
+                title: 'job',
+                value: `<https://github.com/${owner}/${repo}/runs/${jobId}|${process.env.GITHUB_JOB}>`,
+                short: true,
+            };
         });
     }
     get commit() {
@@ -11612,18 +11655,6 @@ class Client {
             short: true,
         };
     }
-    get action() {
-        var _a, _b;
-        if (!this.includesField('action'))
-            return undefined;
-        const sha = (_b = (_a = github.context.payload.pull_request) === null || _a === void 0 ? void 0 : _a.head.sha) !== null && _b !== void 0 ? _b : github.context.sha;
-        const { owner, repo } = github.context.repo;
-        return {
-            title: 'action',
-            value: `<https://github.com/${owner}/${repo}/commit/${sha}/checks|action>`,
-            short: true,
-        };
-    }
     get eventName() {
         if (!this.includesField('eventName'))
             return undefined;
@@ -11639,9 +11670,16 @@ class Client {
         return { title: 'ref', value: github.context.ref, short: true };
     }
     get workflow() {
+        var _a, _b;
         if (!this.includesField('workflow'))
             return undefined;
-        return { title: 'workflow', value: github.context.workflow, short: true };
+        const sha = (_b = (_a = github.context.payload.pull_request) === null || _a === void 0 ? void 0 : _a.head.sha) !== null && _b !== void 0 ? _b : github.context.sha;
+        const { owner, repo } = github.context.repo;
+        return {
+            title: 'workflow',
+            value: `<https://github.com/${owner}/${repo}/commit/${sha}/checks|${github.context.workflow}>`,
+            short: true,
+        };
     }
     mentionText(mention, status) {
         if (!this.with.if_mention.includes(status) &&
