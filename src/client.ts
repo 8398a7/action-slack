@@ -140,16 +140,6 @@ export class Client {
     });
     const author = commit?.data.commit.author;
 
-    const runId = process.env.GITHUB_RUN_ID as string;
-    const resp = await this.github?.actions.listJobsForWorkflowRun({
-      owner,
-      repo,
-      run_id: parseInt(runId, 10),
-    });
-    const jobId = resp?.data.jobs.find(
-      job => job.name === process.env.GITHUB_JOB,
-    )?.id;
-
     return this.filterField(
       [
         this.repo,
@@ -170,20 +160,74 @@ export class Client {
               short: true,
             }
           : undefined,
-        jobId && this.includesField('job')
-          ? {
-              title: 'job',
-              value: `<https://github.com/${owner}/${repo}/runs/${jobId}|${process.env.GITHUB_JOB}>`,
-              short: true,
-            }
-          : undefined,
-        this.action,
+        await this.job(),
+        await this.took(),
         this.eventName,
         this.ref,
         this.workflow,
       ],
       undefined,
     );
+  }
+
+  private async took(): Promise<Field | undefined> {
+    if (!this.includesField('took')) return undefined;
+
+    const { owner, repo } = github.context.repo;
+    const runId = process.env.GITHUB_RUN_ID as string;
+    const resp = await this.github?.actions.listJobsForWorkflowRun({
+      owner,
+      repo,
+      run_id: parseInt(runId, 10),
+    });
+    const currentJob = resp?.data.jobs.find(
+      job => job.name === process.env.GITHUB_JOB,
+    );
+    let time =
+      new Date().getTime() - new Date(currentJob?.started_at ?? '').getTime();
+    const h = Math.floor(time / (1000 * 60 * 60));
+    time -= h * 1000 * 60 * 60;
+    const m = Math.floor(time / (1000 * 60));
+    time -= m * 1000 * 60;
+    const s = Math.floor(time / 1000);
+
+    let value = '';
+    if (h > 0) {
+      value += `${h} hour `;
+    }
+    if (m > 0) {
+      value += `${m} min `;
+    }
+    if (s > 0) {
+      value += `${s} sec`;
+    }
+
+    return {
+      value,
+      title: 'took',
+      short: true,
+    };
+  }
+
+  private async job(): Promise<Field | undefined> {
+    if (!this.includesField('job')) return undefined;
+
+    const { owner, repo } = github.context.repo;
+    const runId = process.env.GITHUB_RUN_ID as string;
+    const resp = await this.github?.actions.listJobsForWorkflowRun({
+      owner,
+      repo,
+      run_id: parseInt(runId, 10),
+    });
+    const jobId = resp?.data.jobs.find(
+      job => job.name === process.env.GITHUB_JOB,
+    )?.id;
+
+    return {
+      title: 'job',
+      value: `<https://github.com/${owner}/${repo}/runs/${jobId}|${process.env.GITHUB_JOB}>`,
+      short: true,
+    };
   }
 
   private get commit(): Field | undefined {
@@ -214,20 +258,6 @@ export class Client {
     };
   }
 
-  private get action(): Field | undefined {
-    if (!this.includesField('action')) return undefined;
-
-    const sha =
-      github.context.payload.pull_request?.head.sha ?? github.context.sha;
-    const { owner, repo } = github.context.repo;
-
-    return {
-      title: 'action',
-      value: `<https://github.com/${owner}/${repo}/commit/${sha}/checks|action>`,
-      short: true,
-    };
-  }
-
   private get eventName(): Field | undefined {
     if (!this.includesField('eventName')) return undefined;
 
@@ -247,7 +277,15 @@ export class Client {
   private get workflow(): Field | undefined {
     if (!this.includesField('workflow')) return undefined;
 
-    return { title: 'workflow', value: github.context.workflow, short: true };
+    const sha =
+      github.context.payload.pull_request?.head.sha ?? github.context.sha;
+    const { owner, repo } = github.context.repo;
+
+    return {
+      title: 'workflow',
+      value: `<https://github.com/${owner}/${repo}/commit/${sha}/checks|${github.context.workflow}>`,
+      short: true,
+    };
   }
 
   private mentionText(
