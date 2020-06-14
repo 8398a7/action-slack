@@ -161,12 +161,51 @@ export class Client {
             }
           : undefined,
         await this.job(),
+        await this.took(),
         this.eventName,
         this.ref,
         this.workflow,
       ],
       undefined,
     );
+  }
+
+  private async took(): Promise<Field | undefined> {
+    if (!this.includesField('took')) return undefined;
+
+    const { owner, repo } = github.context.repo;
+    const runId = process.env.GITHUB_RUN_ID as string;
+    const resp = await this.github?.actions.listJobsForWorkflowRun({
+      owner,
+      repo,
+      run_id: parseInt(runId, 10),
+    });
+    const job = resp?.data.jobs.find(
+      job => job.name === process.env.GITHUB_JOB,
+    );
+    let time = new Date().getTime() - new Date(job?.started_at ?? '').getTime();
+    const h = Math.floor(time / (1000 * 60 * 60));
+    time -= h * 1000 * 60 * 60;
+    const m = Math.floor(time / (1000 * 60));
+    time -= m * 1000 * 60;
+    const s = Math.floor(time / 1000);
+
+    let value = '';
+    if (h > 0) {
+      value += `${h} hour `;
+    }
+    if (m > 0) {
+      value += `${m} min `;
+    }
+    if (s > 0) {
+      value += `${s} sec`;
+    }
+
+    return {
+      value,
+      title: 'took',
+      short: true,
+    };
   }
 
   private async job(): Promise<Field | undefined> {
