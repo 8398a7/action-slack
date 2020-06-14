@@ -47,7 +47,8 @@ Corresponding types are as follows.
   - required GITHUB_TOKEN
 - author
   - required GITHUB_TOKEN
-- action
+- job
+  - required GITHUB_TOKEN
 - eventName
 - ref
 - workflow

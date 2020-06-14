@@ -10,4 +10,5 @@ module.exports = {
   verbose: true,
   coverageDirectory: './coverage/',
   collectCoverage: true,
+  preset: 'ts-jest',
 };

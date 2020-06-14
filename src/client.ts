@@ -146,7 +146,9 @@ export class Client {
         commit && this.includesField('message')
           ? {
               title: 'message',
-              value: `<${commit.data.html_url}|${commit.data.commit.message}>`,
+              value: `<${commit.data.html_url}|${
+                commit.data.commit.message.split('\n')[0]
+              }>`,
               short: true,
             }
           : undefined,
@@ -158,13 +160,34 @@ export class Client {
               short: true,
             }
           : undefined,
-        this.action,
+        await this.job(),
         this.eventName,
         this.ref,
         this.workflow,
       ],
       undefined,
     );
+  }
+
+  private async job(): Promise<Field | undefined> {
+    if (!this.includesField('job')) return undefined;
+
+    const { owner, repo } = github.context.repo;
+    const runId = process.env.GITHUB_RUN_ID as string;
+    const resp = await this.github?.actions.listJobsForWorkflowRun({
+      owner,
+      repo,
+      run_id: parseInt(runId, 10),
+    });
+    const jobId = resp?.data.jobs.find(
+      job => job.name === process.env.GITHUB_JOB,
+    )?.id;
+
+    return {
+      title: 'job',
+      value: `<https://github.com/${owner}/${repo}/runs/${jobId}|${process.env.GITHUB_JOB}>`,
+      short: true,
+    };
   }
 
   private get commit(): Field | undefined {
@@ -195,20 +218,6 @@ export class Client {
     };
   }
 
-  private get action(): Field | undefined {
-    if (!this.includesField('action')) return undefined;
-
-    const sha =
-      github.context.payload.pull_request?.head.sha ?? github.context.sha;
-    const { owner, repo } = github.context.repo;
-
-    return {
-      title: 'action',
-      value: `<https://github.com/${owner}/${repo}/commit/${sha}/checks|action>`,
-      short: true,
-    };
-  }
-
   private get eventName(): Field | undefined {
     if (!this.includesField('eventName')) return undefined;
 
@@ -228,7 +237,15 @@ export class Client {
   private get workflow(): Field | undefined {
     if (!this.includesField('workflow')) return undefined;
 
-    return { title: 'workflow', value: github.context.workflow, short: true };
+    const sha =
+      github.context.payload.pull_request?.head.sha ?? github.context.sha;
+    const { owner, repo } = github.context.repo;
+
+    return {
+      title: 'workflow',
+      value: `<https://github.com/${owner}/${repo}/commit/${sha}/checks|${github.context.workflow}>`,
+      short: true,
+    };
   }
 
   private mentionText(

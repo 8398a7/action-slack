@@ -14,10 +14,11 @@ steps:
   - uses: 8398a7/action-slack@v3
     with:
       status: ${{ job.status }}
+      fields: repo,message,commit,author,action,eventName,ref,workflow,job # selectable (default: repo,message)
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # optional
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
     if: always() # Pick up events even if the job fails or is canceled.
 ```
 
-<img width="480" alt="success" src="https://user-images.githubusercontent.com/8043276/78500565-2b15c900-7792-11ea-86fe-a0dcf7ebef84.png" />
+<img width="480" alt="success" src="https://user-images.githubusercontent.com/8043276/79061851-2c358180-7ccf-11ea-9d04-fe67b0f88986.png" />
