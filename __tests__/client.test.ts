@@ -81,6 +81,14 @@ const job = (): Field => {
   };
 };
 
+const took = (): Field => {
+  return {
+    short: true,
+    title: 'took',
+    value: '1 hour 1 min 1 sec',
+  };
+};
+
 const fixedFields = (client: Client, sha?: string) => {
   return client.filterField(
     [
@@ -89,6 +97,7 @@ const fixedFields = (client: Client, sha?: string) => {
       client.includesField('commit') ? commit() : undefined,
       client.includesField('author') ? author() : undefined,
       client.includesField('job') ? job() : undefined,
+      client.includesField('took') ? took() : undefined,
       client.includesField('eventName') ? eventName() : undefined,
       client.includesField('ref') ? ref() : undefined,
       client.includesField('workflow') ? workflow(sha) : undefined,
@@ -117,7 +126,7 @@ const getTemplate: any = (client: Client, text: string, sha?: string) => {
 const successMsg = ':white_check_mark: Succeeded GitHub Actions';
 const cancelMsg = ':warning: Canceled GitHub Actions';
 const failMsg = ':no_entry: Failed GitHub Actions';
-const getApiFixture = (name: string): string =>
+const getApiFixture = (name: string): any =>
   JSON.parse(
     readFileSync(resolve(__dirname, 'fixtures', `${name}.json`)).toString(),
   );
@@ -133,7 +142,15 @@ beforeAll(() => {
     .get(
       `/repos/8398a7/action-slack/actions/runs/${process.env.GITHUB_RUN_ID}/jobs`,
     )
-    .reply(200, () => getApiFixture('actions.runs.jobs'));
+    .reply(200, () => {
+      const obj = getApiFixture('actions.runs.jobs');
+      const now = new Date();
+      now.setHours(now.getHours() - 1);
+      now.setMinutes(now.getMinutes() - 1);
+      now.setSeconds(now.getSeconds() - 1);
+      obj.jobs[0].started_at = now.toISOString();
+      return obj;
+    });
 });
 afterAll(() => {
   nock.cleanAll();
@@ -159,7 +176,7 @@ describe('8398a7/action-slack', () => {
         icon_emoji: '',
         icon_url: '',
         channel: '',
-        fields: 'repo,message,commit,author,job,eventName,ref,workflow',
+        fields: 'repo,message,commit,author,job,eventName,ref,workflow,took',
       };
       const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
       const payload = getTemplate(client, `${successMsg}\n`);
