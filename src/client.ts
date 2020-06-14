@@ -180,10 +180,11 @@ export class Client {
       repo,
       run_id: parseInt(runId, 10),
     });
-    const job = resp?.data.jobs.find(
+    const currentJob = resp?.data.jobs.find(
       job => job.name === process.env.GITHUB_JOB,
     );
-    let time = new Date().getTime() - new Date(job?.started_at ?? '').getTime();
+    let time =
+      new Date().getTime() - new Date(currentJob?.started_at ?? '').getTime();
     const h = Math.floor(time / (1000 * 60 * 60));
     time -= h * 1000 * 60 * 60;
     const m = Math.floor(time / (1000 * 60));
