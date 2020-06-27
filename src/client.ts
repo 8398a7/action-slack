@@ -31,6 +31,7 @@ export interface Field {
 }
 
 const groupMention = ['here', 'channel'];
+const subteamMention = 'subteam^';
 
 export class Client {
   private webhook: IncomingWebhook;
@@ -288,6 +289,11 @@ export class Client {
     };
   }
 
+  private getIdString(id: string): string {
+    if (id.includes(subteamMention)) return `<!${id}>`;
+    else return `<@${id}>`;
+  }
+
   private mentionText(
     mention: string,
     status: SuccessType | FailureType | CancelledType | AlwaysType,
@@ -305,7 +311,7 @@ export class Client {
     } else if (normalized !== '') {
       const text = normalized
         .split(',')
-        .map(userId => `<@${userId}>`)
+        .map(id => this.getIdString(id))
         .join(' ');
       return `${text} `;
     }
