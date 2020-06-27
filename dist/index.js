@@ -11467,6 +11467,7 @@ exports.Cancelled = 'cancelled';
 exports.Custom = 'custom';
 exports.Always = 'always';
 const groupMention = ['here', 'channel'];
+const subteamMention = 'subteam^';
 class Client {
     constructor(props, token, webhookUrl) {
         this.with = props;
@@ -11681,6 +11682,12 @@ class Client {
             short: true,
         };
     }
+    getIdString(id) {
+        if (id.includes(subteamMention))
+            return `<!${id}>`;
+        else
+            return `<@${id}>`;
+    }
     mentionText(mention, status) {
         if (!this.with.if_mention.includes(status) &&
             this.with.if_mention !== exports.Always) {
@@ -11693,7 +11700,7 @@ class Client {
         else if (normalized !== '') {
             const text = normalized
                 .split(',')
-                .map(userId => `<@${userId}>`)
+                .map(id => this.getIdString(id))
                 .join(' ');
             return `${text} `;
         }
