@@ -443,6 +443,47 @@ describe('8398a7/action-slack', () => {
     expect(await client.success(msg)).toStrictEqual(payload);
   });
 
+  it('mentions a user group', async () => {
+    const withParams: With = {
+      status: '',
+      mention: 'subteam^user_group_id',
+      author_name: '',
+      if_mention: Success,
+      username: '',
+      icon_emoji: '',
+      icon_url: '',
+      channel: '',
+      fields: '',
+    };
+    const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
+    const msg = 'mention test';
+    const payload = getTemplate(client, `<!subteam^user_group_id> ${msg}`);
+    payload.attachments[0].color = 'good';
+    expect(await client.success(msg)).toStrictEqual(payload);
+  });
+
+  it('mentions multiple user groups', async () => {
+    const withParams: With = {
+      status: '',
+      mention: 'subteam^user_group_id,subteam^user_group_id2',
+      author_name: '',
+      if_mention: Success,
+      username: '',
+      icon_emoji: '',
+      icon_url: '',
+      channel: '',
+      fields: '',
+    };
+    const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
+    const msg = 'mention test';
+    const payload = getTemplate(
+      client,
+      `<!subteam^user_group_id> <!subteam^user_group_id2> ${msg}`,
+    );
+    payload.attachments[0].color = 'good';
+    expect(await client.success(msg)).toStrictEqual(payload);
+  });
+
   it('mentions multiple users', async () => {
     const withParams: With = {
       status: '',
@@ -458,6 +499,28 @@ describe('8398a7/action-slack', () => {
     const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
     const msg = 'mention test';
     const payload = getTemplate(client, `<@user_id> <@user_id2> ${msg}`);
+    payload.attachments[0].color = 'good';
+    expect(await client.success(msg)).toStrictEqual(payload);
+  });
+
+  it('mentions mix of user and user group', async () => {
+    const withParams: With = {
+      status: '',
+      mention: 'user_id,subteam^user_group_id',
+      author_name: '',
+      if_mention: Success,
+      username: '',
+      icon_emoji: '',
+      icon_url: '',
+      channel: '',
+      fields: '',
+    };
+    const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
+    const msg = 'mention test';
+    const payload = getTemplate(
+      client,
+      `<@user_id> <!subteam^user_group_id> ${msg}`,
+    );
     payload.attachments[0].color = 'good';
     expect(await client.success(msg)).toStrictEqual(payload);
   });
