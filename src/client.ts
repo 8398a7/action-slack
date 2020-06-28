@@ -1,5 +1,6 @@
 import * as core from '@actions/core';
-import * as github from '@actions/github';
+import { context, getOctokit } from '@actions/github';
+import { GitHub } from '@actions/github/lib/utils';
 import { IncomingWebhook, IncomingWebhookSendArguments } from '@slack/webhook';
 
 export const Success = 'success';
@@ -35,7 +36,7 @@ const subteamMention = 'subteam^';
 
 export class Client {
   private webhook: IncomingWebhook;
-  private github?: github.GitHub;
+  private github?: InstanceType<typeof GitHub>;
   private with: With;
 
   constructor(props: With, token?: string, webhookUrl?: string) {
@@ -43,7 +44,7 @@ export class Client {
     if (this.with.fields === '') this.with.fields = 'repo,commit';
 
     if (token !== undefined) {
-      this.github = new github.GitHub(token);
+      this.github = getOctokit(token);
     }
 
     if (webhookUrl === undefined) {
@@ -89,7 +90,7 @@ export class Client {
   }
 
   async send(payload: string | IncomingWebhookSendArguments) {
-    core.debug(JSON.stringify(github.context, null, 2));
+    core.debug(JSON.stringify(context, null, 2));
     await this.webhook.send(payload);
     core.debug('send message');
   }
@@ -131,8 +132,8 @@ export class Client {
   }
 
   private async fields(): Promise<Field[]> {
-    const { sha } = github.context;
-    const { owner, repo } = github.context.repo;
+    const { sha } = context;
+    const { owner, repo } = context.repo;
 
     const commit = await this.github?.repos.getCommit({
       owner,
@@ -174,16 +175,13 @@ export class Client {
   private async took(): Promise<Field | undefined> {
     if (!this.includesField('took')) return undefined;
 
-    const { owner, repo } = github.context.repo;
-    const runId = process.env.GITHUB_RUN_ID as string;
+    const { owner, repo } = context.repo;
     const resp = await this.github?.actions.listJobsForWorkflowRun({
       owner,
       repo,
-      run_id: parseInt(runId, 10),
+      run_id: context.runId,
     });
-    const currentJob = resp?.data.jobs.find(
-      job => job.name === process.env.GITHUB_JOB,
-    );
+    const currentJob = resp?.data.jobs.find(job => job.name === context.job);
     let time =
       new Date().getTime() - new Date(currentJob?.started_at ?? '').getTime();
     const h = Math.floor(time / (1000 * 60 * 60));
@@ -213,20 +211,17 @@ export class Client {
   private async job(): Promise<Field | undefined> {
     if (!this.includesField('job')) return undefined;
 
-    const { owner, repo } = github.context.repo;
-    const runId = process.env.GITHUB_RUN_ID as string;
+    const { owner, repo } = context.repo;
     const resp = await this.github?.actions.listJobsForWorkflowRun({
       owner,
       repo,
-      run_id: parseInt(runId, 10),
+      run_id: context.runId,
     });
-    const jobId = resp?.data.jobs.find(
-      job => job.name === process.env.GITHUB_JOB,
-    )?.id;
+    const jobId = resp?.data.jobs.find(job => job.name === context.job)?.id;
 
     return {
       title: 'job',
-      value: `<https://github.com/${owner}/${repo}/runs/${jobId}|${process.env.GITHUB_JOB}>`,
+      value: `<https://github.com/${owner}/${repo}/runs/${jobId}|${context.job}>`,
       short: true,
     };
   }
@@ -234,8 +229,8 @@ export class Client {
   private get commit(): Field | undefined {
     if (!this.includesField('commit')) return undefined;
 
-    const { sha } = github.context;
-    const { owner, repo } = github.context.repo;
+    const { sha } = context;
+    const { owner, repo } = context.repo;
 
     return {
       title: 'commit',
@@ -250,7 +245,7 @@ export class Client {
   private get repo(): Field | undefined {
     if (!this.includesField('repo')) return undefined;
 
-    const { owner, repo } = github.context.repo;
+    const { owner, repo } = context.repo;
 
     return {
       title: 'repo',
@@ -264,7 +259,7 @@ export class Client {
 
     return {
       title: 'eventName',
-      value: github.context.eventName,
+      value: context.eventName,
       short: true,
     };
   }
@@ -272,19 +267,18 @@ export class Client {
   private get ref(): Field | undefined {
     if (!this.includesField('ref')) return undefined;
 
-    return { title: 'ref', value: github.context.ref, short: true };
+    return { title: 'ref', value: context.ref, short: true };
   }
 
   private get workflow(): Field | undefined {
     if (!this.includesField('workflow')) return undefined;
 
-    const sha =
-      github.context.payload.pull_request?.head.sha ?? github.context.sha;
-    const { owner, repo } = github.context.repo;
+    const sha = context.payload.pull_request?.head.sha ?? context.sha;
+    const { owner, repo } = context.repo;
 
     return {
       title: 'workflow',
-      value: `<https://github.com/${owner}/${repo}/commit/${sha}/checks|${github.context.workflow}>`,
+      value: `<https://github.com/${owner}/${repo}/commit/${sha}/checks|${context.workflow}>`,
       short: true,
     };
   }
