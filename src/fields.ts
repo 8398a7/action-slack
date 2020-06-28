@@ -69,7 +69,11 @@ export class FieldFactory {
     const resp = await this.getCommit();
     if (resp === undefined) return undefined;
 
-    return `<${resp.data.html_url}|${resp.data.commit.message.split('\n')[0]}>`;
+    const value = `<${resp.data.html_url}|${
+      resp.data.commit.message.split('\n')[0]
+    }>`;
+    process.env.AS_MESSAGE = value;
+    return value;
   }
 
   private async author(): Promise<string | undefined> {
@@ -77,7 +81,9 @@ export class FieldFactory {
     const author = resp?.data.commit.author;
     if (author === undefined) return undefined;
 
-    return `${author.name}<${author.email}>`;
+    const value = `${author.name}<${author.email}>`;
+    process.env.AS_AUTHOR = value;
+    return value;
   }
 
   private async took(): Promise<string | undefined> {
@@ -106,6 +112,7 @@ export class FieldFactory {
       value += `${s} sec`;
     }
 
+    process.env.AS_TOOK = value;
     return value;
   }
 
@@ -118,38 +125,50 @@ export class FieldFactory {
     });
     const jobId = resp?.data.jobs.find(job => job.name === context.job)?.id;
 
-    return `<https://github.com/${owner}/${context.repo.repo}/runs/${jobId}|${context.job}>`;
+    const value = `<https://github.com/${owner}/${context.repo.repo}/runs/${jobId}|${context.job}>`;
+    process.env.AS_JOB = value;
+    return value;
   }
 
   private async commit(): Promise<string> {
     const { sha } = context;
     const { owner, repo } = context.repo;
 
-    return `<https://github.com/${owner}/${repo}/commit/${sha}|${sha.slice(
+    const value = `<https://github.com/${owner}/${repo}/commit/${sha}|${sha.slice(
       0,
       8,
     )}>`;
+    process.env.AS_COMMIT = value;
+    return value;
   }
 
   private async repo(): Promise<string> {
     const { owner, repo } = context.repo;
 
-    return `<https://github.com/${owner}/${repo}|${owner}/${repo}>`;
+    const value = `<https://github.com/${owner}/${repo}|${owner}/${repo}>`;
+    process.env.AS_REPO = value;
+    return value;
   }
 
   private async eventName(): Promise<string> {
-    return context.eventName;
+    const value = context.eventName;
+    process.env.AS_EVENT_NAME = value;
+    return value;
   }
 
   private async ref(): Promise<string> {
-    return context.ref;
+    const value = context.ref;
+    process.env.AS_REF = value;
+    return value;
   }
 
   private async workflow(): Promise<string> {
     const sha = context.payload.pull_request?.head.sha ?? context.sha;
     const { owner, repo } = context.repo;
 
-    return `<https://github.com/${owner}/${repo}/commit/${sha}/checks|${context.workflow}>`;
+    const value = `<https://github.com/${owner}/${repo}/commit/${sha}/checks|${context.workflow}>`;
+    process.env.AS_WORKFLOW = value;
+    return value;
   }
 
   private async getCommit() {

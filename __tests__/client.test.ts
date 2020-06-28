@@ -694,4 +694,29 @@ describe('8398a7/action-slack', () => {
 
     expect(fn).toBeCalledTimes(1);
   });
+  describe('.custom', () => {
+    it('is full fields', async () => {
+      const withParams: With = {
+        status: 'custom',
+        mention: '',
+        author_name: '',
+        if_mention: '',
+        username: '',
+        icon_emoji: '',
+        icon_url: '',
+        channel: '',
+        fields: 'repo,message,commit,author,job,eventName,ref,workflow,took',
+      };
+      const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
+      expect(
+        await client.custom(`{
+          text: \`\${process.env.AS_WORKFLOW}
+\${process.env.AS_JOB} (\${process.env.AS_COMMIT}) of \${process.env.AS_REPO}@master by \${process.env.AS_AUTHOR} succeeded in \${process.env.AS_TOOK}\`
+          }`),
+      ).toStrictEqual({
+        text: `<https://github.com/8398a7/action-slack/commit/b24f03a32e093fe8d55e23cfd0bb314069633b2f/checks|PR Checks>
+<https://github.com/8398a7/action-slack/runs/762195612|notification> (<https://github.com/8398a7/action-slack/commit/b24f03a32e093fe8d55e23cfd0bb314069633b2f|b24f03a3>) of <https://github.com/8398a7/action-slack|8398a7/action-slack>@master by 839<8398a7@gmail.com> succeeded in 1 hour 1 min 1 sec`,
+      });
+    });
+  });
 });

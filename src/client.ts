@@ -38,10 +38,10 @@ const groupMention = ['here', 'channel'];
 const subteamMention = 'subteam^';
 
 export class Client {
+  public fieldFactory: FieldFactory;
   private webhook: IncomingWebhook;
   private github?: GitHub;
   private with: With;
-  private fieldFactory: FieldFactory;
 
   constructor(props: With, token?: string, webhookUrl?: string) {
     this.with = props;
@@ -91,6 +91,14 @@ export class Client {
       text,
     );
 
+    return template;
+  }
+
+  async custom(payload: string) {
+    await this.fieldFactory.attachments();
+    /* eslint-disable no-var */
+    var template: IncomingWebhookSendArguments = eval(`template = ${payload}`);
+    /* eslint-enable */
     return template;
   }
 

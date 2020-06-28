@@ -57,12 +57,7 @@ async function run(): Promise<void> {
         await client.send(await client.cancel(text));
         break;
       case Custom:
-        /* eslint-disable no-var */
-        var evalPayload: IncomingWebhookSendArguments = eval(
-          `evalPayload = ${custom_payload}`,
-        );
-        /* eslint-enable */
-        await client.send(evalPayload);
+        await client.send(await client.custom(custom_payload));
         break;
       default:
         throw new Error(
