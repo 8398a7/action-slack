@@ -2279,6 +2279,194 @@ if (typeof process === 'undefined' || process.type === 'renderer') {
 
 /***/ }),
 
+/***/ 81:
+/***/ (function(__unusedmodule, exports, __webpack_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.FieldFactory = void 0;
+const github_1 = __webpack_require__(469);
+class FieldFactory {
+    constructor(fields, github) {
+        this.fields = fields.replace(/ /g, '').split(',');
+        this.github = github;
+    }
+    includes(field) {
+        return this.fields.includes(field) || this.fields.includes('all');
+    }
+    filterField(array, diff) {
+        return array.filter(item => item !== diff);
+    }
+    attachments() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return this.filterField([
+                this.includes('repo')
+                    ? createAttachment('repo', yield this.repo())
+                    : undefined,
+                this.includes('message')
+                    ? createAttachment('message', yield this.message())
+                    : undefined,
+                this.includes('commit')
+                    ? createAttachment('commit', yield this.commit())
+                    : undefined,
+                this.includes('author')
+                    ? createAttachment('author', yield this.author())
+                    : undefined,
+                this.includes('job')
+                    ? createAttachment('job', yield this.job())
+                    : undefined,
+                this.includes('took')
+                    ? createAttachment('took', yield this.took())
+                    : undefined,
+                this.includes('eventName')
+                    ? createAttachment('eventName', yield this.eventName())
+                    : undefined,
+                this.includes('ref')
+                    ? createAttachment('ref', yield this.ref())
+                    : undefined,
+                this.includes('workflow')
+                    ? createAttachment('workflow', yield this.workflow())
+                    : undefined,
+            ], undefined);
+        });
+    }
+    message() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const resp = yield this.getCommit();
+            if (resp === undefined)
+                return undefined;
+            const value = `<${resp.data.html_url}|${resp.data.commit.message.split('\n')[0]}>`;
+            process.env.AS_MESSAGE = value;
+            return value;
+        });
+    }
+    author() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const resp = yield this.getCommit();
+            const author = resp === null || resp === void 0 ? void 0 : resp.data.commit.author;
+            if (author === undefined)
+                return undefined;
+            const value = `${author.name}<${author.email}>`;
+            process.env.AS_AUTHOR = value;
+            return value;
+        });
+    }
+    took() {
+        var _a, _b;
+        return __awaiter(this, void 0, void 0, function* () {
+            const resp = yield ((_a = this.github) === null || _a === void 0 ? void 0 : _a.actions.listJobsForWorkflowRun({
+                owner: github_1.context.repo.owner,
+                repo: github_1.context.repo.repo,
+                run_id: github_1.context.runId,
+            }));
+            const currentJob = resp === null || resp === void 0 ? void 0 : resp.data.jobs.find(job => job.name === github_1.context.job);
+            let time = new Date().getTime() - new Date((_b = currentJob === null || currentJob === void 0 ? void 0 : currentJob.started_at) !== null && _b !== void 0 ? _b : '').getTime();
+            const h = Math.floor(time / (1000 * 60 * 60));
+            time -= h * 1000 * 60 * 60;
+            const m = Math.floor(time / (1000 * 60));
+            time -= m * 1000 * 60;
+            const s = Math.floor(time / 1000);
+            let value = '';
+            if (h > 0) {
+                value += `${h} hour `;
+            }
+            if (m > 0) {
+                value += `${m} min `;
+            }
+            if (s > 0) {
+                value += `${s} sec`;
+            }
+            process.env.AS_TOOK = value;
+            return value;
+        });
+    }
+    job() {
+        var _a, _b;
+        return __awaiter(this, void 0, void 0, function* () {
+            const { owner } = github_1.context.repo;
+            const resp = yield ((_a = this.github) === null || _a === void 0 ? void 0 : _a.actions.listJobsForWorkflowRun({
+                owner,
+                repo: github_1.context.repo.repo,
+                run_id: github_1.context.runId,
+            }));
+            const jobId = (_b = resp === null || resp === void 0 ? void 0 : resp.data.jobs.find(job => job.name === github_1.context.job)) === null || _b === void 0 ? void 0 : _b.id;
+            const value = `<https://github.com/${owner}/${github_1.context.repo.repo}/runs/${jobId}|${github_1.context.job}>`;
+            process.env.AS_JOB = value;
+            return value;
+        });
+    }
+    commit() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { sha } = github_1.context;
+            const { owner, repo } = github_1.context.repo;
+            const value = `<https://github.com/${owner}/${repo}/commit/${sha}|${sha.slice(0, 8)}>`;
+            process.env.AS_COMMIT = value;
+            return value;
+        });
+    }
+    repo() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { owner, repo } = github_1.context.repo;
+            const value = `<https://github.com/${owner}/${repo}|${owner}/${repo}>`;
+            process.env.AS_REPO = value;
+            return value;
+        });
+    }
+    eventName() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const value = github_1.context.eventName;
+            process.env.AS_EVENT_NAME = value;
+            return value;
+        });
+    }
+    ref() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const value = github_1.context.ref;
+            process.env.AS_REF = value;
+            return value;
+        });
+    }
+    workflow() {
+        var _a, _b;
+        return __awaiter(this, void 0, void 0, function* () {
+            const sha = (_b = (_a = github_1.context.payload.pull_request) === null || _a === void 0 ? void 0 : _a.head.sha) !== null && _b !== void 0 ? _b : github_1.context.sha;
+            const { owner, repo } = github_1.context.repo;
+            const value = `<https://github.com/${owner}/${repo}/commit/${sha}/checks|${github_1.context.workflow}>`;
+            process.env.AS_WORKFLOW = value;
+            return value;
+        });
+    }
+    getCommit() {
+        var _a;
+        return __awaiter(this, void 0, void 0, function* () {
+            const { owner, repo } = github_1.context.repo;
+            const { sha: ref } = github_1.context;
+            return yield ((_a = this.github) === null || _a === void 0 ? void 0 : _a.repos.getCommit({ owner, repo, ref }));
+        });
+    }
+}
+exports.FieldFactory = FieldFactory;
+function createAttachment(title, value, short) {
+    if (value === undefined)
+        return undefined;
+    if (short === undefined)
+        short = true;
+    return { title, value, short };
+}
+
+
+/***/ }),
+
 /***/ 87:
 /***/ (function(module) {
 
@@ -3271,10 +3459,7 @@ function run() {
                     yield client.send(yield client.cancel(text));
                     break;
                 case client_1.Custom:
-                    /* eslint-disable no-var */
-                    var evalPayload = eval(`evalPayload = ${custom_payload}`);
-                    /* eslint-enable */
-                    yield client.send(evalPayload);
+                    yield client.send(yield client.custom(custom_payload));
                     break;
                 default:
                     throw new Error('You can specify success or failure or cancelled or custom');
@@ -9847,6 +10032,7 @@ exports.Client = exports.Always = exports.Custom = exports.Cancelled = exports.F
 const core = __importStar(__webpack_require__(470));
 const github_1 = __webpack_require__(469);
 const webhook_1 = __webpack_require__(736);
+const fields_1 = __webpack_require__(81);
 exports.Success = 'success';
 exports.Failure = 'failure';
 exports.Cancelled = 'cancelled';
@@ -9866,6 +10052,7 @@ class Client {
             throw new Error('Specify secrets.SLACK_WEBHOOK_URL');
         }
         this.webhook = new webhook_1.IncomingWebhook(webhookUrl);
+        this.fieldFactory = new fields_1.FieldFactory(this.with.fields, this.github);
     }
     success(text) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -9894,20 +10081,21 @@ class Client {
             return template;
         });
     }
+    custom(payload) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.fieldFactory.attachments();
+            /* eslint-disable no-var */
+            var template = eval(`template = ${payload}`);
+            /* eslint-enable */
+            return template;
+        });
+    }
     send(payload) {
         return __awaiter(this, void 0, void 0, function* () {
             core.debug(JSON.stringify(github_1.context, null, 2));
             yield this.webhook.send(payload);
             core.debug('send message');
         });
-    }
-    includesField(field) {
-        const { fields } = this.with;
-        const normalized = fields.replace(/ /g, '').split(',');
-        return normalized.includes(field);
-    }
-    filterField(array, diff) {
-        return array.filter(item => item !== diff);
     }
     payloadTemplate() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -9923,148 +10111,11 @@ class Client {
                     {
                         color: '',
                         author_name: this.with.author_name,
-                        fields: yield this.fields(),
+                        fields: yield this.fieldFactory.attachments(),
                     },
                 ],
             };
         });
-    }
-    fields() {
-        var _a;
-        return __awaiter(this, void 0, void 0, function* () {
-            const { sha } = github_1.context;
-            const { owner, repo } = github_1.context.repo;
-            const commit = yield ((_a = this.github) === null || _a === void 0 ? void 0 : _a.repos.getCommit({
-                owner,
-                repo,
-                ref: sha,
-            }));
-            const author = commit === null || commit === void 0 ? void 0 : commit.data.commit.author;
-            return this.filterField([
-                this.repo,
-                commit && this.includesField('message')
-                    ? {
-                        title: 'message',
-                        value: `<${commit.data.html_url}|${commit.data.commit.message.split('\n')[0]}>`,
-                        short: true,
-                    }
-                    : undefined,
-                this.commit,
-                author && this.includesField('author')
-                    ? {
-                        title: 'author',
-                        value: `${author.name}<${author.email}>`,
-                        short: true,
-                    }
-                    : undefined,
-                yield this.job(),
-                yield this.took(),
-                this.eventName,
-                this.ref,
-                this.workflow,
-            ], undefined);
-        });
-    }
-    took() {
-        var _a, _b;
-        return __awaiter(this, void 0, void 0, function* () {
-            if (!this.includesField('took'))
-                return undefined;
-            const { owner, repo } = github_1.context.repo;
-            const resp = yield ((_a = this.github) === null || _a === void 0 ? void 0 : _a.actions.listJobsForWorkflowRun({
-                owner,
-                repo,
-                run_id: github_1.context.runId,
-            }));
-            const currentJob = resp === null || resp === void 0 ? void 0 : resp.data.jobs.find(job => job.name === github_1.context.job);
-            let time = new Date().getTime() - new Date((_b = currentJob === null || currentJob === void 0 ? void 0 : currentJob.started_at) !== null && _b !== void 0 ? _b : '').getTime();
-            const h = Math.floor(time / (1000 * 60 * 60));
-            time -= h * 1000 * 60 * 60;
-            const m = Math.floor(time / (1000 * 60));
-            time -= m * 1000 * 60;
-            const s = Math.floor(time / 1000);
-            let value = '';
-            if (h > 0) {
-                value += `${h} hour `;
-            }
-            if (m > 0) {
-                value += `${m} min `;
-            }
-            if (s > 0) {
-                value += `${s} sec`;
-            }
-            return {
-                value,
-                title: 'took',
-                short: true,
-            };
-        });
-    }
-    job() {
-        var _a, _b;
-        return __awaiter(this, void 0, void 0, function* () {
-            if (!this.includesField('job'))
-                return undefined;
-            const { owner, repo } = github_1.context.repo;
-            const resp = yield ((_a = this.github) === null || _a === void 0 ? void 0 : _a.actions.listJobsForWorkflowRun({
-                owner,
-                repo,
-                run_id: github_1.context.runId,
-            }));
-            const jobId = (_b = resp === null || resp === void 0 ? void 0 : resp.data.jobs.find(job => job.name === github_1.context.job)) === null || _b === void 0 ? void 0 : _b.id;
-            return {
-                title: 'job',
-                value: `<https://github.com/${owner}/${repo}/runs/${jobId}|${github_1.context.job}>`,
-                short: true,
-            };
-        });
-    }
-    get commit() {
-        if (!this.includesField('commit'))
-            return undefined;
-        const { sha } = github_1.context;
-        const { owner, repo } = github_1.context.repo;
-        return {
-            title: 'commit',
-            value: `<https://github.com/${owner}/${repo}/commit/${sha}|${sha.slice(0, 8)}>`,
-            short: true,
-        };
-    }
-    get repo() {
-        if (!this.includesField('repo'))
-            return undefined;
-        const { owner, repo } = github_1.context.repo;
-        return {
-            title: 'repo',
-            value: `<https://github.com/${owner}/${repo}|${owner}/${repo}>`,
-            short: true,
-        };
-    }
-    get eventName() {
-        if (!this.includesField('eventName'))
-            return undefined;
-        return {
-            title: 'eventName',
-            value: github_1.context.eventName,
-            short: true,
-        };
-    }
-    get ref() {
-        if (!this.includesField('ref'))
-            return undefined;
-        return { title: 'ref', value: github_1.context.ref, short: true };
-    }
-    get workflow() {
-        var _a, _b;
-        if (!this.includesField('workflow'))
-            return undefined;
-        const sha = (_b = (_a = github_1.context.payload.pull_request) === null || _a === void 0 ? void 0 : _a.head.sha) !== null && _b !== void 0 ? _b : github_1.context.sha;
-        const { owner, repo } = github_1.context.repo;
-        return {
-            title: 'workflow',
-            value: `<https://github.com/${owner}/${repo}/commit/${sha}/checks|${github_1.context.workflow}>`,
-            short: true,
-        };
     }
     getIdString(id) {
         if (id.includes(subteamMention))
