@@ -12,6 +12,7 @@ const config = {
     githubUrl: 'https://github.com/8398a7/action-slack',
     helpUrl: '',
     tweetText: '',
+    twitter: '8398a7',
     links: [{ text: '', link: '' }],
     search: {
       enabled: false,
@@ -22,13 +23,7 @@ const config = {
     },
   },
   sidebar: {
-    forcedNavOrder: [
-      '/usage',
-      '/with',
-      '/migration',
-      '/usecase',
-      '/contributors',
-    ],
+    forcedNavOrder: ['/usage', '/with', '/migration', '/usecase', '/contributors'],
     collapsedNav: [
       '/usecase', // add trailing slash if enabled above
       '/migration',
@@ -36,13 +31,13 @@ const config = {
     links: [{ text: 'GitHub', link: 'https://github.com/8398a7/action-slack' }],
     frontline: false,
     ignoreIndex: true,
+    title: '',
   },
   siteMetadata: {
     title: 'action-slack | 8398a7',
     description: '',
     ogImage: null,
-    docsLocation:
-      'https://github.com/8398a7/action-slack/tree/master/docs/content',
+    docsLocation: 'https://github.com/8398a7/action-slack/tree/master/docs/content',
     favicon: 'This is the action-slack documentation site.',
   },
   pwa: {

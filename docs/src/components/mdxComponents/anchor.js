@@ -6,7 +6,7 @@ const AnchorTag = ({ children: link, ...props }) => {
       return <a href={props.href}>{link}</a>;
     } else {
       return (
-        <a href={props.href} target="_blank" rel="noopener">
+        <a href={props.href} target="_blank" rel="noopener noreferrer">
           {link}
         </a>
       );
