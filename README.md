@@ -48,7 +48,7 @@ steps:
       }
   env:
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    SLACK_WEBHOOK_URL: ${{ secrets.SLACK_LEGACY_WEBHOOK_URL_FOR_INTEGRATION_TEST }}
+    SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 ```
 
 <img width="633" alt="custom" src="https://user-images.githubusercontent.com/8043276/85947865-3723b800-b988-11ea-80f7-6db5329c6af7.png">
