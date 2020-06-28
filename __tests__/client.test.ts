@@ -476,7 +476,10 @@ describe('8398a7/action-slack', () => {
     };
     const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
     const msg = 'mention test';
-    const payload = getTemplate(client, `<!subteam^user_group_id> <!subteam^user_group_id2> ${msg}`);
+    const payload = getTemplate(
+      client,
+      `<!subteam^user_group_id> <!subteam^user_group_id2> ${msg}`,
+    );
     payload.attachments[0].color = 'good';
     expect(await client.success(msg)).toStrictEqual(payload);
   });
@@ -514,7 +517,10 @@ describe('8398a7/action-slack', () => {
     };
     const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
     const msg = 'mention test';
-    const payload = getTemplate(client, `<@user_id> <!subteam^user_group_id> ${msg}`);
+    const payload = getTemplate(
+      client,
+      `<@user_id> <!subteam^user_group_id> ${msg}`,
+    );
     payload.attachments[0].color = 'good';
     expect(await client.success(msg)).toStrictEqual(payload);
   });
