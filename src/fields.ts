@@ -17,7 +17,7 @@ export class FieldFactory {
   }
 
   includes(field: string) {
-    return this.fields.includes(field);
+    return this.fields.includes(field) || this.fields.includes('all');
   }
 
   filterField<T extends Array<Field | undefined>, U extends undefined>(

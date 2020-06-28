@@ -705,7 +705,7 @@ describe('8398a7/action-slack', () => {
         icon_emoji: '',
         icon_url: '',
         channel: '',
-        fields: 'repo,message,commit,author,job,eventName,ref,workflow,took',
+        fields: 'all',
       };
       const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
       expect(
