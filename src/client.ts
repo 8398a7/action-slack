@@ -176,15 +176,12 @@ export class Client {
     if (!this.includesField('took')) return undefined;
 
     const { owner, repo } = context.repo;
-    const runId = process.env.GITHUB_RUN_ID as string;
     const resp = await this.github?.actions.listJobsForWorkflowRun({
       owner,
       repo,
-      run_id: parseInt(runId, 10),
+      run_id: context.runId,
     });
-    const currentJob = resp?.data.jobs.find(
-      job => job.name === process.env.GITHUB_JOB,
-    );
+    const currentJob = resp?.data.jobs.find(job => job.name === context.job);
     let time =
       new Date().getTime() - new Date(currentJob?.started_at ?? '').getTime();
     const h = Math.floor(time / (1000 * 60 * 60));
@@ -215,19 +212,16 @@ export class Client {
     if (!this.includesField('job')) return undefined;
 
     const { owner, repo } = context.repo;
-    const runId = process.env.GITHUB_RUN_ID as string;
     const resp = await this.github?.actions.listJobsForWorkflowRun({
       owner,
       repo,
-      run_id: parseInt(runId, 10),
+      run_id: context.runId,
     });
-    const jobId = resp?.data.jobs.find(
-      job => job.name === process.env.GITHUB_JOB,
-    )?.id;
+    const jobId = resp?.data.jobs.find(job => job.name === context.job)?.id;
 
     return {
       title: 'job',
-      value: `<https://github.com/${owner}/${repo}/runs/${jobId}|${process.env.GITHUB_JOB}>`,
+      value: `<https://github.com/${owner}/${repo}/runs/${jobId}|${context.job}>`,
       short: true,
     };
   }
