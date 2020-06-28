@@ -56,14 +56,14 @@ steps:
   - uses: 8398a7/action-slack@v3
     with:
       status: custom
-      fields: all
+      fields: workflow,job,commit,repo,ref,author,took
       custom_payload: |
         {
           username: 'action-slack',
           icon_emoji: ':octocat:',
           attachments: [{
-            color: 'good',
-            text: `${process.env.AS_WORKFLOW}\n${process.env.AS_JOB} (${process.env.AS_COMMIT}) of ${process.env.AS_REPO}@master by ${process.env.AS_AUTHOR} succeeded in ${process.env.AS_TOOK}`,
+            color: '${{ job.status }}' === 'success' ? 'good' : '${{ job.status }}' === 'failure' ? 'danger' : 'warning',
+            text: `${process.env.AS_WORKFLOW}\n${process.env.AS_JOB} (${process.env.AS_COMMIT}) of ${process.env.AS_REPO}@${process.env.AS_REF} by ${process.env.AS_AUTHOR} ${{ job.status }} in ${process.env.AS_TOOK}`,
           }]
         }
     env:
@@ -74,6 +74,6 @@ steps:
 You can access the values retrieved by Fields through environment variables.  
 See [Fields](/fields) for the available environment variables.
 
-<img width="633" alt="custom" src="https://user-images.githubusercontent.com/8043276/85947865-3723b800-b988-11ea-80f7-6db5329c6af7.png" />
+<img width="510" alt="custom" src="https://user-images.githubusercontent.com/8043276/85949706-44926f80-b993-11ea-83bf-b3f81e5e2d8c.png" />
 
 If there's a good format, I'd like to introduce it on this page from time to time.
