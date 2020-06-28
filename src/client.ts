@@ -38,7 +38,7 @@ const groupMention = ['here', 'channel'];
 const subteamMention = 'subteam^';
 
 export class Client {
-  public fieldFactory: FieldFactory;
+  private fieldFactory: FieldFactory;
   private webhook: IncomingWebhook;
   private github?: GitHub;
   private with: With;
