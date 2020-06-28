@@ -15,8 +15,8 @@ const config = {
     twitter: '8398a7',
     links: [{ text: '', link: '' }],
     search: {
-      enabled: false,
-      indexName: '',
+      enabled: true,
+      indexName: process.env.ALGOLIA === 'prod' ? 'prod_action-slack' : 'dev_action-slack',
       algoliaAppId: process.env.GATSBY_ALGOLIA_APP_ID,
       algoliaSearchKey: process.env.GATSBY_ALGOLIA_SEARCH_KEY,
       algoliaAdminKey: process.env.ALGOLIA_ADMIN_KEY,
