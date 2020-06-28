@@ -8,19 +8,19 @@ This page describes the elements that can be specified in with.
 
 # List
 
-|key|value|default|
-|---|---|---|
-|[status](/with#status)|`'success'` or `'failure'` or `'cancelled'` or `'custom'`|`''`|
-|[fields](/with#fields)|You can choose the items you want to add to the fields at the time of notification.|`'repo,commit'`|
-|[text](/with#text)|Specify the text you want to add.|`''`|
-|[author_name](/with#author_name)|It can be overwritten by specifying. The job name is recommend.|`'8398a7@action-slack'`|
-|[mention](/with#mention)|`'here'` or `'channel'` or [user_group_id](https://api.slack.com/reference/surfaces/formatting#mentioning-groups) or [user_id](https://api.slack.com/reference/surfaces/formatting#mentioning-users)|`''`|
-|[if_mention](/with#mention)|Specify `'success'` or `'failure'` or `'cancelled'` or `'custom'` or `'always'`.|`''`|
-|[username](/with#username)|Override the legacy integration's default name.|`''`|
-|[icon_emoji](/with#icon_emoji)|[emoji code](https://www.webfx.com/tools/emoji-cheat-sheet/) string to use in place of the default icon.|`''`|
-|[icon_url](/with#icon_url)|icon image URL string to use in place of the default icon.|`''`|
-|[channel](/with#channel)|Override the legacy integration's default channel. This should be an ID, such as `C8UJ12P4P`.|`''`|
-|[custom_payload](/with#custom_payload)|e.g. `{"text": "Custom Field Check", obj: 'LOWER CASE'.toLowerCase()}`|`''`|
+| key                                    | value                                                                                                                                                                                                | default                 |
+| -------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------- |
+| [status](/with#status)                 | `'success'` or `'failure'` or `'cancelled'` or `'custom'`                                                                                                                                            | `''`                    |
+| [fields](/fields)                      | You can choose the items you want to add to the fields at the time of notification.                                                                                                                  | `'repo,commit'`         |
+| [text](/with#text)                     | Specify the text you want to add.                                                                                                                                                                    | `''`                    |
+| [author_name](/with#author_name)       | It can be overwritten by specifying. The job name is recommend.                                                                                                                                      | `'8398a7@action-slack'` |
+| [mention](/with#mention)               | `'here'` or `'channel'` or [user_group_id](https://api.slack.com/reference/surfaces/formatting#mentioning-groups) or [user_id](https://api.slack.com/reference/surfaces/formatting#mentioning-users) | `''`                    |
+| [if_mention](/with#mention)            | Specify `'success'` or `'failure'` or `'cancelled'` or `'custom'` or `'always'`.                                                                                                                     | `''`                    |
+| [username](/with#username)             | Override the legacy integration's default name.                                                                                                                                                      | `''`                    |
+| [icon_emoji](/with#icon_emoji)         | [emoji code](https://www.webfx.com/tools/emoji-cheat-sheet/) string to use in place of the default icon.                                                                                             | `''`                    |
+| [icon_url](/with#icon_url)             | icon image URL string to use in place of the default icon.                                                                                                                                           | `''`                    |
+| [channel](/with#channel)               | Override the legacy integration's default channel. This should be an ID, such as `C8UJ12P4P`.                                                                                                        | `''`                    |
+| [custom_payload](/with#custom_payload) | e.g. `{"text": "Custom Field Check", obj: 'LOWER CASE'.toLowerCase()}`                                                                                                                               | `''`                    |
 
 # status
 
@@ -31,35 +31,6 @@ steps:
   - uses: 8398a7/action-slack@v3
     with:
       status: ${{ job.status }}
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # optional
-      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
-```
-
-# fields
-
-If you have more than one, please enter it in csv format.  
-Corresponding types are as follows.
-
-- repo
-- commit
-- message
-  - required GITHUB_TOKEN
-- author
-  - required GITHUB_TOKEN
-- job
-  - required GITHUB_TOKEN
-- took
-  - required GITHUB_TOKEN
-- eventName
-- ref
-- workflow
-
-```yaml
-steps:
-  - uses: 8398a7/action-slack@v3
-    with:
-      fields: repo,commit
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # optional
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required

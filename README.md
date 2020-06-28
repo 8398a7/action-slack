@@ -9,6 +9,10 @@
 
 - [Document](https://action-slack.netlify.com)
 
+## Quick Start
+
+You can learn more about it [here](https://action-slack.netlify.com/usecase/01-general).
+
 ```yaml
 steps:
   - uses: 8398a7/action-slack@v3
@@ -22,3 +26,29 @@ steps:
 ```
 
 <img width="495" alt="success" src="https://user-images.githubusercontent.com/8043276/84587112-64844800-ae57-11ea-8007-7ce83a91dae3.png" />
+
+## Custom Formats of your choice
+
+You can learn more about it [here](https://action-slack.netlify.com/usecase/02-custom).
+
+```yaml
+steps:
+  - uses: 8398a7/action-slack@v3
+  with:
+    status: custom
+    fields: all
+    custom_payload: |
+      {
+        username: 'action-slack',
+        icon_emoji: ':octocat:',
+        attachments: [{
+          color: 'good',
+          text: `${process.env.AS_WORKFLOW}\n${process.env.AS_JOB} (${process.env.AS_COMMIT}) of ${process.env.AS_REPO}@master by ${process.env.AS_AUTHOR} succeeded in ${process.env.AS_TOOK}`,
+        }]
+      }
+  env:
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    SLACK_WEBHOOK_URL: ${{ secrets.SLACK_LEGACY_WEBHOOK_URL_FOR_INTEGRATION_TEST }}
+```
+
+<img width="633" alt="custom" src="https://user-images.githubusercontent.com/8043276/85947865-3723b800-b988-11ea-80f7-6db5329c6af7.png">

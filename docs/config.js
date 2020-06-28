@@ -23,11 +23,8 @@ const config = {
     },
   },
   sidebar: {
-    forcedNavOrder: ['/usage', '/with', '/migration', '/usecase', '/contributors'],
-    collapsedNav: [
-      '/usecase', // add trailing slash if enabled above
-      '/migration',
-    ],
+    forcedNavOrder: ['/usage', '/with', '/fields', '/migration', '/usecase', '/contributors'],
+    collapsedNav: ['/usecase', '/migration'],
     links: [{ text: 'GitHub', link: 'https://github.com/8398a7/action-slack' }],
     frontline: false,
     ignoreIndex: true,
