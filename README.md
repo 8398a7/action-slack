@@ -51,4 +51,4 @@ steps:
     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 ```
 
-<img width="510" alt="custom" src="https://user-images.githubusercontent.com/8043276/85949706-44926f80-b993-11ea-83bf-b3f81e5e2d8c.png">
+<img width="501" alt="custom" src="https://user-images.githubusercontent.com/8043276/85949864-2b3df300-b994-11ea-9388-f4ff1aebc292.png">
