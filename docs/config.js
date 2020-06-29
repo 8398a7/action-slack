@@ -1,7 +1,7 @@
 const config = {
   gatsby: {
     pathPrefix: '/',
-    siteUrl: 'https://action-slack.netlify.com',
+    siteUrl: 'https://action-slack.netlify.app',
     gaTrackingId: null,
     trailingSlash: false,
   },

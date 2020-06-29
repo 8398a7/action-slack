@@ -7,11 +7,11 @@
 [![codecov](https://codecov.io/gh/8398a7/action-slack/branch/master/graph/badge.svg)](https://codecov.io/gh/8398a7/action-slack)
 
 
-- [Document](https://action-slack.netlify.com)
+- [Document](https://action-slack.netlify.app)
 
 ## Quick Start
 
-You can learn more about it [here](https://action-slack.netlify.com/usecase/01-general).
+You can learn more about it [here](https://action-slack.netlify.app/usecase/01-general).
 
 ```yaml
 steps:
@@ -29,7 +29,7 @@ steps:
 
 ## Custom Formats of your choice
 
-You can learn more about it [here](https://action-slack.netlify.com/usecase/02-custom).
+You can learn more about it [here](https://action-slack.netlify.app/usecase/02-custom).
 
 ```yaml
 steps:
