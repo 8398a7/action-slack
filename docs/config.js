@@ -16,7 +16,7 @@ const config = {
     links: [{ text: '', link: '' }],
     search: {
       enabled: true,
-      indexName: process.env.ALGOLIA === 'prod' ? 'prod_action-slack' : 'dev_action-slack',
+      indexName: process.env.ALGOLIA === 'dev' ? 'dev_action-slack' : 'prod_action-slack',
       algoliaAppId: process.env.GATSBY_ALGOLIA_APP_ID,
       algoliaSearchKey: process.env.GATSBY_ALGOLIA_SEARCH_KEY,
       algoliaAdminKey: process.env.ALGOLIA_ADMIN_KEY,
