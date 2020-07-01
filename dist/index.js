@@ -2322,6 +2322,9 @@ class FieldFactory {
                 this.includes('author')
                     ? createAttachment('author', yield this.author())
                     : undefined,
+                this.includes('action')
+                    ? createAttachment('action', yield this.action())
+                    : undefined,
                 this.includes('job')
                     ? createAttachment('job', yield this.job())
                     : undefined,
@@ -2443,6 +2446,16 @@ class FieldFactory {
             const { owner, repo } = github_1.context.repo;
             const value = `<https://github.com/${owner}/${repo}/commit/${sha}/checks|${github_1.context.workflow}>`;
             process.env.AS_WORKFLOW = value;
+            return value;
+        });
+    }
+    action() {
+        var _a, _b;
+        return __awaiter(this, void 0, void 0, function* () {
+            const sha = (_b = (_a = github_1.context.payload.pull_request) === null || _a === void 0 ? void 0 : _a.head.sha) !== null && _b !== void 0 ? _b : github_1.context.sha;
+            const { owner, repo } = github_1.context.repo;
+            const value = `<https://github.com/${owner}/${repo}/commit/${sha}/checks|action>`;
+            process.env.AS_ACTION = value;
             return value;
         });
     }
