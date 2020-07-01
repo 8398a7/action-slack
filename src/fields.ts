@@ -45,6 +45,9 @@ export class FieldFactory {
         this.includes('author')
           ? createAttachment('author', await this.author())
           : undefined,
+        this.includes('action')
+          ? createAttachment('action', await this.action())
+          : undefined,
         this.includes('job')
           ? createAttachment('job', await this.job())
           : undefined,
@@ -168,6 +171,15 @@ export class FieldFactory {
 
     const value = `<https://github.com/${owner}/${repo}/commit/${sha}/checks|${context.workflow}>`;
     process.env.AS_WORKFLOW = value;
+    return value;
+  }
+
+  private async action(): Promise<string> {
+    const sha = context.payload.pull_request?.head.sha ?? context.sha;
+    const { owner, repo } = context.repo;
+
+    const value = `<https://github.com/${owner}/${repo}/commit/${sha}/checks|action>`;
+    process.env.AS_ACTION = value;
     return value;
   }
 

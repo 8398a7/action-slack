@@ -5,10 +5,10 @@ metaDescription: This describes the custom use case of action-slack.
 ---
 
 You will often want to send notifications in a format other than the one that action-slack has determined.  
-In such a case, consider using `type: custom`.
+In such a case, consider using `status: custom`.
 
 If you specify a payload in accordance with the slack specification, action-slack will notify you as it is.  
-Use `status: cutom` and [custom_payload](/with#custom_payload) to customize notifications to your liking can be sent.
+Use `status: custom` and [custom_payload](/with#custom_payload) to customize notifications to your liking can be sent.
 
 ```yaml
 steps:
