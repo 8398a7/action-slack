@@ -75,6 +75,16 @@ const workflow = (sha?: string): Field => {
   };
 };
 
+const action = (sha?: string): Field => {
+  return {
+    short: true,
+    title: 'action',
+    value: `<https://github.com/8398a7/action-slack/commit/${
+      sha ?? process.env.GITHUB_SHA
+    }/checks|action>`,
+  };
+};
+
 const job = (): Field => {
   return {
     short: true,
@@ -99,6 +109,7 @@ const fixedFields = (fields: string, sha?: string) => {
       ff.includes('message') ? message() : undefined,
       ff.includes('commit') ? commit() : undefined,
       ff.includes('author') ? author() : undefined,
+      ff.includes('action') ? action(sha) : undefined,
       ff.includes('job') ? job() : undefined,
       ff.includes('took') ? took() : undefined,
       ff.includes('eventName') ? eventName() : undefined,
@@ -179,7 +190,8 @@ describe('8398a7/action-slack', () => {
         icon_emoji: '',
         icon_url: '',
         channel: '',
-        fields: 'repo,message,commit,author,job,eventName,ref,workflow,took',
+        fields:
+          'repo,message,commit,author,job,action,eventName,ref,workflow,took',
       };
       const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
       const payload = getTemplate(withParams.fields, `${successMsg}\n`);

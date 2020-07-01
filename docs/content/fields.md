@@ -16,10 +16,13 @@ Corresponding types are as follows.
 | eventName | no                      | `AS_EVENT_NAME`      | trigger event name                    |
 | ref       | no                      | `AS_REF`             | git refrence                          |
 | workflow  | no                      | `AS_WORKFLOW`        | GitHub Actions workflow name          |
+| action    | no                      | `AS_ACTION`          | Generate a workflow link from git sha |
 | message   | yes                     | `AS_MESSAGE`         | commit message                        |
 | author    | yes                     | `AS_AUTHOR`          | The author who pushed                 |
 | job       | yes                     | `AS_JOB`             | The name of the job that was executed |
 | took      | yes                     | `AS_TOOK`            | Execution time for the job            |
+
+caution: The Field in `action` is similar to what you get in workflow. It will be removed in the next major release version.
 
 ```yaml
 steps:
