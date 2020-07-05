@@ -16,7 +16,7 @@ import {
   cancelMsg,
   getTemplate,
   getApiFixture,
-} from './helper';
+} from './helper.test';
 import {
   Client,
   With,

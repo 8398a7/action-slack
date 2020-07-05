@@ -157,3 +157,7 @@ export const getApiFixture = (name: string): any =>
   JSON.parse(
     readFileSync(resolve(__dirname, 'fixtures', `${name}.json`)).toString(),
   );
+
+describe('TODO - Add a test suite', () => {
+  it('TODO - Add a test', async () => {});
+});

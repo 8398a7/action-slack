@@ -14,7 +14,7 @@ import {
   setupNockJobs,
   successMsg,
   getTemplate,
-} from './helper';
+} from './helper.test';
 import { Client, With } from '../src/client';
 
 beforeAll(() => {
