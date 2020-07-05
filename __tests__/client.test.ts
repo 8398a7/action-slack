@@ -1,6 +1,4 @@
 import nock from 'nock';
-import { readFileSync } from 'fs';
-import { resolve } from 'path';
 
 process.env.GITHUB_WORKFLOW = 'PR Checks';
 process.env.GITHUB_SHA = 'b24f03a32e093fe8d55e23cfd0bb314069633b2f';
@@ -11,160 +9,27 @@ process.env.GITHUB_RUN_ID = '1';
 process.env.GITHUB_JOB = 'notification';
 
 import {
+  setupNockCommit,
+  setupNockJobs,
+  successMsg,
+  failMsg,
+  cancelMsg,
+  getTemplate,
+  getApiFixture,
+} from './helper';
+import {
   Client,
   With,
   Success,
   Failure,
   Cancelled,
   Always,
-  Field,
-  GitHub,
 } from '../src/client';
-import { FieldFactory } from '../src/fields';
-
-const repo = (): Field => {
-  return {
-    short: true,
-    title: 'repo',
-    value: '<https://github.com/8398a7/action-slack|8398a7/action-slack>',
-  };
-};
-
-const message = (): Field => {
-  const obj: any = getApiFixture('repos.commits.get');
-  return {
-    short: true,
-    title: 'message',
-    value: `<${obj.html_url}|[#19] support for multiple user mentions>`,
-  };
-};
-
-const commit = (): Field => {
-  return {
-    short: true,
-    title: 'commit',
-    value: `<https://github.com/8398a7/action-slack/commit/${
-      process.env.GITHUB_SHA
-    }|${process.env.GITHUB_SHA?.slice(0, 8)}>`,
-  };
-};
-
-const author = (): Field => {
-  return { short: true, title: 'author', value: '839<8398a7@gmail.com>' };
-};
-
-const eventName = (): Field => {
-  return {
-    short: true,
-    title: 'eventName',
-    value: process.env.GITHUB_EVENT_NAME as string,
-  };
-};
-
-const ref = (): Field => {
-  return { short: true, title: 'ref', value: process.env.GITHUB_REF as string };
-};
-
-const workflow = (sha?: string): Field => {
-  return {
-    short: true,
-    title: 'workflow',
-    value: `<https://github.com/8398a7/action-slack/commit/${
-      sha ?? process.env.GITHUB_SHA
-    }/checks|${process.env.GITHUB_WORKFLOW as string}>`,
-  };
-};
-
-const action = (sha?: string): Field => {
-  return {
-    short: true,
-    title: 'action',
-    value: `<https://github.com/8398a7/action-slack/commit/${
-      sha ?? process.env.GITHUB_SHA
-    }/checks|action>`,
-  };
-};
-
-const job = (): Field => {
-  return {
-    short: true,
-    title: 'job',
-    value: `<https://github.com/8398a7/action-slack/runs/762195612|${process.env.GITHUB_JOB}>`,
-  };
-};
-
-const took = (): Field => {
-  return {
-    short: true,
-    title: 'took',
-    value: '1 hour 1 min 1 sec',
-  };
-};
-
-const fixedFields = (fields: string, sha?: string) => {
-  const ff = new FieldFactory(fields);
-  return ff.filterField(
-    [
-      ff.includes('repo') ? repo() : undefined,
-      ff.includes('message') ? message() : undefined,
-      ff.includes('commit') ? commit() : undefined,
-      ff.includes('author') ? author() : undefined,
-      ff.includes('action') ? action(sha) : undefined,
-      ff.includes('job') ? job() : undefined,
-      ff.includes('took') ? took() : undefined,
-      ff.includes('eventName') ? eventName() : undefined,
-      ff.includes('ref') ? ref() : undefined,
-      ff.includes('workflow') ? workflow(sha) : undefined,
-    ],
-    undefined,
-  );
-};
-
-const getTemplate: any = (fields: string, text: string, sha?: string) => {
-  return {
-    text,
-    attachments: [
-      {
-        author_name: '',
-        color: '',
-        fields: fixedFields(fields, sha),
-      },
-    ],
-    username: '',
-    icon_emoji: '',
-    icon_url: '',
-    channel: '',
-  };
-};
-
-const successMsg = ':white_check_mark: Succeeded GitHub Actions';
-const cancelMsg = ':warning: Canceled GitHub Actions';
-const failMsg = ':no_entry: Failed GitHub Actions';
-const getApiFixture = (name: string): any =>
-  JSON.parse(
-    readFileSync(resolve(__dirname, 'fixtures', `${name}.json`)).toString(),
-  );
 
 beforeAll(() => {
   nock.disableNetConnect();
-  nock('https://api.github.com')
-    .persist()
-    .get(`/repos/8398a7/action-slack/commits/${process.env.GITHUB_SHA}`)
-    .reply(200, () => getApiFixture('repos.commits.get'));
-  nock('https://api.github.com')
-    .persist()
-    .get(
-      `/repos/8398a7/action-slack/actions/runs/${process.env.GITHUB_RUN_ID}/jobs`,
-    )
-    .reply(200, () => {
-      const obj = getApiFixture('actions.runs.jobs');
-      const now = new Date();
-      now.setHours(now.getHours() - 1);
-      now.setMinutes(now.getMinutes() - 1);
-      now.setSeconds(now.getSeconds() - 1);
-      obj.jobs[0].started_at = now.toISOString();
-      return obj;
-    });
+  setupNockCommit(process.env.GITHUB_SHA as string);
+  setupNockJobs(process.env.GITHUB_RUN_ID as string, 'actions.runs.jobs');
 });
 afterAll(() => {
   nock.cleanAll();
@@ -194,7 +59,7 @@ describe('8398a7/action-slack', () => {
           'repo,message,commit,author,job,action,eventName,ref,workflow,took',
       };
       const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
-      const payload = getTemplate(withParams.fields, `${successMsg}\n`);
+      const payload = getTemplate(withParams.fields, successMsg);
       payload.attachments[0].color = 'good';
       expect(await client.success('')).toStrictEqual(payload);
     });
@@ -214,7 +79,7 @@ describe('8398a7/action-slack', () => {
         fields: '',
       };
       const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
-      const payload = getTemplate(withParams.fields, `${successMsg}\n`);
+      const payload = getTemplate(withParams.fields, successMsg);
       payload.attachments[0].color = 'good';
       expect(await client.success('')).toStrictEqual(payload);
     });
@@ -231,7 +96,7 @@ describe('8398a7/action-slack', () => {
         fields: '',
       };
       const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
-      const payload = getTemplate(withParams.fields, `${failMsg}\n`);
+      const payload = getTemplate(withParams.fields, failMsg);
       payload.attachments[0].color = 'danger';
       expect(await client.fail('')).toStrictEqual(payload);
     });
@@ -248,7 +113,7 @@ describe('8398a7/action-slack', () => {
         fields: '',
       };
       const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
-      const payload = getTemplate(withParams.fields, `${cancelMsg}\n`);
+      const payload = getTemplate(withParams.fields, cancelMsg);
       payload.attachments[0].color = 'warning';
       expect(await client.cancel('')).toStrictEqual(payload);
     });
@@ -613,7 +478,7 @@ describe('8398a7/action-slack', () => {
       fields: 'message,author',
     };
     const client = new Client(withParams, undefined, '');
-    const payload = getTemplate(withParams.fields, `${successMsg}\n`);
+    const payload = getTemplate(withParams.fields, successMsg);
     payload.attachments[0].color = 'good';
     payload.attachments[0].fields = payload.attachments[0].fields.filter(
       (field: any) => !['message', 'author'].includes(field.title),
