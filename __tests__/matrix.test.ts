@@ -1,12 +1,6 @@
 import nock from 'nock';
 
-process.env.GITHUB_WORKFLOW = 'PR Checks';
-process.env.GITHUB_SHA = 'b24f03a32e093fe8d55e23cfd0bb314069633b2f';
-process.env.GITHUB_REF = 'refs/heads/feature/19';
-process.env.GITHUB_EVENT_NAME = 'push';
-process.env.GITHUB_TOKEN = 'test-token';
 process.env.GITHUB_RUN_ID = '2';
-process.env.GITHUB_JOB = 'notification';
 process.env.MATRIX_CONTEXT = '{"os": "ubuntu-18.04"}';
 
 import { setupNockCommit, setupNockJobs, successMsg } from './helper';

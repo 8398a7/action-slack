@@ -4,12 +4,73 @@ import { resolve } from 'path';
 import { Field } from '../src/client';
 import { FieldFactory } from '../src/fields';
 
-process.env.GITHUB_WORKFLOW = 'PR Checks';
-process.env.GITHUB_SHA = 'b24f03a32e093fe8d55e23cfd0bb314069633b2f';
-process.env.GITHUB_REF = 'refs/heads/feature/19';
-process.env.GITHUB_EVENT_NAME = 'push';
-process.env.GITHUB_TOKEN = 'test-token';
-process.env.GITHUB_JOB = 'notification';
+export const getTemplate: any = (
+  fields: string,
+  text: string,
+  sha?: string,
+) => {
+  return {
+    text,
+    attachments: [
+      {
+        author_name: '',
+        color: '',
+        fields: fixedFields(fields, sha),
+      },
+    ],
+    username: '',
+    icon_emoji: '',
+    icon_url: '',
+    channel: '',
+  };
+};
+
+export const setupNockCommit = (sha: string) =>
+  nock('https://api.github.com')
+    .persist()
+    .get(`/repos/8398a7/action-slack/commits/${sha}`)
+    .reply(200, () => getApiFixture('repos.commits.get'));
+
+export const setupNockJobs = (runId: string, fixture: string) =>
+  nock('https://api.github.com')
+    .persist()
+    .get(`/repos/8398a7/action-slack/actions/runs/${runId}/jobs`)
+    .reply(200, () => {
+      const obj = getApiFixture(fixture);
+      const now = new Date();
+      now.setHours(now.getHours() - 1);
+      now.setMinutes(now.getMinutes() - 1);
+      now.setSeconds(now.getSeconds() - 1);
+      obj.jobs[0].started_at = now.toISOString();
+      return obj;
+    });
+
+export const successMsg = ':white_check_mark: Succeeded GitHub Actions\n';
+export const cancelMsg = ':warning: Canceled GitHub Actions\n';
+export const failMsg = ':no_entry: Failed GitHub Actions\n';
+export const getApiFixture = (name: string): any =>
+  JSON.parse(
+    readFileSync(resolve(__dirname, 'fixtures', `${name}.json`)).toString(),
+  );
+
+export const fixedFields = (fields: string, sha?: string) => {
+  const ff = new FieldFactory(fields, process.env.GITHUB_JOB as string);
+  return ff.filterField(
+    [
+      ff.includes('repo') ? repo() : undefined,
+      ff.includes('message') ? message() : undefined,
+      ff.includes('commit') ? commit() : undefined,
+      ff.includes('author') ? author() : undefined,
+      ff.includes('action') ? action(sha) : undefined,
+      ff.includes('job') ? job() : undefined,
+      ff.includes('took') ? took() : undefined,
+      ff.includes('eventName') ? eventName() : undefined,
+      ff.includes('ref') ? ref() : undefined,
+      ff.includes('workflow') ? workflow(sha) : undefined,
+    ],
+    undefined,
+  );
+};
 
 export const repo = (): Field => {
   return {
@@ -89,71 +150,3 @@ export const took = (): Field => {
     value: '1 hour 1 min 1 sec',
   };
 };
-
-export const fixedFields = (fields: string, sha?: string) => {
-  const ff = new FieldFactory(fields, process.env.GITHUB_JOB as string);
-  return ff.filterField(
-    [
-      ff.includes('repo') ? repo() : undefined,
-      ff.includes('message') ? message() : undefined,
-      ff.includes('commit') ? commit() : undefined,
-      ff.includes('author') ? author() : undefined,
-      ff.includes('action') ? action(sha) : undefined,
-      ff.includes('job') ? job() : undefined,
-      ff.includes('took') ? took() : undefined,
-      ff.includes('eventName') ? eventName() : undefined,
-      ff.includes('ref') ? ref() : undefined,
-      ff.includes('workflow') ? workflow(sha) : undefined,
-    ],
-    undefined,
-  );
-};
-
-export const getTemplate: any = (
-  fields: string,
-  text: string,
-  sha?: string,
-) => {
-  return {
-    text,
-    attachments: [
-      {
-        author_name: '',
-        color: '',
-        fields: fixedFields(fields, sha),
-      },
-    ],
-    username: '',
-    icon_emoji: '',
-    icon_url: '',
-    channel: '',
-  };
-};
-
-export const setupNockCommit = (sha: string) =>
-  nock('https://api.github.com')
-    .persist()
-    .get(`/repos/8398a7/action-slack/commits/${sha}`)
-    .reply(200, () => getApiFixture('repos.commits.get'));
-
-export const setupNockJobs = (runId: string, fixture: string) =>
-  nock('https://api.github.com')
-    .persist()
-    .get(`/repos/8398a7/action-slack/actions/runs/${runId}/jobs`)
-    .reply(200, () => {
-      const obj = getApiFixture(fixture);
-      const now = new Date();
-      now.setHours(now.getHours() - 1);
-      now.setMinutes(now.getMinutes() - 1);
-      now.setSeconds(now.getSeconds() - 1);
-      obj.jobs[0].started_at = now.toISOString();
-      return obj;
-    });
-
-export const successMsg = ':white_check_mark: Succeeded GitHub Actions\n';
-export const cancelMsg = ':warning: Canceled GitHub Actions\n';
-export const failMsg = ':no_entry: Failed GitHub Actions\n';
-export const getApiFixture = (name: string): any =>
-  JSON.parse(
-    readFileSync(resolve(__dirname, 'fixtures', `${name}.json`)).toString(),
-  );
