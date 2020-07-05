@@ -9,7 +9,7 @@ process.env.GITHUB_RUN_ID = '2';
 process.env.GITHUB_JOB = 'notification';
 process.env.MATRIX_CONTEXT = '{"os": "ubuntu-18.04"}';
 
-import { setupNockCommit, setupNockJobs, successMsg } from './helper.test';
+import { setupNockCommit, setupNockJobs, successMsg } from './helper';
 import { Client, With, Success } from '../src/client';
 
 beforeAll(() => {
