@@ -10,9 +10,11 @@ export interface Field {
 export class FieldFactory {
   private github?: GitHub;
   private fields: string[];
+  private jobName: string;
 
-  constructor(fields: string, github?: GitHub) {
+  constructor(fields: string, jobName: string, github?: GitHub) {
     this.fields = fields.replace(/ /g, '').split(',');
+    this.jobName = jobName;
     this.github = github;
   }
 
@@ -95,7 +97,7 @@ export class FieldFactory {
       repo: context.repo.repo,
       run_id: context.runId,
     });
-    const currentJob = resp?.data.jobs.find(job => job.name === context.job);
+    const currentJob = resp?.data.jobs.find(job => job.name === this.jobName);
     let time =
       new Date().getTime() - new Date(currentJob?.started_at ?? '').getTime();
     const h = Math.floor(time / (1000 * 60 * 60));
@@ -126,9 +128,9 @@ export class FieldFactory {
       repo: context.repo.repo,
       run_id: context.runId,
     });
-    const jobId = resp?.data.jobs.find(job => job.name === context.job)?.id;
+    const jobId = resp?.data.jobs.find(job => job.name === this.jobName)?.id;
 
-    const value = `<https://github.com/${owner}/${context.repo.repo}/runs/${jobId}|${context.job}>`;
+    const value = `<https://github.com/${owner}/${context.repo.repo}/runs/${jobId}|${this.jobName}>`;
     process.env.AS_JOB = value;
     return value;
   }
