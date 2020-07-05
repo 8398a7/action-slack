@@ -1,0 +1,2 @@
+ignore:
+  - __tests__/helper.ts
