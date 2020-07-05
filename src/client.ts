@@ -93,7 +93,7 @@ export class Client {
     core.debug('send message');
   }
 
-  public injectColor() {
+  injectColor() {
     switch (this.with.status) {
       case Success:
         return 'good';
@@ -105,7 +105,7 @@ export class Client {
     throw new Error(`invalid status: ${this.with.status}`);
   }
 
-  public injectText(value: string) {
+  injectText(value: string) {
     let text = '';
     switch (this.with.status) {
       case Success:
