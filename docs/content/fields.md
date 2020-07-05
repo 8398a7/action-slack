@@ -4,6 +4,22 @@ metaTitle: Fields | action-slack
 metaDescription: This explains the values that can be specified in Fields.
 ---
 
+caution: Additional configuration is required to work with matrix.
+
+Don't forget to add `MATRIX_CONTEXT`.  
+Not required if the fields do not contain jobs or tooks.
+
+```yaml
+steps:
+  - uses: 8398a7/action-slack@v3
+    with:
+      fields: job,took
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # required
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
+      MATRIX_CONTEXT: ${{ toJson(matrix) }} # required
+```
+
 If you have more than one, please enter it in csv format.  
 Corresponding types are as follows.
 
