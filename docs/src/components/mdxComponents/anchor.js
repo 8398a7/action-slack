@@ -1,18 +1,22 @@
 import * as React from 'react';
+import { Link as GatsbyLink } from 'gatsby';
+import isAbsoluteUrl from 'is-absolute-url';
 
 const AnchorTag = ({ children: link, ...props }) => {
-  if (link) {
-    if (props.href.startsWith('/')) {
-      return <a href={props.href}>{link}</a>;
-    } else {
-      return (
-        <a href={props.href} target="_blank" rel="noopener noreferrer">
-          {link}
-        </a>
-      );
-    }
+  if (!link) return null;
+
+  if (isAbsoluteUrl(props.href)) {
+    return (
+      <a href={props.href} target="_blank" rel="noopener noreferrer">
+        {link}
+      </a>
+    );
   } else {
-    return null;
+    return (
+      <GatsbyLink to={props.href} {...props}>
+        {link}
+      </GatsbyLink>
+    );
   }
 };
 
