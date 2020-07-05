@@ -55,7 +55,21 @@ export class Client {
       throw new Error('Specify secrets.SLACK_WEBHOOK_URL');
     }
     this.webhook = new IncomingWebhook(webhookUrl);
-    this.fieldFactory = new FieldFactory(this.with.fields, this.github);
+    this.fieldFactory = new FieldFactory(
+      this.with.fields,
+      this.jobName,
+      this.github,
+    );
+  }
+
+  private get jobName() {
+    if (
+      process.env.MATRIX_CONTEXT == null ||
+      process.env.MATRIX_CONTEXT === 'null'
+    )
+      return context.job;
+    const os = JSON.parse(process.env.MATRIX_CONTEXT).os;
+    return os !== '' ? `${context.job} (${os})` : context.job;
   }
 
   async success(text: string) {
