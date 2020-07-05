@@ -2297,8 +2297,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.FieldFactory = void 0;
 const github_1 = __webpack_require__(469);
 class FieldFactory {
-    constructor(fields, github) {
+    constructor(fields, jobName, github) {
         this.fields = fields.replace(/ /g, '').split(',');
+        this.jobName = jobName;
         this.github = github;
     }
     includes(field) {
@@ -2372,7 +2373,7 @@ class FieldFactory {
                 repo: github_1.context.repo.repo,
                 run_id: github_1.context.runId,
             }));
-            const currentJob = resp === null || resp === void 0 ? void 0 : resp.data.jobs.find(job => job.name === github_1.context.job);
+            const currentJob = resp === null || resp === void 0 ? void 0 : resp.data.jobs.find(job => job.name === this.jobName);
             let time = new Date().getTime() - new Date((_b = currentJob === null || currentJob === void 0 ? void 0 : currentJob.started_at) !== null && _b !== void 0 ? _b : '').getTime();
             const h = Math.floor(time / (1000 * 60 * 60));
             time -= h * 1000 * 60 * 60;
@@ -2402,8 +2403,8 @@ class FieldFactory {
                 repo: github_1.context.repo.repo,
                 run_id: github_1.context.runId,
             }));
-            const jobId = (_b = resp === null || resp === void 0 ? void 0 : resp.data.jobs.find(job => job.name === github_1.context.job)) === null || _b === void 0 ? void 0 : _b.id;
-            const value = `<https://github.com/${owner}/${github_1.context.repo.repo}/runs/${jobId}|${github_1.context.job}>`;
+            const jobId = (_b = resp === null || resp === void 0 ? void 0 : resp.data.jobs.find(job => job.name === this.jobName)) === null || _b === void 0 ? void 0 : _b.id;
+            const value = `<https://github.com/${owner}/${github_1.context.repo.repo}/runs/${jobId}|${this.jobName}>`;
             process.env.AS_JOB = value;
             return value;
         });
@@ -10065,7 +10066,14 @@ class Client {
             throw new Error('Specify secrets.SLACK_WEBHOOK_URL');
         }
         this.webhook = new webhook_1.IncomingWebhook(webhookUrl);
-        this.fieldFactory = new fields_1.FieldFactory(this.with.fields, this.github);
+        this.fieldFactory = new fields_1.FieldFactory(this.with.fields, this.jobName, this.github);
+    }
+    get jobName() {
+        if (process.env.MATRIX_CONTEXT == null ||
+            process.env.MATRIX_CONTEXT === 'null')
+            return github_1.context.job;
+        const os = JSON.parse(process.env.MATRIX_CONTEXT).os;
+        return os !== '' ? `${github_1.context.job} (${os})` : github_1.context.job;
     }
     success(text) {
         return __awaiter(this, void 0, void 0, function* () {
