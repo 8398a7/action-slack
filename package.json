@@ -1,6 +1,6 @@
 {
   "name": "action-slack",
-  "version": "3.5.2",
+  "version": "3.5.3",
   "private": true,
   "description": "You can notify slack of GitHub Actions.",
   "main": "lib/main.js",
@@ -13,7 +13,8 @@
     "test": "jest && codecov",
     "test-for-local": "jest",
     "all": "npm run build && npm run format-check && npm run lint && npm run pack && npm test",
-    "release": "npm run build && npm run pack"
+    "release": "npm run build && npm run pack",
+    "prepare-release": "./scripts/prepare-release.sh"
   },
   "repository": {
     "type": "git",
