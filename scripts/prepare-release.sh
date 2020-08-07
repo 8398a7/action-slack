@@ -23,6 +23,6 @@ if [ $? = 0 ]; then
   git push github v$major
 
   # push tag
-  git tag $tag
+  git tag v$tag
   git push github --tags
 fi
