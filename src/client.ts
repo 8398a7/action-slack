@@ -68,8 +68,9 @@ export class Client {
       process.env.MATRIX_CONTEXT === 'null'
     )
       return context.job;
-    const os = JSON.parse(process.env.MATRIX_CONTEXT).os;
-    return os !== '' ? `${context.job} (${os})` : context.job;
+    const matrix = JSON.parse(process.env.MATRIX_CONTEXT);
+    const value = Object.values(matrix).join(', ');
+    return value !== '' ? `${context.job} (${value})` : context.job;
   }
 
   async custom(payload: string) {
