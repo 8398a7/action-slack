@@ -15,6 +15,7 @@ if [ $? = 0 ]; then
   # release flow
   git checkout v$major
   git merge origin/master
+  npm ci
   npm install
   npm run release
   git add -A
