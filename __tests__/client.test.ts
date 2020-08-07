@@ -592,4 +592,23 @@ describe('8398a7/action-slack', () => {
       expect(() => client.injectText('')).toThrow();
     });
   });
+  describe('mentionText', () => {
+    it('returns proper user and group mentions', () => {
+      const withParams: With = {
+        status: Success,
+        mention: 'test1,test2, here',
+        author_name: '',
+        if_mention: Success,
+        username: '',
+        icon_emoji: '',
+        icon_url: '',
+        channel: '',
+        fields: '',
+      };
+      const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
+      expect(client.mentionText(Success)).toStrictEqual(
+        '<@test1> <@test2> <!here> ',
+      );
+    });
+  });
 });
