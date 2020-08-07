@@ -47,13 +47,9 @@ async function run(): Promise<void> {
 
     switch (status) {
       case Success:
-        await client.send(await client.success(text));
-        break;
       case Failure:
-        await client.send(await client.fail(text));
-        break;
       case Cancelled:
-        await client.send(await client.cancel(text));
+        await client.send(await client.prepare(text));
         break;
       case Custom:
         await client.send(await client.custom(custom_payload));

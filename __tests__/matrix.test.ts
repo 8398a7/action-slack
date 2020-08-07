@@ -1,21 +1,10 @@
 import nock from 'nock';
 
-process.env.GITHUB_WORKFLOW = 'PR Checks';
-process.env.GITHUB_SHA = 'b24f03a32e093fe8d55e23cfd0bb314069633b2f';
-process.env.GITHUB_REF = 'refs/heads/feature/19';
-process.env.GITHUB_EVENT_NAME = 'push';
-process.env.GITHUB_TOKEN = 'test-token';
 process.env.GITHUB_RUN_ID = '2';
-process.env.GITHUB_JOB = 'notification';
 process.env.MATRIX_CONTEXT = '{"os": "ubuntu-18.04"}';
 
-import {
-  setupNockCommit,
-  setupNockJobs,
-  successMsg,
-  getTemplate,
-} from './helper.test';
-import { Client, With } from '../src/client';
+import { setupNockCommit, setupNockJobs, successMsg } from './helper';
+import { Client, With, Success } from '../src/client';
 
 beforeAll(() => {
   nock.disableNetConnect();
@@ -40,7 +29,7 @@ describe('MATRIX_CONTEXT', () => {
 
   it('runs in matrix', async () => {
     const withParams: With = {
-      status: '',
+      status: Success,
       mention: '',
       author_name: '',
       if_mention: '',
@@ -51,7 +40,7 @@ describe('MATRIX_CONTEXT', () => {
       fields: 'job,took',
     };
     const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
-    expect(await client.success('')).toStrictEqual({
+    expect(await client.prepare('')).toStrictEqual({
       text: successMsg,
       attachments: [
         {
