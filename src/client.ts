@@ -128,6 +128,27 @@ export class Client {
     throw new Error(`invalid status: ${this.with.status}`);
   }
 
+  mentionText(status: SuccessType | FailureType | CancelledType | AlwaysType) {
+    const { mention, if_mention } = this.with;
+    if (!if_mention.includes(status) && if_mention !== Always) {
+      return '';
+    }
+
+    const normalized = mention.replace(/ /g, '');
+    if (normalized !== '') {
+      const text = normalized
+        .split(',')
+        .map(id => this.getIdString(id))
+        .join(' ');
+      return `${text} `;
+    }
+    return '';
+  }
+
+  private insertText(defaultText: string, text: string) {
+    return text === '' ? defaultText : text;
+  }
+
   private async payloadTemplate() {
     const text = '';
     const { username, icon_emoji, icon_url, channel } = this.with;
@@ -149,32 +170,9 @@ export class Client {
   }
 
   private getIdString(id: string): string {
-    if (id.includes(subteamMention)) return `<!${id}>`;
-    else return `<@${id}>`;
-  }
+    if (id.includes(subteamMention) || groupMention.includes(id))
+      return `<!${id}>`;
 
-  private mentionText(
-    status: SuccessType | FailureType | CancelledType | AlwaysType,
-  ) {
-    const { mention, if_mention } = this.with;
-    if (!if_mention.includes(status) && if_mention !== Always) {
-      return '';
-    }
-
-    const normalized = mention.replace(/ /g, '');
-    if (groupMention.includes(normalized)) {
-      return `<!${normalized}> `;
-    } else if (normalized !== '') {
-      const text = normalized
-        .split(',')
-        .map(id => this.getIdString(id))
-        .join(' ');
-      return `${text} `;
-    }
-    return '';
-  }
-
-  private insertText(defaultText: string, text: string) {
-    return text === '' ? defaultText : text;
+    return `<@${id}>`;
   }
 }
