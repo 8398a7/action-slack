@@ -1,6 +1,6 @@
 # action-slack
 
-![](https://github.com/8398a7/action-slack/workflows/ci/badge.svg)
+![](https://github.com/8398a7/action-slack/workflows/test-build/badge.svg)
 ![](https://github.com/8398a7/action-slack/workflows/Slack%20Mainline/badge.svg)
 ![](https://img.shields.io/github/license/8398a7/action-slack?color=brightgreen)
 ![](https://img.shields.io/github/v/release/8398a7/action-slack?color=brightgreen)
