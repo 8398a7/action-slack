@@ -1,5 +1,6 @@
 #!/bin/bash -u
 
+echo "::set-output name=skip::true"
 git diff HEAD~..HEAD -- package-lock.json | grep -q '"version":'
 
 if [ $? = 0 ]; then
@@ -11,10 +12,12 @@ if [ $? = 0 ]; then
 
   tag=$(git diff HEAD~..HEAD -- package-lock.json | grep version | tail -n 1 | cut -d'"' -f4)
   major=$(echo ${tag:0:1})
+  tag=v$tag
 
   # release flow
   git checkout v$major
   git merge origin/master
+  npm ci
   npm install
   npm run release
   git add -A
@@ -23,6 +26,9 @@ if [ $? = 0 ]; then
   git push github v$major
 
   # push tag
-  git tag v$tag
+  git tag $tag
   git push github --tags
+
+  echo "::set-output name=skip::false"
+  echo "::set-output name=tag::$tag"
 fi
