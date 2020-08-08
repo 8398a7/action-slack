@@ -16,7 +16,7 @@ echo start release flow
 git config user.name "8398a7"
 git config user.email "8398a7@gmail.com"
 
-tag=$(git diff HEAD~..HEAD -- package-lock.json | grep version | tail -n 1 | cut -d'"' -f4)
+tag=$(git diff HEAD~..HEAD -- package.json | grep version | tail -n 1 | cut -d'"' -f4)
 major=$(echo ${tag:0:1})
 tag=v$tag
 
