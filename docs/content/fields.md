@@ -15,7 +15,7 @@ steps:
     with:
       fields: job,took
     env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # required
+      GITHUB_TOKEN: ${{ github.token }} # required
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
       MATRIX_CONTEXT: ${{ toJson(matrix) }} # required
 ```
@@ -46,7 +46,7 @@ steps:
     with:
       fields: repo,commit
     env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # optional
+      GITHUB_TOKEN: ${{ github.token }} # optional
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
 ```
 
@@ -58,6 +58,6 @@ steps:
     with:
       fields: all
     env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # optional
+      GITHUB_TOKEN: ${{ github.token }} # optional
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
 ```

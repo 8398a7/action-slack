@@ -44,7 +44,7 @@ steps:
           }]
         }
     env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # optional
+      GITHUB_TOKEN: ${{ github.token }} # optional
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
 ```
 
@@ -67,7 +67,7 @@ steps:
           }]
         }
     env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_TOKEN: ${{ github.token }}
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 ```
 

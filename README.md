@@ -1,6 +1,6 @@
 # action-slack
 
-![](https://github.com/8398a7/action-slack/workflows/build-test/badge.svg)
+![](https://github.com/8398a7/action-slack/workflows/test-build/badge.svg)
 ![](https://github.com/8398a7/action-slack/workflows/Slack%20Mainline/badge.svg)
 ![](https://img.shields.io/github/license/8398a7/action-slack?color=brightgreen)
 ![](https://img.shields.io/github/v/release/8398a7/action-slack?color=brightgreen)
@@ -20,7 +20,7 @@ steps:
       status: ${{ job.status }}
       fields: repo,message,commit,author,action,eventName,ref,workflow,job,took # selectable (default: repo,message)
     env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # optional
+      GITHUB_TOKEN: ${{ github.token }} # optional
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
     if: always() # Pick up events even if the job fails or is canceled.
 ```
@@ -47,7 +47,7 @@ steps:
         }]
       }
   env:
-    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    GITHUB_TOKEN: ${{ github.token }}
     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 ```
 

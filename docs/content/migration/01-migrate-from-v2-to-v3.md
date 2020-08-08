@@ -14,7 +14,7 @@ steps:
     with:
       status: ${{ job.status }}
     env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # optional
+      GITHUB_TOKEN: ${{ github.token }} # optional
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
 ```
 
@@ -29,7 +29,7 @@ steps:
       status: ${{ job.status }}
       fields: repo,message,commit,author,action,eventName,ref,workflow
     env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # optional
+      GITHUB_TOKEN: ${{ github.token }} # optional
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
 ```
 
@@ -68,7 +68,7 @@ steps:
       status: ${{ job.status }}
       mention: here
     env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # optional
+      GITHUB_TOKEN: ${{ github.token }} # optional
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
 ```
 
@@ -82,7 +82,7 @@ steps:
       mention: here
       if_mention: always
     env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # optional
+      GITHUB_TOKEN: ${{ github.token }} # optional
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
 ```
 
@@ -97,7 +97,7 @@ steps:
       status: ${{ job.status }}
       only_mention_fail: here
     env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # optional
+      GITHUB_TOKEN: ${{ github.token }} # optional
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
 ```
 
@@ -111,7 +111,7 @@ steps:
       mention: here
       if_mention: failure
     env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # optional
+      GITHUB_TOKEN: ${{ github.token }} # optional
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
 ```
 
@@ -156,7 +156,7 @@ steps:
           }]
         }
     env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # optional
+      GITHUB_TOKEN: ${{ github.token }} # optional
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
 ```
 
@@ -196,6 +196,6 @@ steps:
           }]
         }
     env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # optional
+      GITHUB_TOKEN: ${{ github.token }} # optional
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
 ```
