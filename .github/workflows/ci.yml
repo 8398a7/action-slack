@@ -33,7 +33,9 @@ jobs:
       skip: ${{ steps.prepare-release.outputs.skip }}
       tag: ${{ steps.prepare-release.outputs.tag }}
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
       - uses: actions/cache@v1
         with:
           path: ~/.npm
