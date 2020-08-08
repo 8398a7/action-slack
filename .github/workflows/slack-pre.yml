@@ -13,21 +13,21 @@ jobs:
         with:
           status: Success
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_FOR_INTEGRATION_TEST }}
       - name: Failed
         uses: 8398a7/action-slack@pre
         with:
           status: Failure
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_FOR_INTEGRATION_TEST }}
       - name: Canceled
         uses: 8398a7/action-slack@pre
         with:
           status: Cancelled
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_FOR_INTEGRATION_TEST }}
       - name: Legacy Webhook URL
         uses: 8398a7/action-slack@pre
@@ -36,7 +36,7 @@ jobs:
           username: legacy user
           icon_emoji: ":octocat:"
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_LEGACY_WEBHOOK_URL_FOR_INTEGRATION_TEST }}
       - name: Custom Field
         uses: 8398a7/action-slack@pre
@@ -71,7 +71,7 @@ jobs:
               }]
             }
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_FOR_INTEGRATION_TEST }}
       - name: Custom Field2
         uses: 8398a7/action-slack@pre
@@ -88,7 +88,7 @@ jobs:
               }]
             }
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_LEGACY_WEBHOOK_URL_FOR_INTEGRATION_TEST }}
       - name: No GITHUB_TOKEN
         uses: 8398a7/action-slack@pre
@@ -103,7 +103,7 @@ jobs:
           mention: here
           if_mention: always
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_FOR_INTEGRATION_TEST }}
       - name: Fields Check
         uses: 8398a7/action-slack@pre
@@ -111,14 +111,14 @@ jobs:
           status: ${{ job.status }}
           fields: repo,message,commit,author,job,eventName,ref,workflow,took
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_FOR_INTEGRATION_TEST }}
       - uses: 8398a7/action-slack@pre
         with:
           status: ${{ job.status }}
           fields: repo,message,job,took
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
   matrix-notification:
     strategy:
@@ -131,7 +131,7 @@ jobs:
           status: ${{ job.status }}
           fields: job,took
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_FOR_INTEGRATION_TEST }}
           MATRIX_CONTEXT: ${{ toJson(matrix) }}
         if: always()

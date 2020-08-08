@@ -32,7 +32,7 @@ steps:
     with:
       status: ${{ job.status }}
     env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # optional
+      GITHUB_TOKEN: ${{ github.token }} # optional
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
 ```
 
@@ -46,7 +46,7 @@ steps:
     with:
       text: 'any string'
     env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # optional
+      GITHUB_TOKEN: ${{ github.token }} # optional
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
 ```
 
@@ -60,7 +60,7 @@ steps:
     with:
       author_name: 'my workflow'
     env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # optional
+      GITHUB_TOKEN: ${{ github.token }} # optional
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
 ```
 
@@ -75,7 +75,7 @@ steps:
       mention: 'here'
       if_mention: failure
     env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # optional
+      GITHUB_TOKEN: ${{ github.token }} # optional
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
 ```
 
@@ -88,7 +88,7 @@ steps:
       mention: 'user_id,user_id2'
       if_mention: 'failure,cancelled'
     env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # optional
+      GITHUB_TOKEN: ${{ github.token }} # optional
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
 ```
 
@@ -102,7 +102,7 @@ steps:
     with:
       username: 'my workflow bot'
     env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # optional
+      GITHUB_TOKEN: ${{ github.token }} # optional
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
 ```
 
@@ -116,7 +116,7 @@ steps:
     with:
       icon_emoji: ':octocat:'
     env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # optional
+      GITHUB_TOKEN: ${{ github.token }} # optional
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
 ```
 
@@ -130,7 +130,7 @@ steps:
     with:
       icon_url: 'http://example.com/hoge.png'
     env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # optional
+      GITHUB_TOKEN: ${{ github.token }} # optional
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
 ```
 
@@ -144,7 +144,7 @@ steps:
     with:
       channel: '#general'
     env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # optional
+      GITHUB_TOKEN: ${{ github.token }} # optional
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
 ```
 
@@ -184,7 +184,7 @@ steps:
           }]
         }
     env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # optional
+      GITHUB_TOKEN: ${{ github.token }} # optional
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
 ```
 
