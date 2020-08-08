@@ -1,6 +1,5 @@
 #!/bin/bash -u
 
-echo "::set-output name=skip::true"
 git diff HEAD~..HEAD -- package-lock.json | grep -q '"version":'
 if [ $? = 1 ]; then
   exit 0
@@ -34,6 +33,3 @@ git push github v$major
 # push tag
 git tag $tag
 git push github --tags
-
-echo "::set-output name=skip::false"
-echo "::set-output name=tag::$tag"

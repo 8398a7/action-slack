@@ -1,4 +1,4 @@
-name: ci
+name: test-build
 on: [pull_request, push]
 
 jobs:
@@ -29,42 +29,14 @@ jobs:
     if: contains(github.ref, 'master')
     needs: [test]
     runs-on: ubuntu-latest
-    outputs:
-      skip: ${{ steps.prepare-release.outputs.skip }}
-      tag: ${{ steps.prepare-release.outputs.tag }}
     steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 2
+      - uses: actions/checkout@v1
       - uses: actions/cache@v2
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
-      - id: prepare-release
-        run: npm run prepare-release
+      - run: npm run prepare-release
         env:
-          GITHUB_TOKEN: ${{ github.token }}
-  release:
-    needs: [prepare-release]
-    runs-on: ubuntu-latest
-    if: ${{ needs.prepare-release.outputs.skip == 'false' }}
-    steps:
-      - uses: actions/checkout@v2
-      - name: Create Release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        with:
-          tag_name: ${{ needs.prepare-release.outputs.tag }}
-          release_name: Release ${{ needs.prepare-release.outputs.tag }}
-          draft: false
-          prerelease: false
-      - uses: 8398a7/action-slack@v3
-        with:
-          status: ${{ job.status }}
-          fields: repo,message,job,took
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }} # Use personal access token to trigger another workflow.
