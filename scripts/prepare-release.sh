@@ -2,6 +2,10 @@
 
 echo "::set-output name=skip::true"
 git diff HEAD~..HEAD -- package-lock.json | grep -q '"version":'
+if [ $? = 1 ]; then
+  exit 0
+fi
+git diff HEAD~..HEAD -- package.json | grep -q '"version":'
 
 if [ $? = 0 ]; then
   echo start release flow
