@@ -70,36 +70,53 @@ export class FieldFactory {
     );
   }
 
-  private async message(): Promise<string | undefined> {
-    const resp = await this.getCommit();
-    if (resp === undefined) return undefined;
+  private async message(): Promise<string> {
+    if (this.github === undefined) {
+      process.env.AS_MESSAGE = this.githubTokenIsNotSet;
+      return this.githubTokenIsNotSet;
+    }
 
-    const value = `<${resp.data.html_url}|${
-      resp.data.commit.message.split('\n')[0]
+    const resp = await this.getCommit();
+
+    const value = `<${resp?.data.html_url}|${
+      resp?.data.commit.message.split('\n')[0]
     }>`;
     process.env.AS_MESSAGE = value;
     return value;
   }
 
-  private async author(): Promise<string | undefined> {
+  private async author(): Promise<string> {
+    if (this.github === undefined) {
+      process.env.AS_AUTHOR = this.githubTokenIsNotSet;
+      return this.githubTokenIsNotSet;
+    }
+
     const resp = await this.getCommit();
     const author = resp?.data.commit.author;
-    if (author === undefined) return undefined;
 
-    const value = `${author.name}<${author.email}>`;
+    const value = `${author?.name}<${author?.email}>`;
     process.env.AS_AUTHOR = value;
     return value;
   }
 
-  private async took(): Promise<string | undefined> {
+  private async took(): Promise<string> {
+    if (this.github === undefined) {
+      process.env.AS_JOB = this.githubTokenIsNotSet;
+      return this.githubTokenIsNotSet;
+    }
+
     const resp = await this.github?.actions.listJobsForWorkflowRun({
       owner: context.repo.owner,
       repo: context.repo.repo,
       run_id: context.runId,
     });
     const currentJob = resp?.data.jobs.find(job => job.name === this.jobName);
-    let time =
-      new Date().getTime() - new Date(currentJob?.started_at ?? '').getTime();
+    if (currentJob === undefined) {
+      process.env.AS_JOB = this.jobIsNotFound;
+      return this.jobIsNotFound;
+    }
+
+    let time = new Date().getTime() - new Date(currentJob.started_at).getTime();
     const h = Math.floor(time / (1000 * 60 * 60));
     time -= h * 1000 * 60 * 60;
     const m = Math.floor(time / (1000 * 60));
@@ -116,22 +133,33 @@ export class FieldFactory {
     if (s > 0) {
       value += `${s} sec`;
     }
-
     process.env.AS_TOOK = value;
+
     return value;
   }
 
-  private async job(): Promise<string | undefined> {
+  private async job(): Promise<string> {
+    if (this.github === undefined) {
+      process.env.AS_JOB = this.githubTokenIsNotSet;
+      return this.githubTokenIsNotSet;
+    }
+
     const { owner } = context.repo;
     const resp = await this.github?.actions.listJobsForWorkflowRun({
       owner,
       repo: context.repo.repo,
       run_id: context.runId,
     });
-    const jobId = resp?.data.jobs.find(job => job.name === this.jobName)?.id;
+    const currentJob = resp?.data.jobs.find(job => job.name === this.jobName);
+    if (currentJob === undefined) {
+      process.env.AS_JOB = this.jobIsNotFound;
+      return this.jobIsNotFound;
+    }
 
+    const jobId = currentJob.id;
     const value = `<https://github.com/${owner}/${context.repo.repo}/runs/${jobId}|${this.jobName}>`;
     process.env.AS_JOB = value;
+
     return value;
   }
 
@@ -190,14 +218,21 @@ export class FieldFactory {
     const { sha: ref } = context;
     return await this.github?.repos.getCommit({ owner, repo, ref });
   }
+
+  private get githubTokenIsNotSet() {
+    return 'GitHub Token is not set.';
+  }
+
+  private get jobIsNotFound() {
+    return 'Job is not found.\nCheck the matrix.';
+  }
 }
 
 function createAttachment(
   title: string,
-  value?: string,
+  value: string,
   short?: boolean,
 ): Field | undefined {
-  if (value === undefined) return undefined;
   if (short === undefined) short = true;
   return { title, value, short };
 }
