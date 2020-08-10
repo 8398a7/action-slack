@@ -1,7 +1,6 @@
 {
   "name": "action-slack",
-  "version": "3.6.0",
-  "private": true,
+  "version": "3.6.1",
   "description": "You can notify slack of GitHub Actions.",
   "main": "lib/main.js",
   "scripts": {
@@ -9,7 +8,7 @@
     "format": "prettier --write **/*.ts",
     "format-check": "prettier --check **/*.ts",
     "lint": "eslint src/**/*.ts",
-    "pack": "ncc build",
+    "pack": "ncc build -m",
     "test": "jest && codecov",
     "test-for-local": "jest",
     "all": "npm run build && npm run format-check && npm run lint && npm run pack && npm test",
