@@ -1,5 +1,5 @@
 import { context } from '@actions/github';
-import { GitHub } from './client';
+import { Octokit } from './client';
 
 export interface Field {
   title: string;
@@ -8,14 +8,14 @@ export interface Field {
 }
 
 export class FieldFactory {
-  private github?: GitHub;
+  private octokit?: Octokit;
   private fields: string[];
   private jobName: string;
 
-  constructor(fields: string, jobName: string, github?: GitHub) {
+  constructor(fields: string, jobName: string, octokit?: Octokit) {
     this.fields = fields.replace(/ /g, '').split(',');
     this.jobName = jobName;
-    this.github = github;
+    this.octokit = octokit;
   }
 
   includes(field: string) {
@@ -71,12 +71,12 @@ export class FieldFactory {
   }
 
   private async message(): Promise<string> {
-    if (this.github === undefined) {
+    if (this.octokit === undefined) {
       process.env.AS_MESSAGE = this.githubTokenIsNotSet;
       return this.githubTokenIsNotSet;
     }
 
-    const resp = await this.getCommit(this.github);
+    const resp = await this.getCommit(this.octokit);
 
     const value = `<${resp.data.html_url}|${
       resp.data.commit.message.split('\n')[0]
@@ -86,12 +86,12 @@ export class FieldFactory {
   }
 
   private async author(): Promise<string> {
-    if (this.github === undefined) {
+    if (this.octokit === undefined) {
       process.env.AS_AUTHOR = this.githubTokenIsNotSet;
       return this.githubTokenIsNotSet;
     }
 
-    const resp = await this.getCommit(this.github);
+    const resp = await this.getCommit(this.octokit);
     const author = resp.data.commit.author;
 
     const value = `${author.name}<${author.email}>`;
@@ -100,12 +100,12 @@ export class FieldFactory {
   }
 
   private async took(): Promise<string> {
-    if (this.github === undefined) {
+    if (this.octokit === undefined) {
       process.env.AS_JOB = this.githubTokenIsNotSet;
       return this.githubTokenIsNotSet;
     }
 
-    const resp = await this.github?.actions.listJobsForWorkflowRun({
+    const resp = await this.octokit?.actions.listJobsForWorkflowRun({
       owner: context.repo.owner,
       repo: context.repo.repo,
       run_id: context.runId,
@@ -139,13 +139,13 @@ export class FieldFactory {
   }
 
   private async job(): Promise<string> {
-    if (this.github === undefined) {
+    if (this.octokit === undefined) {
       process.env.AS_JOB = this.githubTokenIsNotSet;
       return this.githubTokenIsNotSet;
     }
 
     const { owner } = context.repo;
-    const resp = await this.github?.actions.listJobsForWorkflowRun({
+    const resp = await this.octokit?.actions.listJobsForWorkflowRun({
       owner,
       repo: context.repo.repo,
       run_id: context.runId,
@@ -213,10 +213,10 @@ export class FieldFactory {
     return value;
   }
 
-  private async getCommit(github: GitHub) {
+  private async getCommit(octokit: Octokit) {
     const { owner, repo } = context.repo;
     const { sha: ref } = context;
-    return await github.repos.getCommit({ owner, repo, ref });
+    return await octokit.repos.getCommit({ owner, repo, ref });
   }
 
   private get githubTokenIsNotSet() {

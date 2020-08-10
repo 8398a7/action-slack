@@ -14,7 +14,7 @@ export const Custom = 'custom';
 export const Always = 'always';
 type AlwaysType = 'always';
 
-export type GitHub = InstanceType<typeof GitHub>;
+export type Octokit = InstanceType<typeof GitHub>;
 
 export interface With {
   status: string;
@@ -40,7 +40,7 @@ const subteamMention = 'subteam^';
 export class Client {
   private fieldFactory: FieldFactory;
   private webhook: IncomingWebhook;
-  private github?: GitHub;
+  private octokit?: Octokit;
   private with: With;
 
   constructor(props: With, token?: string, webhookUrl?: string) {
@@ -48,7 +48,7 @@ export class Client {
     if (this.with.fields === '') this.with.fields = 'repo,commit';
 
     if (token !== undefined) {
-      this.github = getOctokit(token);
+      this.octokit = getOctokit(token);
     }
 
     if (webhookUrl === undefined) {
@@ -58,7 +58,7 @@ export class Client {
     this.fieldFactory = new FieldFactory(
       this.with.fields,
       this.jobName,
-      this.github,
+      this.octokit,
     );
   }
 
