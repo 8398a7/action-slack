@@ -476,14 +476,17 @@ describe('8398a7/action-slack', () => {
       icon_emoji: '',
       icon_url: '',
       channel: '',
-      fields: 'message,author',
+      fields: 'message,author,job,took',
     };
     const client = new Client(withParams, undefined, '');
     const payload = getTemplate(withParams.fields, successMsg);
     payload.attachments[0].color = 'good';
-    payload.attachments[0].fields = payload.attachments[0].fields.filter(
-      (field: any) => !['message', 'author'].includes(field.title),
-    );
+    payload.attachments[0].fields = [
+      { short: true, title: 'message', value: 'GitHub Token is not set.' },
+      { short: true, title: 'author', value: 'GitHub Token is not set.' },
+      { short: true, title: 'job', value: 'GitHub Token is not set.' },
+      { short: true, title: 'took', value: 'GitHub Token is not set.' },
+    ];
     expect(await client.prepare('')).toStrictEqual(payload);
   });
   it('throws error', () => {
