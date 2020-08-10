@@ -76,10 +76,10 @@ export class FieldFactory {
       return this.githubTokenIsNotSet;
     }
 
-    const resp = await this.getCommit();
+    const resp = await this.getCommit(this.github);
 
-    const value = `<${resp?.data.html_url}|${
-      resp?.data.commit.message.split('\n')[0]
+    const value = `<${resp.data.html_url}|${
+      resp.data.commit.message.split('\n')[0]
     }>`;
     process.env.AS_MESSAGE = value;
     return value;
@@ -91,10 +91,10 @@ export class FieldFactory {
       return this.githubTokenIsNotSet;
     }
 
-    const resp = await this.getCommit();
-    const author = resp?.data.commit.author;
+    const resp = await this.getCommit(this.github);
+    const author = resp.data.commit.author;
 
-    const value = `${author?.name}<${author?.email}>`;
+    const value = `${author.name}<${author.email}>`;
     process.env.AS_AUTHOR = value;
     return value;
   }
@@ -213,10 +213,10 @@ export class FieldFactory {
     return value;
   }
 
-  private async getCommit() {
+  private async getCommit(github: GitHub) {
     const { owner, repo } = context.repo;
     const { sha: ref } = context;
-    return await this.github?.repos.getCommit({ owner, repo, ref });
+    return await github.repos.getCommit({ owner, repo, ref });
   }
 
   private get githubTokenIsNotSet() {
