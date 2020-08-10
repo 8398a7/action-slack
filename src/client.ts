@@ -14,7 +14,7 @@ export const Custom = 'custom';
 export const Always = 'always';
 type AlwaysType = 'always';
 
-export type GitHub = InstanceType<typeof GitHub>;
+export type Octokit = InstanceType<typeof GitHub>;
 
 export interface With {
   status: string;
@@ -40,7 +40,7 @@ const subteamMention = 'subteam^';
 export class Client {
   private fieldFactory: FieldFactory;
   private webhook: IncomingWebhook;
-  private github?: GitHub;
+  private octokit?: Octokit;
   private with: With;
 
   constructor(props: With, token?: string, webhookUrl?: string) {
@@ -48,7 +48,7 @@ export class Client {
     if (this.with.fields === '') this.with.fields = 'repo,commit';
 
     if (token !== undefined) {
-      this.github = getOctokit(token);
+      this.octokit = getOctokit(token);
     }
 
     if (webhookUrl === undefined) {
@@ -58,7 +58,7 @@ export class Client {
     this.fieldFactory = new FieldFactory(
       this.with.fields,
       this.jobName,
-      this.github,
+      this.octokit,
     );
   }
 
@@ -68,44 +68,9 @@ export class Client {
       process.env.MATRIX_CONTEXT === 'null'
     )
       return context.job;
-    const os = JSON.parse(process.env.MATRIX_CONTEXT).os;
-    return os !== '' ? `${context.job} (${os})` : context.job;
-  }
-
-  async success(text: string) {
-    const template = await this.payloadTemplate();
-    template.attachments[0].color = 'good';
-    template.text += this.mentionText(this.with.mention, Success);
-    template.text += this.insertText(
-      ':white_check_mark: Succeeded GitHub Actions\n',
-      text,
-    );
-
-    return template;
-  }
-
-  async fail(text: string) {
-    const template = await this.payloadTemplate();
-    template.attachments[0].color = 'danger';
-    template.text += this.mentionText(this.with.mention, Failure);
-    template.text += this.insertText(
-      ':no_entry: Failed GitHub Actions\n',
-      text,
-    );
-
-    return template;
-  }
-
-  async cancel(text: string) {
-    const template = await this.payloadTemplate();
-    template.attachments[0].color = 'warning';
-    template.text += this.mentionText(this.with.mention, Cancelled);
-    template.text += this.insertText(
-      ':warning: Canceled GitHub Actions\n',
-      text,
-    );
-
-    return template;
+    const matrix = JSON.parse(process.env.MATRIX_CONTEXT);
+    const value = Object.values(matrix).join(', ');
+    return value !== '' ? `${context.job} (${value})` : context.job;
   }
 
   async custom(payload: string) {
@@ -116,10 +81,72 @@ export class Client {
     return template;
   }
 
+  async prepare(text: string) {
+    const template = await this.payloadTemplate();
+    template.text = this.injectText(text);
+    template.attachments[0].color = this.injectColor();
+    return template;
+  }
+
   async send(payload: string | IncomingWebhookSendArguments) {
     core.debug(JSON.stringify(context, null, 2));
     await this.webhook.send(payload);
     core.debug('send message');
+  }
+
+  injectColor() {
+    switch (this.with.status) {
+      case Success:
+        return 'good';
+      case Cancelled:
+        return 'warning';
+      case Failure:
+        return 'danger';
+    }
+    throw new Error(`invalid status: ${this.with.status}`);
+  }
+
+  injectText(value: string) {
+    let text = '';
+    switch (this.with.status) {
+      case Success:
+        text += this.mentionText(Success);
+        text += this.insertText(
+          ':white_check_mark: Succeeded GitHub Actions\n',
+          value,
+        );
+        return text;
+      case Cancelled:
+        text += this.mentionText(Cancelled);
+        text += this.insertText(':warning: Canceled GitHub Actions\n', value);
+        return text;
+      case Failure:
+        text += this.mentionText(Failure);
+        text += this.insertText(':no_entry: Failed GitHub Actions\n', value);
+        return text;
+    }
+    throw new Error(`invalid status: ${this.with.status}`);
+  }
+
+  mentionText(status: SuccessType | FailureType | CancelledType | AlwaysType) {
+    const { mention, if_mention } = this.with;
+    if (!if_mention.includes(status) && if_mention !== Always) {
+      return '';
+    }
+
+    const normalized = mention.replace(/ /g, '');
+    if (normalized !== '') {
+      const text = normalized
+        .split(',')
+        .map(id => this.getIdString(id))
+        .join(' ');
+      return `${text} `;
+    }
+    return '';
+  }
+
+  private insertText(defaultText: string, text: string) {
+    return text === '' ? defaultText : text;
   }
 
   private async payloadTemplate() {
@@ -143,35 +170,9 @@ export class Client {
   }
 
   private getIdString(id: string): string {
-    if (id.includes(subteamMention)) return `<!${id}>`;
-    else return `<@${id}>`;
-  }
+    if (id.includes(subteamMention) || groupMention.includes(id))
+      return `<!${id}>`;
 
-  private mentionText(
-    mention: string,
-    status: SuccessType | FailureType | CancelledType | AlwaysType,
-  ) {
-    if (
-      !this.with.if_mention.includes(status) &&
-      this.with.if_mention !== Always
-    ) {
-      return '';
-    }
-
-    const normalized = mention.replace(/ /g, '');
-    if (groupMention.includes(normalized)) {
-      return `<!${normalized}> `;
-    } else if (normalized !== '') {
-      const text = normalized
-        .split(',')
-        .map(id => this.getIdString(id))
-        .join(' ');
-      return `${text} `;
-    }
-    return '';
-  }
-
-  private insertText(defaultText: string, text: string) {
-    return text === '' ? defaultText : text;
+    return `<@${id}>`;
   }
 }

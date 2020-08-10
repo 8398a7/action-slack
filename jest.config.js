@@ -11,4 +11,5 @@ module.exports = {
   coverageDirectory: './coverage/',
   collectCoverage: true,
   preset: 'ts-jest',
+  globalSetup: './__tests__/setupTest.ts',
 };

@@ -1,7 +1,7 @@
 import nock from 'nock';
 
 process.env.GITHUB_RUN_ID = '2';
-process.env.MATRIX_CONTEXT = '{"os": "ubuntu-18.04"}';
+process.env.MATRIX_CONTEXT = '{}';
 
 import { setupNockCommit, setupNockJobs, successMsg } from './helper';
 import { Client, With, Success } from '../src/client';
@@ -27,7 +27,7 @@ describe('MATRIX_CONTEXT', () => {
     github.context.payload = {};
   });
 
-  it('runs in matrix', async () => {
+  it('not runs in matrix', async () => {
     const withParams: With = {
       status: Success,
       mention: '',
@@ -50,10 +50,13 @@ describe('MATRIX_CONTEXT', () => {
             {
               short: true,
               title: 'job',
-              value:
-                '<https://github.com/8398a7/action-slack/runs/762195612|notification (ubuntu-18.04)>',
+              value: 'Job is not found.\nCheck the matrix.',
             },
-            { short: true, title: 'took', value: '1 hour 1 min 1 sec' },
+            {
+              short: true,
+              title: 'took',
+              value: 'Job is not found.\nCheck the matrix.',
+            },
           ],
         },
       ],
