@@ -2346,9 +2346,11 @@ class FieldFactory {
     }
     message() {
         return __awaiter(this, void 0, void 0, function* () {
-            const resp = yield this.getCommit();
-            if (resp === undefined)
-                return undefined;
+            if (this.github === undefined) {
+                process.env.AS_MESSAGE = this.githubTokenIsNotSet;
+                return this.githubTokenIsNotSet;
+            }
+            const resp = yield this.getCommit(this.github);
             const value = `<${resp.data.html_url}|${resp.data.commit.message.split('\n')[0]}>`;
             process.env.AS_MESSAGE = value;
             return value;
@@ -2356,25 +2358,35 @@ class FieldFactory {
     }
     author() {
         return __awaiter(this, void 0, void 0, function* () {
-            const resp = yield this.getCommit();
-            const author = resp === null || resp === void 0 ? void 0 : resp.data.commit.author;
-            if (author === undefined)
-                return undefined;
+            if (this.github === undefined) {
+                process.env.AS_AUTHOR = this.githubTokenIsNotSet;
+                return this.githubTokenIsNotSet;
+            }
+            const resp = yield this.getCommit(this.github);
+            const author = resp.data.commit.author;
             const value = `${author.name}<${author.email}>`;
             process.env.AS_AUTHOR = value;
             return value;
         });
     }
     took() {
-        var _a, _b;
+        var _a;
         return __awaiter(this, void 0, void 0, function* () {
+            if (this.github === undefined) {
+                process.env.AS_JOB = this.githubTokenIsNotSet;
+                return this.githubTokenIsNotSet;
+            }
             const resp = yield ((_a = this.github) === null || _a === void 0 ? void 0 : _a.actions.listJobsForWorkflowRun({
                 owner: github_1.context.repo.owner,
                 repo: github_1.context.repo.repo,
                 run_id: github_1.context.runId,
             }));
             const currentJob = resp === null || resp === void 0 ? void 0 : resp.data.jobs.find(job => job.name === this.jobName);
-            let time = new Date().getTime() - new Date((_b = currentJob === null || currentJob === void 0 ? void 0 : currentJob.started_at) !== null && _b !== void 0 ? _b : '').getTime();
+            if (currentJob === undefined) {
+                process.env.AS_JOB = this.jobIsNotFound;
+                return this.jobIsNotFound;
+            }
+            let time = new Date().getTime() - new Date(currentJob.started_at).getTime();
             const h = Math.floor(time / (1000 * 60 * 60));
             time -= h * 1000 * 60 * 60;
             const m = Math.floor(time / (1000 * 60));
@@ -2395,15 +2407,24 @@ class FieldFactory {
         });
     }
     job() {
-        var _a, _b;
+        var _a;
         return __awaiter(this, void 0, void 0, function* () {
+            if (this.github === undefined) {
+                process.env.AS_JOB = this.githubTokenIsNotSet;
+                return this.githubTokenIsNotSet;
+            }
             const { owner } = github_1.context.repo;
             const resp = yield ((_a = this.github) === null || _a === void 0 ? void 0 : _a.actions.listJobsForWorkflowRun({
                 owner,
                 repo: github_1.context.repo.repo,
                 run_id: github_1.context.runId,
             }));
-            const jobId = (_b = resp === null || resp === void 0 ? void 0 : resp.data.jobs.find(job => job.name === this.jobName)) === null || _b === void 0 ? void 0 : _b.id;
+            const currentJob = resp === null || resp === void 0 ? void 0 : resp.data.jobs.find(job => job.name === this.jobName);
+            if (currentJob === undefined) {
+                process.env.AS_JOB = this.jobIsNotFound;
+                return this.jobIsNotFound;
+            }
+            const jobId = currentJob.id;
             const value = `<https://github.com/${owner}/${github_1.context.repo.repo}/runs/${jobId}|${this.jobName}>`;
             process.env.AS_JOB = value;
             return value;
@@ -2460,19 +2481,22 @@ class FieldFactory {
             return value;
         });
     }
-    getCommit() {
-        var _a;
+    getCommit(github) {
         return __awaiter(this, void 0, void 0, function* () {
             const { owner, repo } = github_1.context.repo;
             const { sha: ref } = github_1.context;
-            return yield ((_a = this.github) === null || _a === void 0 ? void 0 : _a.repos.getCommit({ owner, repo, ref }));
+            return yield github.repos.getCommit({ owner, repo, ref });
         });
+    }
+    get githubTokenIsNotSet() {
+        return 'GitHub Token is not set.';
+    }
+    get jobIsNotFound() {
+        return 'Job is not found.\nCheck the matrix.';
     }
 }
 exports.FieldFactory = FieldFactory;
 function createAttachment(title, value, short) {
-    if (value === undefined)
-        return undefined;
     if (short === undefined)
         short = true;
     return { title, value, short };
