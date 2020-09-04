@@ -47,6 +47,9 @@ export class FieldFactory {
         this.includes('author')
           ? createAttachment('author', await this.author())
           : undefined,
+        this.includes('authorName')
+          ? createAttachment('authorName', await this.authorName())
+          : undefined,
         this.includes('action')
           ? createAttachment('action', await this.action())
           : undefined,
@@ -61,6 +64,9 @@ export class FieldFactory {
           : undefined,
         this.includes('ref')
           ? createAttachment('ref', await this.ref())
+          : undefined,
+        this.includes('branch')
+          ? createAttachment('branch', await this.branch())
           : undefined,
         this.includes('workflow')
           ? createAttachment('workflow', await this.workflow())
@@ -96,6 +102,20 @@ export class FieldFactory {
 
     const value = `${author.name}<${author.email}>`;
     process.env.AS_AUTHOR = value;
+    return value;
+  }
+
+  private async authorName(): Promise<string> {
+    if (this.octokit === undefined) {
+      process.env.AS_AUTHOR_NAME = this.githubTokenIsNotSet;
+      return this.githubTokenIsNotSet;
+    }
+
+    const resp = await this.getCommit(this.octokit);
+    const author = resp.data.commit.author;
+
+    const value = `${author.name}`;
+    process.env.AS_AUTHOR_NAME = value;
     return value;
   }
 
@@ -192,6 +212,12 @@ export class FieldFactory {
   private async ref(): Promise<string> {
     const value = context.ref;
     process.env.AS_REF = value;
+    return value;
+  }
+
+  private async branch(): Promise<string> {
+    const value = context.ref.slice(context.ref.lastIndexOf('/') + 1);
+    process.env.AS_BRANCH = value;
     return value;
   }
 
