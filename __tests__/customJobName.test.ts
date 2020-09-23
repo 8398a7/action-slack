@@ -11,7 +11,7 @@ beforeAll(() => {
   setupNockCommit(process.env.GITHUB_SHA as string);
   setupNockJobs(
     process.env.GITHUB_RUN_ID as string,
-    'actions.matrix-runs.jobs',
+    'actions.custom-job-name.jobs',
   );
 });
 afterAll(() => {
@@ -19,7 +19,7 @@ afterAll(() => {
   nock.enableNetConnect();
 });
 
-describe('MATRIX_CONTEXT', () => {
+describe('job_name', () => {
   beforeEach(() => {
     process.env.GITHUB_REPOSITORY = '8398a7/action-slack';
     process.env.GITHUB_EVENT_NAME = 'push';
@@ -27,11 +27,12 @@ describe('MATRIX_CONTEXT', () => {
     github.context.payload = {};
   });
 
-  it('runs in matrix', async () => {
+  it('works even if you rename the job', async () => {
     const withParams: With = {
       ...newWith(),
       status: Success,
       fields: 'job,took',
+      job_name: 'Custom Job',
     };
     const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
     expect(await client.prepare('')).toStrictEqual({
@@ -45,7 +46,7 @@ describe('MATRIX_CONTEXT', () => {
               short: true,
               title: 'job',
               value:
-                '<https://github.com/8398a7/action-slack/runs/762195612|notification (ubuntu-18.04)>',
+                '<https://github.com/8398a7/action-slack/runs/762195612|Custom Job (ubuntu-18.04)>',
             },
             { short: true, title: 'took', value: '1 hour 1 min 1 sec' },
           ],

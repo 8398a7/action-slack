@@ -1,7 +1,7 @@
 import nock from 'nock';
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
-import { Field } from '../src/client';
+import { Field, With } from '../src/client';
 import { FieldFactory } from '../src/fields';
 
 export const getTemplate: any = (
@@ -52,6 +52,21 @@ export const getApiFixture = (name: string): any =>
   JSON.parse(
     readFileSync(resolve(__dirname, 'fixtures', `${name}.json`)).toString(),
   );
+
+export const newWith = (): With => {
+  return {
+    status: '',
+    mention: '',
+    author_name: '',
+    if_mention: '',
+    username: '',
+    icon_emoji: '',
+    icon_url: '',
+    channel: '',
+    fields: '',
+    job_name: '',
+  };
+};
 
 export const fixedFields = (fields: string, sha?: string) => {
   const ff = new FieldFactory(fields, process.env.GITHUB_JOB as string);

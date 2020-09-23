@@ -15,6 +15,7 @@ async function run(): Promise<void> {
     const custom_payload = core.getInput('custom_payload');
     const payload = core.getInput('payload');
     const fields = core.getInput('fields');
+    const job_name = core.getInput('job_name');
 
     core.debug(`status: ${status}`);
     core.debug(`mention: ${mention}`);
@@ -28,6 +29,7 @@ async function run(): Promise<void> {
     core.debug(`custom_payload: ${custom_payload}`);
     core.debug(`payload: ${payload}`);
     core.debug(`fields: ${fields}`);
+    core.debug(`job_name: ${job_name}`);
 
     const client = new Client(
       {
@@ -40,6 +42,7 @@ async function run(): Promise<void> {
         icon_url,
         channel,
         fields,
+        job_name,
       },
       process.env.GITHUB_TOKEN,
       process.env.SLACK_WEBHOOK_URL,

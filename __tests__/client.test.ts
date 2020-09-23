@@ -7,6 +7,7 @@ import {
   cancelMsg,
   getTemplate,
   getApiFixture,
+  newWith,
 } from './helper';
 
 import {
@@ -38,15 +39,9 @@ describe('8398a7/action-slack', () => {
 
   describe('fields', () => {
     it('is full fields', async () => {
-      const withParams: With = {
+      const withParams = {
+        ...newWith(),
         status: Success,
-        mention: '',
-        author_name: '',
-        if_mention: '',
-        username: '',
-        icon_emoji: '',
-        icon_url: '',
-        channel: '',
         fields:
           'repo,message,commit,author,job,action,eventName,ref,workflow,took',
       };
@@ -59,16 +54,9 @@ describe('8398a7/action-slack', () => {
 
   describe('text is not specified', () => {
     it('is success', async () => {
-      const withParams: With = {
+      const withParams = {
+        ...newWith(),
         status: Success,
-        mention: '',
-        author_name: '',
-        if_mention: '',
-        username: '',
-        icon_emoji: '',
-        icon_url: '',
-        channel: '',
-        fields: '',
       };
       const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
       const payload = getTemplate(withParams.fields, successMsg);
@@ -76,16 +64,9 @@ describe('8398a7/action-slack', () => {
       expect(await client.prepare('')).toStrictEqual(payload);
     });
     it('is failure', async () => {
-      const withParams: With = {
+      const withParams = {
+        ...newWith(),
         status: Failure,
-        mention: '',
-        author_name: '',
-        if_mention: '',
-        username: '',
-        icon_emoji: '',
-        icon_url: '',
-        channel: '',
-        fields: '',
       };
       const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
       const payload = getTemplate(withParams.fields, failMsg);
@@ -93,16 +74,9 @@ describe('8398a7/action-slack', () => {
       expect(await client.prepare('')).toStrictEqual(payload);
     });
     it('is cancel', async () => {
-      const withParams: With = {
+      const withParams = {
+        ...newWith(),
         status: Cancelled,
-        mention: '',
-        author_name: '',
-        if_mention: '',
-        username: '',
-        icon_emoji: '',
-        icon_url: '',
-        channel: '',
-        fields: '',
       };
       const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
       const payload = getTemplate(withParams.fields, cancelMsg);
@@ -112,16 +86,9 @@ describe('8398a7/action-slack', () => {
   });
 
   it('has no mention', async () => {
-    const withParams: With = {
+    const withParams = {
+      ...newWith(),
       status: Success,
-      mention: '',
-      author_name: '',
-      if_mention: '',
-      username: '',
-      icon_emoji: '',
-      icon_url: '',
-      channel: '',
-      fields: '',
     };
     const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
     const msg = 'mention test';
@@ -131,16 +98,11 @@ describe('8398a7/action-slack', () => {
   });
 
   it('does not match the requirements of the mention', async () => {
-    const withParams: With = {
+    const withParams = {
+      ...newWith(),
       status: Success,
       mention: 'here',
-      author_name: '',
       if_mention: Failure,
-      username: '',
-      icon_emoji: '',
-      icon_url: '',
-      channel: '',
-      fields: '',
     };
     let client = new Client(withParams, process.env.GITHUB_TOKEN, '');
     const msg = 'mention test';
@@ -157,16 +119,11 @@ describe('8398a7/action-slack', () => {
   });
 
   it('matches some of the conditions of the mention', async () => {
-    const withParams: With = {
+    const withParams = {
+      ...newWith(),
       status: Success,
       mention: 'here',
-      author_name: '',
       if_mention: `${Failure},${Success}`,
-      username: '',
-      icon_emoji: '',
-      icon_url: '',
-      channel: '',
-      fields: '',
     };
     const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
     const msg = 'mention test';
@@ -176,16 +133,11 @@ describe('8398a7/action-slack', () => {
   });
 
   it('can be mentioned on success', async () => {
-    const withParams: With = {
+    const withParams = {
+      ...newWith(),
       status: Success,
       mention: 'here',
-      author_name: '',
       if_mention: Success,
-      username: '',
-      icon_emoji: '',
-      icon_url: '',
-      channel: '',
-      fields: '',
     };
     const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
     const msg = 'mention test';
@@ -195,16 +147,11 @@ describe('8398a7/action-slack', () => {
   });
 
   it('can be mentioned on failure', async () => {
-    const withParams: With = {
+    const withParams = {
+      ...newWith(),
       status: Failure,
       mention: 'here',
-      author_name: '',
       if_mention: Failure,
-      username: '',
-      icon_emoji: '',
-      icon_url: '',
-      channel: '',
-      fields: '',
     };
     const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
     const msg = 'mention test';
@@ -214,16 +161,11 @@ describe('8398a7/action-slack', () => {
   });
 
   it('can be mentioned on cancelled', async () => {
-    const withParams: With = {
+    const withParams = {
+      ...newWith(),
       status: Cancelled,
       mention: 'here',
-      author_name: '',
       if_mention: Cancelled,
-      username: '',
-      icon_emoji: '',
-      icon_url: '',
-      channel: '',
-      fields: '',
     };
     const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
     const msg = 'mention test';
@@ -233,16 +175,11 @@ describe('8398a7/action-slack', () => {
   });
 
   it('can be mentioned on always', async () => {
-    const withParams: With = {
+    const withParams = {
+      ...newWith(),
       status: Success,
       mention: 'here',
-      author_name: '',
       if_mention: Always,
-      username: '',
-      icon_emoji: '',
-      icon_url: '',
-      channel: '',
-      fields: '',
     };
     let client = new Client(withParams, process.env.GITHUB_TOKEN, '');
     const msg = 'mention test';
@@ -265,15 +202,10 @@ describe('8398a7/action-slack', () => {
 
   it('mentions one user', async () => {
     const withParams: With = {
+      ...newWith(),
       status: Success,
       mention: 'user_id',
-      author_name: '',
       if_mention: Success,
-      username: '',
-      icon_emoji: '',
-      icon_url: '',
-      channel: '',
-      fields: '',
     };
     const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
     const msg = 'mention test';
@@ -284,15 +216,10 @@ describe('8398a7/action-slack', () => {
 
   it('can be mentioned here', async () => {
     const withParams: With = {
+      ...newWith(),
       status: Success,
       mention: 'here',
-      author_name: '',
       if_mention: Success,
-      username: '',
-      icon_emoji: '',
-      icon_url: '',
-      channel: '',
-      fields: '',
     };
     const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
     const msg = 'mention test';
@@ -303,15 +230,10 @@ describe('8398a7/action-slack', () => {
 
   it('can be mentioned channel', async () => {
     const withParams: With = {
+      ...newWith(),
       status: Success,
       mention: 'channel',
-      author_name: '',
       if_mention: Success,
-      username: '',
-      icon_emoji: '',
-      icon_url: '',
-      channel: '',
-      fields: '',
     };
     const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
     const msg = 'mention test';
@@ -322,15 +244,10 @@ describe('8398a7/action-slack', () => {
 
   it('mentions a user group', async () => {
     const withParams: With = {
+      ...newWith(),
       status: Success,
       mention: 'subteam^user_group_id',
-      author_name: '',
       if_mention: Success,
-      username: '',
-      icon_emoji: '',
-      icon_url: '',
-      channel: '',
-      fields: '',
     };
     const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
     const msg = 'mention test';
@@ -344,15 +261,10 @@ describe('8398a7/action-slack', () => {
 
   it('mentions multiple user groups', async () => {
     const withParams: With = {
+      ...newWith(),
       status: Success,
       mention: 'subteam^user_group_id,subteam^user_group_id2',
-      author_name: '',
       if_mention: Success,
-      username: '',
-      icon_emoji: '',
-      icon_url: '',
-      channel: '',
-      fields: '',
     };
     const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
     const msg = 'mention test';
@@ -366,15 +278,10 @@ describe('8398a7/action-slack', () => {
 
   it('mentions multiple users', async () => {
     const withParams: With = {
+      ...newWith(),
       status: Success,
       mention: 'user_id,user_id2',
-      author_name: '',
       if_mention: Success,
-      username: '',
-      icon_emoji: '',
-      icon_url: '',
-      channel: '',
-      fields: '',
     };
     const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
     const msg = 'mention test';
@@ -388,15 +295,10 @@ describe('8398a7/action-slack', () => {
 
   it('mentions mix of user and user group', async () => {
     const withParams: With = {
+      ...newWith(),
       status: Success,
       mention: 'user_id,subteam^user_group_id',
-      author_name: '',
       if_mention: Success,
-      username: '',
-      icon_emoji: '',
-      icon_url: '',
-      channel: '',
-      fields: '',
     };
     const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
     const msg = 'mention test';
@@ -410,15 +312,10 @@ describe('8398a7/action-slack', () => {
 
   it('removes csv space', async () => {
     const withParams: With = {
+      ...newWith(),
       status: Success,
       mention: 'user_id, user_id2',
-      author_name: '',
       if_mention: Success,
-      username: '',
-      icon_emoji: '',
-      icon_url: '',
-      channel: '',
-      fields: '',
     };
     let client = new Client(withParams, process.env.GITHUB_TOKEN, '');
     const msg = 'hello';
@@ -433,15 +330,8 @@ describe('8398a7/action-slack', () => {
 
   it('returns the expected template', async () => {
     const withParams: With = {
+      ...newWith(),
       status: Success,
-      mention: '',
-      author_name: '',
-      if_mention: '',
-      username: '',
-      icon_emoji: '',
-      icon_url: '',
-      channel: '',
-      fields: '',
     };
     let client = new Client(withParams, process.env.GITHUB_TOKEN, '');
     const msg = 'hello';
@@ -468,14 +358,8 @@ describe('8398a7/action-slack', () => {
 
   it('works without GITHUB_TOKEN', async () => {
     const withParams: With = {
+      ...newWith(),
       status: Success,
-      mention: '',
-      author_name: '',
-      if_mention: '',
-      username: '',
-      icon_emoji: '',
-      icon_url: '',
-      channel: '',
       fields: 'message,author,job,took',
     };
     const client = new Client(withParams, undefined, '');
@@ -490,17 +374,7 @@ describe('8398a7/action-slack', () => {
     expect(await client.prepare('')).toStrictEqual(payload);
   });
   it('throws error', () => {
-    const withParams: With = {
-      status: '',
-      mention: '',
-      author_name: '',
-      if_mention: '',
-      username: '',
-      icon_emoji: '',
-      icon_url: '',
-      channel: '',
-      fields: '',
-    };
+    const withParams = newWith();
     expect(() => new Client(withParams, undefined)).toThrow(
       'Specify secrets.SLACK_WEBHOOK_URL',
     );
@@ -519,17 +393,7 @@ describe('8398a7/action-slack', () => {
       })
       .reply(200, () => getApiFixture('repos.commits.get'));
 
-    const withParams: With = {
-      status: '',
-      mention: '',
-      author_name: '',
-      if_mention: '',
-      username: '',
-      icon_emoji: '',
-      icon_url: '',
-      channel: '',
-      fields: '',
-    };
+    const withParams = newWith();
     const client = new Client(withParams, undefined, mockSlackWebhookUrl);
 
     await client.send('payload');
@@ -538,15 +402,9 @@ describe('8398a7/action-slack', () => {
   });
   describe('.custom', () => {
     it('is full fields', async () => {
-      const withParams: With = {
+      const withParams = {
+        ...newWith(),
         status: 'custom',
-        mention: '',
-        author_name: '',
-        if_mention: '',
-        username: '',
-        icon_emoji: '',
-        icon_url: '',
-        channel: '',
         fields: 'all',
       };
       const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
@@ -563,16 +421,9 @@ describe('8398a7/action-slack', () => {
   });
   describe('#injectColor', () => {
     it('returns an exception that it is an unusual status', () => {
-      const withParams: With = {
+      const withParams = {
+        ...newWith(),
         status: 'custom',
-        mention: '',
-        author_name: '',
-        if_mention: '',
-        username: '',
-        icon_emoji: '',
-        icon_url: '',
-        channel: '',
-        fields: '',
       };
       const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
       expect(() => client.injectColor()).toThrow();
@@ -580,16 +431,9 @@ describe('8398a7/action-slack', () => {
   });
   describe('#injectText', () => {
     it('returns an exception that it is an unusual status', () => {
-      const withParams: With = {
+      const withParams = {
+        ...newWith(),
         status: 'custom',
-        mention: '',
-        author_name: '',
-        if_mention: '',
-        username: '',
-        icon_emoji: '',
-        icon_url: '',
-        channel: '',
-        fields: '',
       };
       const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
       expect(() => client.injectText('')).toThrow();
@@ -597,16 +441,11 @@ describe('8398a7/action-slack', () => {
   });
   describe('mentionText', () => {
     it('returns proper user and group mentions', () => {
-      const withParams: With = {
+      const withParams = {
+        ...newWith(),
         status: Success,
         mention: 'test1,test2, here',
-        author_name: '',
         if_mention: Success,
-        username: '',
-        icon_emoji: '',
-        icon_url: '',
-        channel: '',
-        fields: '',
       };
       const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
       expect(client.mentionText(Success)).toStrictEqual(

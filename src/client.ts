@@ -26,6 +26,7 @@ export interface With {
   icon_url: string;
   channel: string;
   fields: string;
+  job_name: string;
 }
 
 export interface Field {
@@ -63,14 +64,15 @@ export class Client {
   }
 
   private get jobName() {
+    const name = this.with.job_name === '' ? context.job : this.with.job_name;
     if (
       process.env.MATRIX_CONTEXT == null ||
       process.env.MATRIX_CONTEXT === 'null'
     )
-      return context.job;
+      return name;
     const matrix = JSON.parse(process.env.MATRIX_CONTEXT);
     const value = Object.values(matrix).join(', ');
-    return value !== '' ? `${context.job} (${value})` : context.job;
+    return value !== '' ? `${name} (${value})` : name;
   }
 
   async custom(payload: string) {
