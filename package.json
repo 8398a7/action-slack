@@ -1,6 +1,6 @@
 {
   "name": "action-slack",
-  "version": "3.6.1",
+  "version": "3.7.0",
   "description": "You can notify slack of GitHub Actions.",
   "main": "lib/main.js",
   "scripts": {
