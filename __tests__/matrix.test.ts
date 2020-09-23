@@ -3,7 +3,7 @@ import nock from 'nock';
 process.env.GITHUB_RUN_ID = '2';
 process.env.MATRIX_CONTEXT = '{"os": "ubuntu-18.04"}';
 
-import { setupNockCommit, setupNockJobs, successMsg } from './helper';
+import { newWith, setupNockCommit, setupNockJobs, successMsg } from './helper';
 import { Client, With, Success } from '../src/client';
 
 beforeAll(() => {
@@ -29,16 +29,9 @@ describe('MATRIX_CONTEXT', () => {
 
   it('runs in matrix', async () => {
     const withParams: With = {
+      ...newWith(),
       status: Success,
-      mention: '',
-      author_name: '',
-      if_mention: '',
-      username: '',
-      icon_emoji: '',
-      icon_url: '',
-      channel: '',
       fields: 'job,took',
-      job_name: '',
     };
     const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
     expect(await client.prepare('')).toStrictEqual({
