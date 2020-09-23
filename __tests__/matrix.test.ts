@@ -38,6 +38,7 @@ describe('MATRIX_CONTEXT', () => {
       icon_url: '',
       channel: '',
       fields: 'job,took',
+      job_name: '',
     };
     const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
     expect(await client.prepare('')).toStrictEqual({
