@@ -356,23 +356,6 @@ describe('8398a7/action-slack', () => {
     expect(await client.prepare(msg)).toStrictEqual(payload);
   });
 
-  it('works without GITHUB_TOKEN', async () => {
-    const withParams: With = {
-      ...newWith(),
-      status: Success,
-      fields: 'message,author,job,took',
-    };
-    const client = new Client(withParams, undefined, '');
-    const payload = getTemplate(withParams.fields, successMsg);
-    payload.attachments[0].color = 'good';
-    payload.attachments[0].fields = [
-      { short: true, title: 'message', value: 'GitHub Token is not set.' },
-      { short: true, title: 'author', value: 'GitHub Token is not set.' },
-      { short: true, title: 'job', value: 'GitHub Token is not set.' },
-      { short: true, title: 'took', value: 'GitHub Token is not set.' },
-    ];
-    expect(await client.prepare('')).toStrictEqual(payload);
-  });
   it('throws error', () => {
     const withParams = newWith();
     expect(() => new Client(withParams, undefined)).toThrow(

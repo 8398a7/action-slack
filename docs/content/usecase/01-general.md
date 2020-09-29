@@ -13,7 +13,6 @@ steps:
       status: ${{ job.status }}
       fields: repo,message,commit,author,action,eventName,ref,workflow,job,took # selectable (default: repo,message)
     env:
-      GITHUB_TOKEN: ${{ github.token }} # optional
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
     if: always() # Pick up events even if the job fails or is canceled.
 ```
