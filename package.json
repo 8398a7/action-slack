@@ -29,7 +29,7 @@
   "author": "8398a7",
   "license": "MIT",
   "dependencies": {
-    "@actions/core": "^1.2.4",
+    "@actions/core": "^1.2.6",
     "@actions/github": "^4.0.0",
     "@slack/webhook": "^5.0.3",
     "semver": "^7.3.2"
