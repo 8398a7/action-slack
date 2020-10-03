@@ -58,6 +58,10 @@ inputs:
     description: Use this if you want to overwrite the job name.
     default: ""
     required: false
+  github_token:
+    description: Use this if you wish to use a different GitHub token than the one provided by the workflow.
+    required: true
+    default: ${{ github.token }}
 runs:
   using: node12
   main: dist/index.js

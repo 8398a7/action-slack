@@ -8,11 +8,11 @@ export interface Field {
 }
 
 export class FieldFactory {
-  private octokit?: Octokit;
+  private octokit: Octokit;
   private fields: string[];
   private jobName: string;
 
-  constructor(fields: string, jobName: string, octokit?: Octokit) {
+  constructor(fields: string, jobName: string, octokit: Octokit) {
     this.fields = fields.replace(/ /g, '').split(',');
     this.jobName = jobName;
     this.octokit = octokit;
@@ -71,11 +71,6 @@ export class FieldFactory {
   }
 
   private async message(): Promise<string> {
-    if (this.octokit === undefined) {
-      process.env.AS_MESSAGE = this.githubTokenIsNotSet;
-      return this.githubTokenIsNotSet;
-    }
-
     const resp = await this.getCommit(this.octokit);
 
     const value = `<${resp.data.html_url}|${
@@ -86,11 +81,6 @@ export class FieldFactory {
   }
 
   private async author(): Promise<string> {
-    if (this.octokit === undefined) {
-      process.env.AS_AUTHOR = this.githubTokenIsNotSet;
-      return this.githubTokenIsNotSet;
-    }
-
     const resp = await this.getCommit(this.octokit);
     const author = resp.data.commit.author;
 
@@ -100,11 +90,6 @@ export class FieldFactory {
   }
 
   private async took(): Promise<string> {
-    if (this.octokit === undefined) {
-      process.env.AS_JOB = this.githubTokenIsNotSet;
-      return this.githubTokenIsNotSet;
-    }
-
     const resp = await this.octokit?.actions.listJobsForWorkflowRun({
       owner: context.repo.owner,
       repo: context.repo.repo,
@@ -139,11 +124,6 @@ export class FieldFactory {
   }
 
   private async job(): Promise<string> {
-    if (this.octokit === undefined) {
-      process.env.AS_JOB = this.githubTokenIsNotSet;
-      return this.githubTokenIsNotSet;
-    }
-
     const { owner } = context.repo;
     const resp = await this.octokit?.actions.listJobsForWorkflowRun({
       owner,
@@ -217,10 +197,6 @@ export class FieldFactory {
     const { owner, repo } = context.repo;
     const { sha: ref } = context;
     return await octokit.repos.getCommit({ owner, repo, ref });
-  }
-
-  private get githubTokenIsNotSet() {
-    return 'GitHub Token is not set.';
   }
 
   private get jobIsNotFound() {

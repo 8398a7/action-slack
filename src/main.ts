@@ -16,6 +16,7 @@ async function run(): Promise<void> {
     const payload = core.getInput('payload');
     const fields = core.getInput('fields');
     const job_name = core.getInput('job_name');
+    const github_token = core.getInput('github_token');
 
     core.debug(`status: ${status}`);
     core.debug(`mention: ${mention}`);
@@ -44,7 +45,7 @@ async function run(): Promise<void> {
         fields,
         job_name,
       },
-      process.env.GITHUB_TOKEN,
+      github_token,
       process.env.SLACK_WEBHOOK_URL,
     );
 
