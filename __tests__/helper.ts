@@ -3,6 +3,9 @@ import { readFileSync } from 'fs';
 import { resolve } from 'path';
 import { Field, With } from '../src/client';
 import { FieldFactory } from '../src/fields';
+import { getOctokit } from '@actions/github';
+
+export const githubToken = 'github-token';
 
 export const getTemplate: any = (
   fields: string,
@@ -69,7 +72,11 @@ export const newWith = (): With => {
 };
 
 export const fixedFields = (fields: string, sha?: string) => {
-  const ff = new FieldFactory(fields, process.env.GITHUB_JOB as string);
+  const ff = new FieldFactory(
+    fields,
+    process.env.GITHUB_JOB as string,
+    getOctokit(githubToken),
+  );
   return ff.filterField(
     [
       ff.includes('repo') ? repo() : undefined,
