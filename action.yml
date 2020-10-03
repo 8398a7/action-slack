@@ -54,6 +54,14 @@ inputs:
     description: override the legacy integration's default channel. This should be an ID, such as C8UJ12P4P.
     default: ""
     required: false
+  job_name:
+    description: Use this if you want to overwrite the job name.
+    default: ""
+    required: false
+  github_token:
+    description: Use this if you wish to use a different Github token than the one provided by the workflow.
+    required: true
+    default: ${{ github.token }}
 runs:
   using: node12
   main: dist/index.js
