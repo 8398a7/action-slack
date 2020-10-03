@@ -22,7 +22,6 @@ jobs:
           status: ${{ job.status }}
           fields: repo,message,job,took
         env:
-          GITHUB_TOKEN: ${{ github.token }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         if: ${{ github.event_name != 'pull_request' }}
   prepare-release:
