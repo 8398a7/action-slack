@@ -2,7 +2,7 @@ import nock from 'nock';
 
 process.env.GITHUB_EVENT_NAME = 'pull_request';
 
-import { setupNockCommit, getTemplate, newWith } from './helper';
+import { setupNockCommit, getTemplate, newWith, githubToken } from './helper';
 import { Client, With, Success } from '../src/client';
 
 beforeAll(() => {
@@ -33,7 +33,7 @@ describe('pull request event', () => {
       if_mention: Success,
       fields: 'action',
     };
-    const client = new Client(withParams, process.env.GITHUB_TOKEN, '');
+    const client = new Client(withParams, githubToken, '');
     const msg = 'mention test';
     const payload = getTemplate(withParams.fields, `<@user_id> ${msg}`, sha);
     payload.attachments[0].color = 'good';

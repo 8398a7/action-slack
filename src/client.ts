@@ -41,16 +41,14 @@ const subteamMention = 'subteam^';
 export class Client {
   private fieldFactory: FieldFactory;
   private webhook: IncomingWebhook;
-  private octokit?: Octokit;
+  private octokit: Octokit;
   private with: With;
 
-  constructor(props: With, token?: string, webhookUrl?: string) {
+  constructor(props: With, token: string, webhookUrl?: string) {
     this.with = props;
     if (this.with.fields === '') this.with.fields = 'repo,commit';
 
-    if (token !== undefined) {
-      this.octokit = getOctokit(token);
-    }
+    this.octokit = getOctokit(token);
 
     if (webhookUrl === undefined) {
       throw new Error('Specify secrets.SLACK_WEBHOOK_URL');
