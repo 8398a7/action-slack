@@ -44,13 +44,13 @@ export class Client {
   private octokit: Octokit;
   private with: With;
 
-  constructor(props: With, token: string, webhookUrl?: string) {
+  constructor(props: With, token: string, webhookUrl?: string | null) {
     this.with = props;
     if (this.with.fields === '') this.with.fields = 'repo,commit';
 
     this.octokit = getOctokit(token);
 
-    if (webhookUrl === undefined) {
+    if (webhookUrl === undefined || webhookUrl === null || webhookUrl === '') {
       throw new Error('Specify secrets.SLACK_WEBHOOK_URL');
     }
     this.webhook = new IncomingWebhook(webhookUrl);

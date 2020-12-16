@@ -9,6 +9,7 @@ import {
   setupNockCommit,
   setupNockJobs,
   successMsg,
+  webhookUrl,
 } from './helper';
 import { Client, With, Success } from '../src/client';
 
@@ -39,7 +40,7 @@ describe('MATRIX_CONTEXT', () => {
       status: Success,
       fields: 'job,took',
     };
-    const client = new Client(withParams, githubToken, '');
+    const client = new Client(withParams, githubToken, webhookUrl);
     expect(await client.prepare('')).toStrictEqual({
       text: successMsg,
       attachments: [
