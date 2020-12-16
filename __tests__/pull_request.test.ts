@@ -6,7 +6,7 @@ import {
   setupNockCommit,
   getTemplate,
   newWith,
-  githubToken,
+  gitHubToken,
   webhookUrl,
 } from './helper';
 import { Client, With, Success } from '../src/client';
@@ -39,7 +39,7 @@ describe('pull request event', () => {
       if_mention: Success,
       fields: 'action',
     };
-    const client = new Client(withParams, githubToken, webhookUrl);
+    const client = new Client(withParams, gitHubToken, webhookUrl);
     const msg = 'mention test';
     const payload = getTemplate(withParams.fields, `<@user_id> ${msg}`, sha);
     payload.attachments[0].color = 'good';

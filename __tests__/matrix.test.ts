@@ -4,7 +4,7 @@ process.env.GITHUB_RUN_ID = '2';
 process.env.MATRIX_CONTEXT = '{"os": "ubuntu-18.04"}';
 
 import {
-  githubToken,
+  gitHubToken,
   newWith,
   setupNockCommit,
   setupNockJobs,
@@ -40,7 +40,7 @@ describe('MATRIX_CONTEXT', () => {
       status: Success,
       fields: 'job,took',
     };
-    const client = new Client(withParams, githubToken, webhookUrl);
+    const client = new Client(withParams, gitHubToken, webhookUrl);
     expect(await client.prepare('')).toStrictEqual({
       text: successMsg,
       attachments: [
