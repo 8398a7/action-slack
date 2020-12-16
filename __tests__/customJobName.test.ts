@@ -9,6 +9,7 @@ import {
   setupNockCommit,
   setupNockJobs,
   successMsg,
+  webhookUrl,
 } from './helper';
 import { Client, With, Success } from '../src/client';
 
@@ -40,7 +41,7 @@ describe('job_name', () => {
       fields: 'job,took',
       job_name: 'Custom Job',
     };
-    const client = new Client(withParams, githubToken, '');
+    const client = new Client(withParams, githubToken, webhookUrl);
     expect(await client.prepare('')).toStrictEqual({
       text: successMsg,
       attachments: [

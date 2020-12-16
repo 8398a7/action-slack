@@ -6,6 +6,7 @@ import { FieldFactory } from '../src/fields';
 import { getOctokit } from '@actions/github';
 
 export const githubToken = 'github-token';
+export const webhookUrl = 'https://hooks.slack.com/services/xxx';
 
 export const getTemplate: any = (
   fields: string,
