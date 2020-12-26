@@ -22,13 +22,13 @@ export class FieldFactory {
     return this.fields.includes(field) || this.fields.includes('all');
   }
 
-  filterField<T extends Array<Field | undefined>, U extends undefined>(
+  filterField<T extends Array<Field | undefined>, D extends undefined>(
     array: T,
-    diff: U,
+    diff: D,
   ) {
     return array.filter(item => item !== diff) as Exclude<
       T extends { [K in keyof T]: infer U } ? U : never,
-      U
+      D
     >[];
   }
 
