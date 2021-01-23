@@ -67,6 +67,7 @@ steps:
         }
     env:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+    if: always() # Pick up events even if the job fails or is canceled.
 ```
 
 You can access the values retrieved by Fields through environment variables.  
