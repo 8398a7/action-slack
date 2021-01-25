@@ -37,8 +37,6 @@ steps:
     fields: workflow,job,commit,repo,ref,author,took
     custom_payload: |
       {
-        username: 'action-slack',
-        icon_emoji: ':octocat:',
         attachments: [{
           color: '${{ job.status }}' === 'success' ? 'good' : '${{ job.status }}' === 'failure' ? 'danger' : 'warning',
           text: `${process.env.AS_WORKFLOW}\n${process.env.AS_JOB} (${process.env.AS_COMMIT}) of ${process.env.AS_REPO}@${process.env.AS_REF} by ${process.env.AS_AUTHOR} ${{ job.status }} in ${process.env.AS_TOOK}`,
