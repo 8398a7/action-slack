@@ -11,11 +11,19 @@ export class FieldFactory {
   private octokit: Octokit;
   private fields: string[];
   private jobName: string;
+  private gitHubBaseUrl: string;
 
-  constructor(fields: string, jobName: string, octokit: Octokit) {
+  constructor(
+    fields: string,
+    jobName: string,
+    gitHubBaseUrl: string,
+    octokit: Octokit,
+  ) {
     this.fields = fields.replace(/ /g, '').split(',');
     this.jobName = jobName;
     this.octokit = octokit;
+    this.gitHubBaseUrl =
+      gitHubBaseUrl === '' ? 'https://github.com' : gitHubBaseUrl;
   }
 
   includes(field: string) {
@@ -137,7 +145,7 @@ export class FieldFactory {
     }
 
     const jobId = currentJob.id;
-    const value = `<https://github.com/${owner}/${context.repo.repo}/runs/${jobId}|${this.jobName}>`;
+    const value = `<${this.gitHubBaseUrl}/${owner}/${context.repo.repo}/runs/${jobId}|${this.jobName}>`;
     process.env.AS_JOB = value;
 
     return value;
@@ -147,10 +155,9 @@ export class FieldFactory {
     const { sha } = context;
     const { owner, repo } = context.repo;
 
-    const value = `<https://github.com/${owner}/${repo}/commit/${sha}|${sha.slice(
-      0,
-      8,
-    )}>`;
+    const value = `<${
+      this.gitHubBaseUrl
+    }/${owner}/${repo}/commit/${sha}|${sha.slice(0, 8)}>`;
     process.env.AS_COMMIT = value;
     return value;
   }
@@ -158,7 +165,7 @@ export class FieldFactory {
   private async repo(): Promise<string> {
     const { owner, repo } = context.repo;
 
-    const value = `<https://github.com/${owner}/${repo}|${owner}/${repo}>`;
+    const value = `<${this.gitHubBaseUrl}/${owner}/${repo}|${owner}/${repo}>`;
     process.env.AS_REPO = value;
     return value;
   }
@@ -179,7 +186,7 @@ export class FieldFactory {
     const sha = context.payload.pull_request?.head.sha ?? context.sha;
     const { owner, repo } = context.repo;
 
-    const value = `<https://github.com/${owner}/${repo}/commit/${sha}/checks|${context.workflow}>`;
+    const value = `<${this.gitHubBaseUrl}/${owner}/${repo}/commit/${sha}/checks|${context.workflow}>`;
     process.env.AS_WORKFLOW = value;
     return value;
   }
@@ -188,7 +195,7 @@ export class FieldFactory {
     const sha = context.payload.pull_request?.head.sha ?? context.sha;
     const { owner, repo } = context.repo;
 
-    const value = `<https://github.com/${owner}/${repo}/commit/${sha}/checks|action>`;
+    const value = `<${this.gitHubBaseUrl}/${owner}/${repo}/commit/${sha}/checks|action>`;
     process.env.AS_ACTION = value;
     return value;
   }

@@ -6,6 +6,7 @@ import { FieldFactory } from '../src/fields';
 import { getOctokit } from '@actions/github';
 
 export const gitHubToken = 'github-token';
+export const gitHubBaseUrl = '';
 export const webhookUrl = 'https://hooks.slack.com/services/xxx';
 
 export const getTemplate: any = (
@@ -76,6 +77,7 @@ export const fixedFields = (fields: string, sha?: string) => {
   const ff = new FieldFactory(
     fields,
     process.env.GITHUB_JOB as string,
+    '',
     getOctokit(gitHubToken),
   );
   return ff.filterField(
