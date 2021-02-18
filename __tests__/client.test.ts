@@ -9,6 +9,7 @@ import {
   getApiFixture,
   newWith,
   gitHubToken,
+  gitHubBaseUrl,
   webhookUrl,
 } from './helper';
 
@@ -43,25 +44,30 @@ describe('8398a7/action-slack', () => {
     it('is returns an exception because the environment variable does not exist', () => {
       const withParams = newWith();
       expect(() => {
-        new Client(withParams, gitHubToken, process.env.NOT_FOUND_ENV);
+        new Client(
+          withParams,
+          gitHubToken,
+          gitHubBaseUrl,
+          process.env.NOT_FOUND_ENV,
+        );
       }).toThrow();
     });
     it('is returns exception because null value', () => {
       const withParams = newWith();
       expect(() => {
-        new Client(withParams, gitHubToken, null);
+        new Client(withParams, gitHubToken, gitHubBaseUrl, null);
       }).toThrow();
     });
     it('is returns exception because undefined value', () => {
       const withParams = newWith();
       expect(() => {
-        new Client(withParams, gitHubToken, undefined);
+        new Client(withParams, gitHubToken, gitHubBaseUrl, undefined);
       }).toThrow();
     });
     it('is returns exception because empty string value', () => {
       const withParams = newWith();
       expect(() => {
-        new Client(withParams, gitHubToken, '');
+        new Client(withParams, gitHubToken, gitHubBaseUrl, '');
       }).toThrow();
     });
   });
@@ -74,7 +80,12 @@ describe('8398a7/action-slack', () => {
         fields:
           'repo,message,commit,author,job,action,eventName,ref,workflow,took',
       };
-      const client = new Client(withParams, gitHubToken, webhookUrl);
+      const client = new Client(
+        withParams,
+        gitHubToken,
+        gitHubBaseUrl,
+        webhookUrl,
+      );
       const payload = getTemplate(withParams.fields, successMsg);
       payload.attachments[0].color = 'good';
       expect(await client.prepare('')).toStrictEqual(payload);
@@ -87,7 +98,12 @@ describe('8398a7/action-slack', () => {
         ...newWith(),
         status: Success,
       };
-      const client = new Client(withParams, gitHubToken, webhookUrl);
+      const client = new Client(
+        withParams,
+        gitHubToken,
+        gitHubBaseUrl,
+        webhookUrl,
+      );
       const payload = getTemplate(withParams.fields, successMsg);
       payload.attachments[0].color = 'good';
       expect(await client.prepare('')).toStrictEqual(payload);
@@ -97,7 +113,12 @@ describe('8398a7/action-slack', () => {
         ...newWith(),
         status: Failure,
       };
-      const client = new Client(withParams, gitHubToken, webhookUrl);
+      const client = new Client(
+        withParams,
+        gitHubToken,
+        gitHubBaseUrl,
+        webhookUrl,
+      );
       const payload = getTemplate(withParams.fields, failMsg);
       payload.attachments[0].color = 'danger';
       expect(await client.prepare('')).toStrictEqual(payload);
@@ -107,7 +128,12 @@ describe('8398a7/action-slack', () => {
         ...newWith(),
         status: Cancelled,
       };
-      const client = new Client(withParams, gitHubToken, webhookUrl);
+      const client = new Client(
+        withParams,
+        gitHubToken,
+        gitHubBaseUrl,
+        webhookUrl,
+      );
       const payload = getTemplate(withParams.fields, cancelMsg);
       payload.attachments[0].color = 'warning';
       expect(await client.prepare('')).toStrictEqual(payload);
@@ -119,7 +145,12 @@ describe('8398a7/action-slack', () => {
       ...newWith(),
       status: Success,
     };
-    const client = new Client(withParams, gitHubToken, webhookUrl);
+    const client = new Client(
+      withParams,
+      gitHubToken,
+      gitHubBaseUrl,
+      webhookUrl,
+    );
     const msg = 'mention test';
     const payload = getTemplate(withParams.fields, msg);
     payload.attachments[0].color = 'good';
@@ -133,7 +164,7 @@ describe('8398a7/action-slack', () => {
       mention: 'here',
       if_mention: Failure,
     };
-    let client = new Client(withParams, gitHubToken, webhookUrl);
+    let client = new Client(withParams, gitHubToken, gitHubBaseUrl, webhookUrl);
     const msg = 'mention test';
     let payload = getTemplate(withParams.fields, msg);
     payload.attachments[0].color = 'good';
@@ -141,7 +172,7 @@ describe('8398a7/action-slack', () => {
 
     withParams.mention = '';
     withParams.status = Failure;
-    client = new Client(withParams, gitHubToken, webhookUrl);
+    client = new Client(withParams, gitHubToken, gitHubBaseUrl, webhookUrl);
     payload = getTemplate(withParams.fields, msg);
     payload.attachments[0].color = 'danger';
     expect(await client.prepare(msg)).toStrictEqual(payload);
@@ -154,7 +185,12 @@ describe('8398a7/action-slack', () => {
       mention: 'here',
       if_mention: `${Failure},${Success}`,
     };
-    const client = new Client(withParams, gitHubToken, webhookUrl);
+    const client = new Client(
+      withParams,
+      gitHubToken,
+      gitHubBaseUrl,
+      webhookUrl,
+    );
     const msg = 'mention test';
     const payload = getTemplate(withParams.fields, `<!here> ${msg}`);
     payload.attachments[0].color = 'good';
@@ -168,7 +204,12 @@ describe('8398a7/action-slack', () => {
       mention: 'here',
       if_mention: Success,
     };
-    const client = new Client(withParams, gitHubToken, webhookUrl);
+    const client = new Client(
+      withParams,
+      gitHubToken,
+      gitHubBaseUrl,
+      webhookUrl,
+    );
     const msg = 'mention test';
     const payload = getTemplate(withParams.fields, `<!here> ${msg}`);
     payload.attachments[0].color = 'good';
@@ -182,7 +223,12 @@ describe('8398a7/action-slack', () => {
       mention: 'here',
       if_mention: Failure,
     };
-    const client = new Client(withParams, gitHubToken, webhookUrl);
+    const client = new Client(
+      withParams,
+      gitHubToken,
+      gitHubBaseUrl,
+      webhookUrl,
+    );
     const msg = 'mention test';
     const payload = getTemplate(withParams.fields, `<!here> ${msg}`);
     payload.attachments[0].color = 'danger';
@@ -196,7 +242,12 @@ describe('8398a7/action-slack', () => {
       mention: 'here',
       if_mention: Cancelled,
     };
-    const client = new Client(withParams, gitHubToken, webhookUrl);
+    const client = new Client(
+      withParams,
+      gitHubToken,
+      gitHubBaseUrl,
+      webhookUrl,
+    );
     const msg = 'mention test';
     const payload = getTemplate(withParams.fields, `<!here> ${msg}`);
     payload.attachments[0].color = 'warning';
@@ -210,7 +261,7 @@ describe('8398a7/action-slack', () => {
       mention: 'here',
       if_mention: Always,
     };
-    let client = new Client(withParams, gitHubToken, webhookUrl);
+    let client = new Client(withParams, gitHubToken, gitHubBaseUrl, webhookUrl);
     const msg = 'mention test';
     let payload = getTemplate(withParams.fields, `<!here> ${msg}`);
     payload.attachments[0].color = 'good';
@@ -219,13 +270,13 @@ describe('8398a7/action-slack', () => {
     payload = getTemplate(withParams.fields, `<!here> ${msg}`);
     payload.attachments[0].color = 'danger';
     withParams.status = Failure;
-    client = new Client(withParams, gitHubToken, webhookUrl);
+    client = new Client(withParams, gitHubToken, gitHubBaseUrl, webhookUrl);
     expect(await client.prepare(msg)).toStrictEqual(payload);
 
     payload = getTemplate(withParams.fields, `<!here> ${msg}`);
     payload.attachments[0].color = 'warning';
     withParams.status = Cancelled;
-    client = new Client(withParams, gitHubToken, webhookUrl);
+    client = new Client(withParams, gitHubToken, gitHubBaseUrl, webhookUrl);
     expect(await client.prepare(msg)).toStrictEqual(payload);
   });
 
@@ -236,7 +287,12 @@ describe('8398a7/action-slack', () => {
       mention: 'user_id',
       if_mention: Success,
     };
-    const client = new Client(withParams, gitHubToken, webhookUrl);
+    const client = new Client(
+      withParams,
+      gitHubToken,
+      gitHubBaseUrl,
+      webhookUrl,
+    );
     const msg = 'mention test';
     const payload = getTemplate(withParams.fields, `<@user_id> ${msg}`);
     payload.attachments[0].color = 'good';
@@ -250,7 +306,12 @@ describe('8398a7/action-slack', () => {
       mention: 'here',
       if_mention: Success,
     };
-    const client = new Client(withParams, gitHubToken, webhookUrl);
+    const client = new Client(
+      withParams,
+      gitHubToken,
+      gitHubBaseUrl,
+      webhookUrl,
+    );
     const msg = 'mention test';
     const payload = getTemplate(withParams.fields, `<!here> ${msg}`);
     payload.attachments[0].color = 'good';
@@ -264,7 +325,12 @@ describe('8398a7/action-slack', () => {
       mention: 'channel',
       if_mention: Success,
     };
-    const client = new Client(withParams, gitHubToken, webhookUrl);
+    const client = new Client(
+      withParams,
+      gitHubToken,
+      gitHubBaseUrl,
+      webhookUrl,
+    );
     const msg = 'mention test';
     const payload = getTemplate(withParams.fields, `<!channel> ${msg}`);
     payload.attachments[0].color = 'good';
@@ -278,7 +344,12 @@ describe('8398a7/action-slack', () => {
       mention: 'subteam^user_group_id',
       if_mention: Success,
     };
-    const client = new Client(withParams, gitHubToken, webhookUrl);
+    const client = new Client(
+      withParams,
+      gitHubToken,
+      gitHubBaseUrl,
+      webhookUrl,
+    );
     const msg = 'mention test';
     const payload = getTemplate(
       withParams.fields,
@@ -295,7 +366,12 @@ describe('8398a7/action-slack', () => {
       mention: 'subteam^user_group_id,subteam^user_group_id2',
       if_mention: Success,
     };
-    const client = new Client(withParams, gitHubToken, webhookUrl);
+    const client = new Client(
+      withParams,
+      gitHubToken,
+      gitHubBaseUrl,
+      webhookUrl,
+    );
     const msg = 'mention test';
     const payload = getTemplate(
       withParams.fields,
@@ -312,7 +388,12 @@ describe('8398a7/action-slack', () => {
       mention: 'user_id,user_id2',
       if_mention: Success,
     };
-    const client = new Client(withParams, gitHubToken, webhookUrl);
+    const client = new Client(
+      withParams,
+      gitHubToken,
+      gitHubBaseUrl,
+      webhookUrl,
+    );
     const msg = 'mention test';
     const payload = getTemplate(
       withParams.fields,
@@ -329,7 +410,12 @@ describe('8398a7/action-slack', () => {
       mention: 'user_id,subteam^user_group_id',
       if_mention: Success,
     };
-    const client = new Client(withParams, gitHubToken, webhookUrl);
+    const client = new Client(
+      withParams,
+      gitHubToken,
+      gitHubBaseUrl,
+      webhookUrl,
+    );
     const msg = 'mention test';
     const payload = getTemplate(
       withParams.fields,
@@ -346,7 +432,7 @@ describe('8398a7/action-slack', () => {
       mention: 'user_id, user_id2',
       if_mention: Success,
     };
-    let client = new Client(withParams, gitHubToken, webhookUrl);
+    let client = new Client(withParams, gitHubToken, gitHubBaseUrl, webhookUrl);
     const msg = 'hello';
 
     let payload = getTemplate(
@@ -362,7 +448,7 @@ describe('8398a7/action-slack', () => {
       ...newWith(),
       status: Success,
     };
-    let client = new Client(withParams, gitHubToken, webhookUrl);
+    let client = new Client(withParams, gitHubToken, gitHubBaseUrl, webhookUrl);
     const msg = 'hello';
 
     // for success
@@ -372,14 +458,14 @@ describe('8398a7/action-slack', () => {
 
     // for cancel
     withParams.status = Cancelled;
-    client = new Client(withParams, gitHubToken, webhookUrl);
+    client = new Client(withParams, gitHubToken, gitHubBaseUrl, webhookUrl);
     payload = getTemplate(withParams.fields, msg);
     payload.attachments[0].color = 'warning';
     expect(await client.prepare(msg)).toStrictEqual(payload);
 
     // for fail
     withParams.status = Failure;
-    client = new Client(withParams, gitHubToken, webhookUrl);
+    client = new Client(withParams, gitHubToken, gitHubBaseUrl, webhookUrl);
     payload = getTemplate(withParams.fields, msg);
     payload.attachments[0].color = 'danger';
     expect(await client.prepare(msg)).toStrictEqual(payload);
@@ -387,7 +473,7 @@ describe('8398a7/action-slack', () => {
 
   it('throws error', () => {
     const withParams = newWith();
-    expect(() => new Client(withParams, gitHubToken)).toThrow(
+    expect(() => new Client(withParams, gitHubToken, gitHubBaseUrl)).toThrow(
       'Specify secrets.SLACK_WEBHOOK_URL',
     );
   });
@@ -406,7 +492,12 @@ describe('8398a7/action-slack', () => {
       .reply(200, () => getApiFixture('repos.commits.get'));
 
     const withParams = newWith();
-    const client = new Client(withParams, gitHubToken, mockSlackWebhookUrl);
+    const client = new Client(
+      withParams,
+      gitHubToken,
+      gitHubBaseUrl,
+      mockSlackWebhookUrl,
+    );
 
     await client.send('payload');
 
@@ -419,7 +510,12 @@ describe('8398a7/action-slack', () => {
         status: 'custom',
         fields: 'all',
       };
-      const client = new Client(withParams, gitHubToken, webhookUrl);
+      const client = new Client(
+        withParams,
+        gitHubToken,
+        gitHubBaseUrl,
+        webhookUrl,
+      );
       expect(
         await client.custom(`{
           text: \`\${process.env.AS_WORKFLOW}
@@ -437,7 +533,12 @@ describe('8398a7/action-slack', () => {
         ...newWith(),
         status: 'custom',
       };
-      const client = new Client(withParams, gitHubToken, webhookUrl);
+      const client = new Client(
+        withParams,
+        gitHubToken,
+        gitHubBaseUrl,
+        webhookUrl,
+      );
       expect(() => client.injectColor()).toThrow();
     });
   });
@@ -447,7 +548,12 @@ describe('8398a7/action-slack', () => {
         ...newWith(),
         status: 'custom',
       };
-      const client = new Client(withParams, gitHubToken, webhookUrl);
+      const client = new Client(
+        withParams,
+        gitHubToken,
+        gitHubBaseUrl,
+        webhookUrl,
+      );
       expect(() => client.injectText('')).toThrow();
     });
   });
@@ -459,10 +565,34 @@ describe('8398a7/action-slack', () => {
         mention: 'test1,test2, here',
         if_mention: Success,
       };
-      const client = new Client(withParams, gitHubToken, webhookUrl);
+      const client = new Client(
+        withParams,
+        gitHubToken,
+        gitHubBaseUrl,
+        webhookUrl,
+      );
       expect(client.mentionText(Success)).toStrictEqual(
         '<@test1> <@test2> <!here> ',
       );
+    });
+  });
+
+  describe('GitHub Enterprise', () => {
+    it('is full fields', () => {
+      const withParams = {
+        ...newWith(),
+        status: Success,
+        fields:
+          'repo,message,commit,author,job,action,eventName,ref,workflow,took',
+      };
+      const client = new Client(
+        withParams,
+        gitHubToken,
+        'https://your.ghe.com.',
+        webhookUrl,
+      );
+      const payload = getTemplate(withParams.fields, successMsg);
+      payload.attachments[0].color = 'good';
     });
   });
 });

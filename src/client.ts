@@ -44,7 +44,12 @@ export class Client {
   private octokit: Octokit;
   private with: With;
 
-  constructor(props: With, token: string, webhookUrl?: string | null) {
+  constructor(
+    props: With,
+    token: string,
+    gitHubBaseUrl: string,
+    webhookUrl?: string | null,
+  ) {
     this.with = props;
     if (this.with.fields === '') this.with.fields = 'repo,commit';
 
@@ -57,6 +62,7 @@ export class Client {
     this.fieldFactory = new FieldFactory(
       this.with.fields,
       this.jobName,
+      gitHubBaseUrl,
       this.octokit,
     );
   }
