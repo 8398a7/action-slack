@@ -7,6 +7,7 @@ import {
   getTemplate,
   newWith,
   gitHubToken,
+  gitHubBaseUrl,
   webhookUrl,
 } from './helper';
 import { Client, With, Success } from '../src/client';
@@ -39,7 +40,12 @@ describe('pull request event', () => {
       if_mention: Success,
       fields: 'action',
     };
-    const client = new Client(withParams, gitHubToken, webhookUrl);
+    const client = new Client(
+      withParams,
+      gitHubToken,
+      gitHubBaseUrl,
+      webhookUrl,
+    );
     const msg = 'mention test';
     const payload = getTemplate(withParams.fields, `<@user_id> ${msg}`, sha);
     payload.attachments[0].color = 'good';

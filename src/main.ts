@@ -17,6 +17,7 @@ async function run(): Promise<void> {
     const fields = core.getInput('fields');
     const job_name = core.getInput('job_name');
     const github_token = core.getInput('github_token');
+    const github_base_url = core.getInput('github_base_url');
 
     core.debug(`status: ${status}`);
     core.debug(`mention: ${mention}`);
@@ -31,6 +32,7 @@ async function run(): Promise<void> {
     core.debug(`payload: ${payload}`);
     core.debug(`fields: ${fields}`);
     core.debug(`job_name: ${job_name}`);
+    core.debug(`github_base_url: ${github_base_url}`);
 
     const client = new Client(
       {
@@ -46,6 +48,7 @@ async function run(): Promise<void> {
         job_name,
       },
       github_token,
+      github_base_url,
       process.env.SLACK_WEBHOOK_URL,
     );
 
