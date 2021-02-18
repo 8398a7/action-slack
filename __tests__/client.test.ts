@@ -576,4 +576,23 @@ describe('8398a7/action-slack', () => {
       );
     });
   });
+
+  describe('GitHub Enterprise', () => {
+    it('is full fields', () => {
+      const withParams = {
+        ...newWith(),
+        status: Success,
+        fields:
+          'repo,message,commit,author,job,action,eventName,ref,workflow,took',
+      };
+      const client = new Client(
+        withParams,
+        gitHubToken,
+        'https://your.ghe.com.',
+        webhookUrl,
+      );
+      const payload = getTemplate(withParams.fields, successMsg);
+      payload.attachments[0].color = 'good';
+    });
+  });
 });
