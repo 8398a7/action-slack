@@ -105,7 +105,7 @@ export class FieldFactory {
     });
     const currentJob = resp?.data.jobs.find(job => job.name === this.jobName);
     if (currentJob === undefined) {
-      process.env.AS_JOB = this.jobIsNotFound;
+      process.env.AS_TOOK = this.jobIsNotFound;
       return this.jobIsNotFound;
     }
 
