@@ -92,13 +92,13 @@ export class FieldFactory {
     const resp = await this.getCommit(this.octokit);
     const author = resp.data.commit.author;
 
-    const value = `${author.name}<${author.email}>`;
+    const value = `${author?.name}<${author?.email}>`;
     process.env.AS_AUTHOR = value;
     return value;
   }
 
   private async took(): Promise<string> {
-    const resp = await this.octokit?.actions.listJobsForWorkflowRun({
+    const resp = await this.octokit?.rest.actions.listJobsForWorkflowRun({
       owner: context.repo.owner,
       repo: context.repo.repo,
       run_id: context.runId,
@@ -133,7 +133,7 @@ export class FieldFactory {
 
   private async job(): Promise<string> {
     const { owner } = context.repo;
-    const resp = await this.octokit?.actions.listJobsForWorkflowRun({
+    const resp = await this.octokit?.rest.actions.listJobsForWorkflowRun({
       owner,
       repo: context.repo.repo,
       run_id: context.runId,
@@ -203,7 +203,7 @@ export class FieldFactory {
   private async getCommit(octokit: Octokit) {
     const { owner, repo } = context.repo;
     const { sha: ref } = context;
-    return await octokit.repos.getCommit({ owner, repo, ref });
+    return await octokit.rest.repos.getCommit({ owner, repo, ref });
   }
 
   private get jobIsNotFound() {
