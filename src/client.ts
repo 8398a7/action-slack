@@ -7,7 +7,7 @@ import {
   IncomingWebhookDefaultArguments,
 } from '@slack/webhook';
 import { FieldFactory } from './fields';
-import HttpsProxyAgent from 'https-proxy-agent';
+import { HttpsProxyAgent } from 'https-proxy-agent';
 
 export const Success = 'success';
 type SuccessType = 'success';
