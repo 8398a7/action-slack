@@ -30,7 +30,7 @@ Corresponding types are as follows.
 | commit    | `AS_COMMIT`             | commit hash                                                  |
 | eventName | `AS_EVENT_NAME`         | trigger event name                                           |
 | ref       | `AS_REF`                | git refrence                                                 |
-| workflow  | `AS_WORKFLOW`           | GitHub Actions workflow name                                 |
+| workflow  | `AS_WORKFLOW`           | Generate a workflow link from git sha                        |
 | action    | `AS_ACTION`             | Generate a workflow link from git sha                        |
 | message   | `AS_MESSAGE`            | commit message                                               |
 | author    | `AS_AUTHOR`             | The author who pushed                                        |
