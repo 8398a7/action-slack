@@ -81,9 +81,11 @@ export class FieldFactory {
   private async message(): Promise<string> {
     const resp = await this.getCommit(this.octokit);
 
-    const value = `<${resp.data.html_url}|${
-      resp.data.commit.message.split('\n')[0]
-    }>`;
+    const value = `<${resp.data.html_url}|${resp.data.commit.message
+      .split('\n')[0]
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')}>`;
     process.env.AS_MESSAGE = value;
     return value;
   }
