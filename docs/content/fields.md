@@ -30,14 +30,11 @@ Corresponding types are as follows.
 | commit    | `AS_COMMIT`             | commit hash                                                  |
 | eventName | `AS_EVENT_NAME`         | trigger event name                                           |
 | ref       | `AS_REF`                | git refrence                                                 |
-| workflow  | `AS_WORKFLOW`           | GitHub Actions workflow name                                 |
-| action    | `AS_ACTION`             | Generate a workflow link from git sha                        |
+| workflow  | `AS_WORKFLOW`           | Generate a workflow link from git sha                        |
 | message   | `AS_MESSAGE`            | commit message                                               |
 | author    | `AS_AUTHOR`             | The author who pushed                                        |
-| job       | `AS_JOB`                | The name of the job that was executed                        |
+| job       | `AS_JOB`                | Generate a job run link of the job that was executed         |
 | took      | `AS_TOOK`               | Execution time for the job                                   |
-
-caution: The Field in `action` is similar to what you get in workflow. It will be removed in the next major release version.
 
 ```yaml
 steps:
