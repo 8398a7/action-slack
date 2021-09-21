@@ -1,8 +1,13 @@
 import * as core from '@actions/core';
 import { context, getOctokit } from '@actions/github';
 import { GitHub } from '@actions/github/lib/utils';
-import { IncomingWebhook, IncomingWebhookSendArguments } from '@slack/webhook';
+import {
+  IncomingWebhook,
+  IncomingWebhookSendArguments,
+  IncomingWebhookDefaultArguments,
+} from '@slack/webhook';
 import { FieldFactory } from './fields';
+import { HttpsProxyAgent } from 'https-proxy-agent';
 
 export const Success = 'success';
 type SuccessType = 'success';
@@ -58,7 +63,14 @@ export class Client {
     if (webhookUrl === undefined || webhookUrl === null || webhookUrl === '') {
       throw new Error('Specify secrets.SLACK_WEBHOOK_URL');
     }
-    this.webhook = new IncomingWebhook(webhookUrl);
+
+    const options: IncomingWebhookDefaultArguments = {};
+    const proxy = process.env.https_proxy || process.env.HTTPS_PROXY;
+    if (proxy) {
+      options.agent = new HttpsProxyAgent(proxy);
+    }
+
+    this.webhook = new IncomingWebhook(webhookUrl, options);
     this.fieldFactory = new FieldFactory(
       this.with.fields,
       this.jobName,
