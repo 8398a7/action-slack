@@ -55,3 +55,33 @@ steps:
     env:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
 ```
+
+In either of the following cases, You must use the `job_name` parameter instead of the `MATRIX_CONTEXT`.
+
+1. Overwrite job name by `name` syntax
+1. Using `matrix` with `include`
+
+Because when constructing the job name in the action-slack, the key specified by `include` is included in the `matrix` map.
+It does not match the actual job name.
+
+```yaml
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest, windows-latest, ubuntu-18.04]
+        node: [8, 10, 12, 14]
+        include:
+          - os: windows-latest
+            node: 8
+            npm: 6
+
+    steps:
+      - uses: 8398a7/action-slack@v3
+        with:
+          job_name: test (${{ matrix.os }}, ${{ matrix.node }}) # named without `npm`
+          fields: job,took
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
+```
