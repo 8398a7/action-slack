@@ -73,6 +73,9 @@ export class FieldFactory {
         this.includes('workflow')
           ? createAttachment('workflow', await this.workflow())
           : undefined,
+        this.includes('pullRequest')
+          ? createAttachment('pullRequest', await this.pullRequest())
+          : undefined,
       ],
       undefined,
     );
@@ -190,6 +193,17 @@ export class FieldFactory {
 
     const value = `<${this.gitHubBaseUrl}/${owner}/${repo}/commit/${sha}/checks|${context.workflow}>`;
     process.env.AS_WORKFLOW = value;
+    return value;
+  }
+
+  private async pullRequest(): Promise<string> {
+    let value;
+    if (context.eventName === 'pull_request') {
+      value = `<${context.payload.pull_request?.html_url}|${context.payload.pull_request?.title} #${context.payload.pull_request?.number}>`;
+    } else {
+      value = 'n/a';
+    }
+    process.env.AS_PULL_REQUEST = value;
     return value;
   }
 
