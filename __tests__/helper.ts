@@ -3,7 +3,7 @@ import { readFileSync } from 'fs';
 import { resolve } from 'path';
 import { Field, With } from '../src/client';
 import { FieldFactory } from '../src/fields';
-import github, {context, getOctokit} from '@actions/github';
+import github, { context, getOctokit } from '@actions/github';
 
 export const gitHubToken = 'github-token';
 export const gitHubBaseUrl = '';
@@ -180,7 +180,8 @@ export const took = (): Field => {
 export const pullRequest = (): Field => {
   let value;
   if (context.eventName === 'pull_request') {
-    value = '<https://github.com/8398a7/action-slack/pull/123|Add pullRequest field #123>';
+    value =
+      '<https://github.com/8398a7/action-slack/pull/123|Add pullRequest field #123>';
   } else {
     value = 'n/a';
   }

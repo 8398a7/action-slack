@@ -11,7 +11,7 @@ import {
   webhookUrl,
 } from './helper';
 import { Client, Success } from '../src/client';
-import github from "@actions/github";
+import github from '@actions/github';
 
 beforeAll(() => {
   nock.disableNetConnect();
@@ -72,10 +72,10 @@ describe('pull request event', () => {
       fields: 'pullRequest',
     };
     const client = new Client(
-        withParams,
-        gitHubToken,
-        gitHubBaseUrl,
-        webhookUrl,
+      withParams,
+      gitHubToken,
+      gitHubBaseUrl,
+      webhookUrl,
     );
     const msg = 'pullRequest test';
     const payload = getTemplate(withParams.fields, msg, sha);
