@@ -80,7 +80,7 @@ describe('8398a7/action-slack', () => {
         ...newWith(),
         status: Success,
         fields:
-          'repo,message,commit,author,job,action,eventName,ref,workflow,took',
+          'repo,message,commit,author,job,action,eventName,ref,workflow,took,pullRequest',
       };
       const client = new Client(
         withParams,
@@ -585,7 +585,7 @@ describe('8398a7/action-slack', () => {
         ...newWith(),
         status: Success,
         fields:
-          'repo,message,commit,author,job,action,eventName,ref,workflow,took',
+          'repo,message,commit,author,job,action,eventName,ref,workflow,took,pullRequest',
       };
       const client = new Client(
         withParams,

@@ -3,7 +3,7 @@ import { readFileSync } from 'fs';
 import { resolve } from 'path';
 import { Field, With } from '../src/client';
 import { FieldFactory } from '../src/fields';
-import { getOctokit } from '@actions/github';
+import github, {context, getOctokit} from '@actions/github';
 
 export const gitHubToken = 'github-token';
 export const gitHubBaseUrl = '';
@@ -92,6 +92,7 @@ export const fixedFields = (fields: string, sha?: string) => {
       ff.includes('eventName') ? eventName() : undefined,
       ff.includes('ref') ? ref() : undefined,
       ff.includes('workflow') ? workflow(sha) : undefined,
+      ff.includes('pullRequest') ? pullRequest() : undefined,
     ],
     undefined,
   );
@@ -173,5 +174,19 @@ export const took = (): Field => {
     short: true,
     title: 'took',
     value: '1 hour 1 min 1 sec',
+  };
+};
+
+export const pullRequest = (): Field => {
+  let value;
+  if (context.eventName === 'pull_request') {
+    value = '<https://github.com/8398a7/action-slack/pull/123|Add pullRequest field #123>';
+  } else {
+    value = 'n/a';
+  }
+  return {
+    short: true,
+    title: 'pullRequest',
+    value: value,
   };
 };
