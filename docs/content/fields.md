@@ -29,7 +29,7 @@ Corresponding types are as follows.
 | repo        | `AS_REPO`               | A working repository name                                   |
 | commit      | `AS_COMMIT`             | commit hash                                                 |
 | eventName   | `AS_EVENT_NAME`         | trigger event name                                          |
-| ref         | `AS_REF`                | git refrence                                                |
+| ref         | `AS_REF`                | git reference                                               |
 | workflow    | `AS_WORKFLOW`           | Generate a workflow link from git sha                       |
 | message     | `AS_MESSAGE`            | commit message                                              |
 | author      | `AS_AUTHOR`             | The author who pushed                                       |
