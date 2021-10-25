@@ -52,8 +52,16 @@ describe('pull request event', () => {
     payload.attachments[0].color = 'good';
     expect(await client.prepare(msg)).toStrictEqual(payload);
   });
+});
 
-  it('pull request information in pullRequest field', async () => {
+describe.each`
+  eventName
+  ${`pull_request`}
+  ${`pull_request_review`}
+  ${`pull_request_review_comment`}
+  ${`pull_request_target`}
+`('pullRequest field on pull_request events', ({ eventName }) => {
+  test(`${eventName}`, async () => {
     const github = require('@actions/github');
     const sha = 'expected-sha-for-pull_request_event';
     github.context.payload = {
@@ -64,7 +72,7 @@ describe('pull request event', () => {
         head: { sha },
       },
     };
-    github.context.eventName = 'pull_request';
+    github.context.eventName = eventName;
 
     const withParams = {
       ...newWith(),
@@ -81,5 +89,8 @@ describe('pull request event', () => {
     const payload = getTemplate(withParams.fields, msg, sha);
     payload.attachments[0].color = 'good';
     expect(await client.prepare(msg)).toStrictEqual(payload);
+    expect(process.env.AS_PULL_REQUEST).toStrictEqual(
+      '<https://github.com/8398a7/action-slack/pull/123|Add pullRequest field #123>',
+    );
   });
 });

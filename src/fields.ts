@@ -198,7 +198,7 @@ export class FieldFactory {
 
   private async pullRequest(): Promise<string> {
     let value;
-    if (context.eventName === 'pull_request') {
+    if (context.eventName.startsWith('pull_request')) {
       value = `<${context.payload.pull_request?.html_url}|${context.payload.pull_request?.title} #${context.payload.pull_request?.number}>`;
     } else {
       value = 'n/a';
