@@ -62,3 +62,13 @@ steps:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
     if: always()
 ```
+
+## Require Permissions
+
+If you are explicitly specifying permissions, must grant `contents` and `actions`.
+
+```yaml
+permissions:
+  contents: read
+  actions: read
+```

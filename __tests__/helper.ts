@@ -181,7 +181,7 @@ export const pullRequest = (): Field => {
   let value;
   if (context.eventName.startsWith('pull_request')) {
     value =
-      '<https://github.com/8398a7/action-slack/pull/123|Add pullRequest field #123>';
+      '<https://github.com/8398a7/action-slack/pull/123|Add pullRequest field &amp; escaping &lt;, &gt; #123>';
   } else {
     value = 'n/a';
   }
