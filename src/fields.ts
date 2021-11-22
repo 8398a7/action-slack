@@ -73,6 +73,9 @@ export class FieldFactory {
         this.includes('workflow')
           ? createAttachment('workflow', await this.workflow())
           : undefined,
+        this.includes('pullRequest')
+          ? createAttachment('pullRequest', await this.pullRequest())
+          : undefined,
       ],
       undefined,
     );
@@ -81,9 +84,11 @@ export class FieldFactory {
   private async message(): Promise<string> {
     const resp = await this.getCommit(this.octokit);
 
-    const value = `<${resp.data.html_url}|${
-      resp.data.commit.message.split('\n')[0]
-    }>`;
+    const value = `<${resp.data.html_url}|${resp.data.commit.message
+      .split('\n')[0]
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')}>`;
     process.env.AS_MESSAGE = value;
     return value;
   }
@@ -188,6 +193,22 @@ export class FieldFactory {
 
     const value = `<${this.gitHubBaseUrl}/${owner}/${repo}/commit/${sha}/checks|${context.workflow}>`;
     process.env.AS_WORKFLOW = value;
+    return value;
+  }
+
+  private async pullRequest(): Promise<string> {
+    let value;
+    if (context.eventName.startsWith('pull_request')) {
+      value = `<${
+        context.payload.pull_request?.html_url
+      }|${context.payload.pull_request?.title
+        ?.replace(/&/g, '&amp;')
+        ?.replace(/</g, '&lt;')
+        ?.replace(/>/g, '&gt;')} #${context.payload.pull_request?.number}>`;
+    } else {
+      value = 'n/a';
+    }
+    process.env.AS_PULL_REQUEST = value;
     return value;
   }
 

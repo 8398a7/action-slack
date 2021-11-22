@@ -23,7 +23,6 @@ tag=v$tag
 git checkout v$major
 git merge origin/master
 npm ci
-npm install
 npm run release
 git add -A
 git commit -m '[command] npm run release'

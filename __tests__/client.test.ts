@@ -36,6 +36,8 @@ describe('8398a7/action-slack', () => {
   beforeEach(() => {
     process.env.GITHUB_REPOSITORY = '8398a7/action-slack';
     process.env.GITHUB_EVENT_NAME = 'push';
+    process.env.https_proxy = 'http://localhost:1334';
+    process.env.HTTPS_PROXY = 'http://localhost:1334';
     const github = require('@actions/github');
     github.context.payload = {};
   });
@@ -78,7 +80,7 @@ describe('8398a7/action-slack', () => {
         ...newWith(),
         status: Success,
         fields:
-          'repo,message,commit,author,job,action,eventName,ref,workflow,took',
+          'repo,message,commit,author,job,action,eventName,ref,workflow,took,pullRequest',
       };
       const client = new Client(
         withParams,
@@ -583,7 +585,7 @@ describe('8398a7/action-slack', () => {
         ...newWith(),
         status: Success,
         fields:
-          'repo,message,commit,author,job,action,eventName,ref,workflow,took',
+          'repo,message,commit,author,job,action,eventName,ref,workflow,took,pullRequest',
       };
       const client = new Client(
         withParams,

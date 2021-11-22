@@ -17,7 +17,7 @@ steps:
   - uses: 8398a7/action-slack@v3
     with:
       status: ${{ job.status }}
-      fields: repo,message,commit,author,action,eventName,ref,workflow,job,took # selectable (default: repo,message)
+      fields: repo,message,commit,author,action,eventName,ref,workflow,job,took,pullRequest # selectable (default: repo,message)
     env:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
     if: always() # Pick up events even if the job fails or is canceled.
@@ -57,8 +57,18 @@ steps:
     with:
       github_base_url: https://your.ghe.com # Specify your GHE
       status: ${{ job.status }}
-      fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
+      fields: repo,message,commit,author,action,eventName,ref,workflow,job,took,pullRequest
     env:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
     if: always()
+```
+
+## Require Permissions
+
+If you are explicitly specifying permissions, must grant `contents` and `actions`.
+
+```yaml
+permissions:
+  contents: read
+  actions: read
 ```
