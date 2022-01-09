@@ -1,0 +1,30 @@
+{
+  "total_count": 1,
+  "jobs": [
+    {
+      "id": 762195612,
+      "run_id": 132308092,
+      "run_url": "https://api.github.com/repos/8398a7/action-slack/actions/runs/132308092",
+      "node_id": "MDg6Q2hlY2tSdW43NjIxOTU2MTI=",
+      "head_sha": "cd15a66fc57d465564195faeb5308a63b4317cde",
+      "url": "https://api.github.com/repos/8398a7/action-slack/actions/jobs/762195612",
+      "html_url": "https://github.com/8398a7/action-slack/runs/762195612",
+      "status": "in_progress",
+      "conclusion": null,
+      "started_at": "2020-06-11T15:05:49Z",
+      "completed_at": null,
+      "name": "call-reusable / notification",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "in_progress",
+          "conclusion": null,
+          "number": 1,
+          "started_at": "2020-06-11T15:05:49.000Z",
+          "completed_at": null
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/8398a7/action-slack/check-runs/762195612"
+    }
+  ]
+}
