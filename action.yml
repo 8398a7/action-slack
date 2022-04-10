@@ -1,6 +1,6 @@
 name: action-slack
 description: You can notify slack of GitHub Actions.
-author: 8398a7
+author: deathtumble
 inputs:
   status:
     description: Specify success or failure or cancelled or custom.
