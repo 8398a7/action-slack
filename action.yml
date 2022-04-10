@@ -1,4 +1,4 @@
-name: action-slack
+name: deathtumble-action-slack
 description: You can notify slack of GitHub Actions.
 author: deathtumble
 inputs:
