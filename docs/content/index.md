@@ -12,7 +12,7 @@ metaDescription: You can notify slack of GitHub Actions.
 
 You can notify slack of GitHub Actions.
 
-- [Usage](/usage)
+- [Usage](./usage.md)
 - [v2 Document Link](https://github.com/8398a7/action-slack/blob/v2/README.md)
 
 ```yaml
