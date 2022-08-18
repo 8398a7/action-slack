@@ -29,7 +29,7 @@
   "author": "8398a7",
   "license": "MIT",
   "dependencies": {
-    "@actions/core": "^1.4.0",
+    "@actions/core": "^1.9.1",
     "@actions/github": "^5.0.0",
     "@slack/webhook": "^6.0.0",
     "https-proxy-agent": "^5.0.0",
