@@ -88,6 +88,19 @@ steps:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
 ```
 
+If you want to mention a user group, you need to add "subteam^" before user group id. 
+
+```yaml
+steps:
+  - uses: 8398a7/action-slack@v3
+    with:
+      mention: 'subteam^S012ABC3Y4Z' # replace S012ABC3Y4Z with your user group id 
+      if_mention: 'failure,cancelled'
+    env:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
+```
+
+
 # username
 
 Only legacy incoming webhook supported.
