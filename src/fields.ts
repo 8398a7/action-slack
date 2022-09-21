@@ -110,6 +110,12 @@ export class FieldFactory {
         repo: context.repo.repo,
         run_id: context.runId,
       },
+      (response, done) => {
+        if (response.data.find(job => this.isCurrentJobName(job.name))) {
+          done();
+        }
+        return response.data;
+      },
     );
     const currentJob = jobs.find(job => this.isCurrentJobName(job.name));
     if (currentJob === undefined) {
@@ -147,6 +153,12 @@ export class FieldFactory {
         owner,
         repo: context.repo.repo,
         run_id: context.runId,
+      },
+      (response, done) => {
+        if (response.data.find(job => this.isCurrentJobName(job.name))) {
+          done();
+        }
+        return response.data;
       },
     );
     const currentJob = jobs.find(job => this.isCurrentJobName(job.name));
