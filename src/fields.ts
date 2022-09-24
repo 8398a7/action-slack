@@ -103,14 +103,21 @@ export class FieldFactory {
   }
 
   private async took(): Promise<string> {
-    const resp = await this.octokit?.rest.actions.listJobsForWorkflowRun({
-      owner: context.repo.owner,
-      repo: context.repo.repo,
-      run_id: context.runId,
-    });
-    const currentJob = resp?.data.jobs.find(job =>
-      this.isCurrentJobName(job.name),
+    const jobs = await this.octokit?.paginate(
+      this.octokit?.rest.actions.listJobsForWorkflowRun,
+      {
+        owner: context.repo.owner,
+        repo: context.repo.repo,
+        run_id: context.runId,
+      },
+      (response, done) => {
+        if (response.data.find(job => this.isCurrentJobName(job.name))) {
+          done();
+        }
+        return response.data;
+      },
     );
+    const currentJob = jobs.find(job => this.isCurrentJobName(job.name));
     if (currentJob === undefined) {
       process.env.AS_TOOK = this.jobIsNotFound;
       return this.jobIsNotFound;
@@ -140,14 +147,21 @@ export class FieldFactory {
 
   private async job(): Promise<string> {
     const { owner } = context.repo;
-    const resp = await this.octokit?.rest.actions.listJobsForWorkflowRun({
-      owner,
-      repo: context.repo.repo,
-      run_id: context.runId,
-    });
-    const currentJob = resp?.data.jobs.find(job =>
-      this.isCurrentJobName(job.name),
+    const jobs = await this.octokit?.paginate(
+      this.octokit?.rest.actions.listJobsForWorkflowRun,
+      {
+        owner,
+        repo: context.repo.repo,
+        run_id: context.runId,
+      },
+      (response, done) => {
+        if (response.data.find(job => this.isCurrentJobName(job.name))) {
+          done();
+        }
+        return response.data;
+      },
     );
+    const currentJob = jobs.find(job => this.isCurrentJobName(job.name));
     if (currentJob === undefined) {
       process.env.AS_JOB = this.jobIsNotFound;
       return this.jobIsNotFound;
