@@ -22,7 +22,7 @@ steps:
     if: always() # Pick up events even if the job fails or is canceled.
 ```
 
-
+[![Netlify Status](https://api.netlify.com/api/v1/badges/a132b9a0-3a80-4938-afa6-2cad038a14a9/deploy-status)](https://app.netlify.com/sites/action-slack/deploys)
 ![](https://github.com/8398a7/action-slack/workflows/build-test/badge.svg)
 ![](https://github.com/8398a7/action-slack/workflows/Slack%20Mainline/badge.svg)
 ![](https://img.shields.io/github/license/8398a7/action-slack?color=brightgreen)

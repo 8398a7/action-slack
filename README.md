@@ -1,5 +1,6 @@
 # action-slack
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/a132b9a0-3a80-4938-afa6-2cad038a14a9/deploy-status)](https://app.netlify.com/sites/action-slack/deploys)
 ![](https://github.com/8398a7/action-slack/workflows/test-build/badge.svg)
 ![](https://github.com/8398a7/action-slack/workflows/Slack%20Mainline/badge.svg)
 ![](https://img.shields.io/github/license/8398a7/action-slack?color=brightgreen)
