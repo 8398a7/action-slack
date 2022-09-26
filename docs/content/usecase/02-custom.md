@@ -1,14 +1,12 @@
 ---
 title: Custom use case
-metaTitle: Custom use case | action-slack
-metaDescription: This describes the custom use case of action-slack.
 ---
 
 You will often want to send notifications in a format other than the one that action-slack has determined.  
 In such a case, consider using `status: custom`.
 
 If you specify a payload in accordance with the slack specification, action-slack will notify you as it is.  
-Use `status: custom` and [custom_payload](/with#custom_payload) to customize notifications to your liking can be sent.
+Use `status: custom` and [custom_payload](/usage/with#custom_payload) to customize notifications to your liking can be sent.
 
 ```yaml
 steps:
@@ -69,7 +67,7 @@ steps:
 ```
 
 You can access the values retrieved by Fields through environment variables.  
-See [Fields](/fields) for the available environment variables.
+See [Fields](/usage/fields) for the available environment variables.
 
 <img width="501" alt="custom" src="https://user-images.githubusercontent.com/8043276/85949864-2b3df300-b994-11ea-9388-f4ff1aebc292.png" />
 

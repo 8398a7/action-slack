@@ -1,0 +1,95 @@
+theme = "hugo-theme-relearn"
+baseURL = "https://action-slack.netlify.app/"
+languageCode = "en-us"
+title = "action-slack"
+
+[outputs]
+home = ["HTML", "RSS", "JSON"]
+
+[params]
+  # This controls whether submenus will be expanded (true), or collapsed (false) in the
+  # menu; if no setting is given, the first menu level is set to false, all others to true;
+  # this can be overridden in the pages frontmatter
+  alwaysopen = true
+  # Prefix URL to edit current page. Will display an "Edit" button on top right hand corner of every page.
+  # Useful to give opportunity to people to create merge request for your doc.
+  # See the config.toml file from this documentation site to have an example.
+  editURL = "https://github.com/8398a7/action-slack/edit/main/docs/content"
+  # Author of the site, will be used in meta information
+  author = "839 <8398a7@github.com>"
+  # Description of the site, will be used in meta information
+  description = ""
+  # Shows a checkmark for visited pages on the menu
+  showVisitedLinks = false
+  # Disable search function. It will hide search bar
+  disableSearch = false
+  # Disable search in hidden pages, otherwise they will be shown in search box
+  disableSearchHiddenPages = false
+  # Disables hidden pages from showing up in the sitemap and on Google (et all), otherwise they may be indexed by search engines
+  disableSeoHiddenPages = false
+  # Disables hidden pages from showing up on the tags page although the tag term will be displayed even if all pages are hidden
+  disableTagHiddenPages = false
+  # Javascript and CSS cache are automatically busted when new version of site is generated.
+  # Set this to true to disable this behavior (some proxies don't handle well this optimization)
+  disableAssetsBusting = false
+  # Set this to true to disable copy-to-clipboard button for inline code.
+  disableInlineCopyToClipBoard = false
+  # A title for shortcuts in menu is set by default. Set this to true to disable it.
+  disableShortcutsTitle = false
+  # If set to false, a Home button will appear below the search bar on the menu.
+  # It is redirecting to the landing page of the current language if specified. (Default is "/")
+  disableLandingPageButton = false
+  # When using mulitlingual website, disable the switch language button.
+  disableLanguageSwitchingButton = false
+  # Hide breadcrumbs in the header and only show the current page title
+  disableBreadcrumb = false
+  # If set to true, hide table of contents menu in the header of all pages
+  disableToc = false
+  # If set to false, load the MathJax module on every page regardless if a MathJax shortcode is present
+  disableMathJax = false
+  # Specifies the remote location of the MathJax js
+  customMathJaxURL = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+  # Initialization parameter for MathJax, see MathJax documentation
+  mathJaxInitialize = "{}"
+  # If set to false, load the Mermaid module on every page regardless if a Mermaid shortcode or Mermaid codefence is present
+  disableMermaid = false
+  # Specifies the remote location of the Mermaid js
+  customMermaidURL = "https://unpkg.com/mermaid/dist/mermaid.min.js"
+  # Initialization parameter for Mermaid, see Mermaid documentation
+  mermaidInitialize = "{ \"theme\": \"default\" }"
+  # If set to false, load the Swagger module on every page regardless if a Swagger shortcode is present
+  disableSwagger = true
+  # Specifies the remote location of the RapiDoc js
+  customSwaggerURL = "https://unpkg.com/rapidoc/dist/rapidoc-min.js"
+  # Initialization parameter for Swagger, see RapiDoc documentation
+  swaggerInitialize = "{ \"theme\": \"light\" }"
+  # Hide Next and Previous page buttons normally displayed full height beside content
+  disableNextPrev = false
+  # Order sections in menu by "weight" or "title". Default to "weight";
+  # this can be overridden in the pages frontmatter
+  ordersectionsby = "weight"
+  # Change default color scheme with a variant one. Eg. can be "red", "blue", "green" or an array like [ "blue", "green" ].
+  themeVariant = ["blue"]
+  # Change the title separator. Default to "::".
+  titleSeparator = "-"
+  # If set to true, the menu in the sidebar will be displayed in a collapsible tree view.
+  collapsibleMenu = false
+  # If a single page can contain content in multiple languages, add those here
+  additionalContentLanguage = ["en"]
+
+[Languages]
+  [[Languages.en.menu.shortcuts]]
+    name = "<i class='fab fa-fw fa-github'></i> GitHub repo"
+    identifier = "ds"
+    url = "https://github.com/8398a7/action-slack"
+    weight = 10
+
+[markup]
+  [markup.highlight]
+    # if set to `guessSyntax = true`, there will be no unstyled code even if no language
+    # was given BUT mermaid code fences will not work anymore! So this is a mandatory
+    # setting for your site
+    guessSyntax = false
+
+    # choose a color theme or create your own
+    style = "monokai"

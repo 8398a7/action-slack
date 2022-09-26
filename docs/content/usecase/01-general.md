@@ -1,7 +1,5 @@
 ---
 title: General use case
-metaTitle: General use case | action-slack
-metaDescription: This describes the general use case of action-slack.
 ---
 
 Notify slack of the results of a single job run.
@@ -20,4 +18,4 @@ steps:
 `status: ${{ job.status }}` allows a job to succeed, fail or cancel etc. to action-slack.
 `if: always()` to trigger action-slack even if the job fails Let them.
 
-For the fields, look at [Fields](/fields) to determine what you want.
+For the fields, look at [Fields](/usage/fields) to determine what you want.
