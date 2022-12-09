@@ -1,0 +1,53 @@
+<style>
+  #logo img ,
+  #logo img * {
+    color: #282828;
+    color: var(--MENU-SECTIONS-BG-color);
+    fill: #282828 !important;
+    fill: var(--MENU-SECTIONS-BG-color) !important;
+    opacity: .945;
+  }
+  a#logo {
+    color: #282828;
+    color: var(--MENU-SECTIONS-BG-color);
+    font-family: 'Work Sans', 'Helvetica', 'Tahoma', 'Geneva', 'Arial', sans-serif;
+    font-size: 30px;
+    font-weight: 300;
+    margin-top: -13px;
+    max-width: 60%;
+    text-transform: uppercase;
+    width: 226px;
+    white-space: nowrap;
+  }
+  a#logo:hover {
+    color: #282828;
+    color: var(--MENU-SECTIONS-BG-color);
+  }
+  #logo img {
+    margin-bottom: -20px;
+    margin-left: -23.5px;
+    width: 65.5%;
+  }
+  @media only all and (max-width: 59.938em) {
+    a#logo {
+      font-size: 25px;
+      margin-top: -3px;
+    }
+    #logo img {
+      margin-bottom: -12px;
+      margin-left: -23px;
+    }
+  }
+  @media all and (-ms-high-contrast:none) {
+    {{ "/* IE11s understanding of positioning is weird at best */" | safeCSS }}
+    a#logo {
+      margin-top: -58px;
+    }
+    #logo img {
+      margin-bottom: -62px;
+    }
+  }
+</style>
+<a id="logo" href="{{ .Site.Home.RelPermalink | default ("/" | relLangURL) }}">
+  <img src="/logo.png">
+</a>
