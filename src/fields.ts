@@ -260,7 +260,7 @@ export class FieldFactory {
   }
 
   private get jobIsNotFound() {
-    return 'Job is not found.\nCheck <https://action-slack.netlify.app/fields|the matrix> or <https://action-slack.netlify.app/with#job_name|job name>.';
+    return 'Job is not found.\nCheck <https://action-slack.netlify.app/usage/fields|the matrix> or <https://action-slack.netlify.app/with#job_name|job name>.';
   }
 }
 
