@@ -58,13 +58,13 @@ describe('MATRIX_CONTEXT', () => {
               short: true,
               title: 'job',
               value:
-                'Job is not found.\nCheck <https://action-slack.netlify.app/fields|the matrix> or <https://action-slack.netlify.app/with#job_name|job name>.',
+                'Job is not found.\nCheck <https://action-slack.netlify.app/usage/fields|the matrix> or <https://action-slack.netlify.app/usage/with#job_name|job name>.',
             },
             {
               short: true,
               title: 'took',
               value:
-                'Job is not found.\nCheck <https://action-slack.netlify.app/fields|the matrix> or <https://action-slack.netlify.app/with#job_name|job name>.',
+                'Job is not found.\nCheck <https://action-slack.netlify.app/usage/fields|the matrix> or <https://action-slack.netlify.app/usage/with#job_name|job name>.',
             },
           ],
         },
