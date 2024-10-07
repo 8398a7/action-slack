@@ -92,6 +92,7 @@ export const fixedFields = (fields: string, sha?: string) => {
       ff.includes('eventName') ? eventName() : undefined,
       ff.includes('ref') ? ref() : undefined,
       ff.includes('workflow') ? workflow(sha) : undefined,
+      ff.includes('workflowRun') ? workflowRun() : undefined,
       ff.includes('pullRequest') ? pullRequest() : undefined,
     ],
     undefined,
@@ -148,6 +149,14 @@ export const workflow = (sha?: string): Field => {
     value: `<https://github.com/8398a7/action-slack/commit/${
       sha ?? process.env.GITHUB_SHA
     }/checks|${process.env.GITHUB_WORKFLOW as string}>`,
+  };
+};
+
+export const workflowRun = (): Field => {
+  return {
+    short: true,
+    title: 'workflowRun',
+    value: `<https://github.com/8398a7/action-slack/actions/runs/762195612|${process.env.GITHUB_WORKFLOW as string}>`,
   };
 };
 
