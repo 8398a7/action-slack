@@ -156,7 +156,9 @@ export const workflowRun = (): Field => {
   return {
     short: true,
     title: 'workflowRun',
-    value: `<https://github.com/8398a7/action-slack/actions/runs/762195612|${process.env.GITHUB_WORKFLOW as string}>`,
+    value: `<https://github.com/8398a7/action-slack/actions/runs/762195612|${
+      process.env.GITHUB_WORKFLOW as string
+    }>`,
   };
 };
 
