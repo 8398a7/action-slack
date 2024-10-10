@@ -74,7 +74,7 @@ export class FieldFactory {
           ? createAttachment('workflow', await this.workflow())
           : undefined,
         this.includes('workflowRun')
-          ? createAttachment('workflow', await this.workflowRun())
+          ? createAttachment('workflowRun', await this.workflowRun())
           : undefined,
         this.includes('pullRequest')
           ? createAttachment('pullRequest', await this.pullRequest())
