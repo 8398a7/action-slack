@@ -127,7 +127,7 @@ export const commit = (): Field => {
 };
 
 export const author = (): Field => {
-  return { short: true, title: 'author', value: '839<8398a7@gmail.com>' };
+  return { short: true, title: 'author', value: '839 <8398a7@gmail.com>' };
 };
 
 export const eventName = (): Field => {
