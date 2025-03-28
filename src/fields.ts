@@ -100,7 +100,7 @@ export class FieldFactory {
     const resp = await this.getCommit(this.octokit);
     const author = resp.data.commit.author;
 
-    const value = `${author?.name}<${author?.email}>`;
+    const value = `${author?.name} <${author?.email}>`;
     process.env.AS_AUTHOR = value;
     return value;
   }
