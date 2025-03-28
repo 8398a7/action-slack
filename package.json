@@ -1,6 +1,6 @@
 {
   "name": "action-slack",
-  "version": "3.16.2",
+  "version": "3.17.0",
   "description": "You can notify slack of GitHub Actions.",
   "main": "lib/main.js",
   "scripts": {
@@ -9,8 +9,7 @@
     "format-check": "prettier --check **/*.ts",
     "lint": "eslint src/**/*.ts",
     "pack": "ncc build -m",
-    "test": "jest && codecov",
-    "test-for-local": "jest",
+    "test": "jest",
     "all": "npm run build && npm run format-check && npm run lint && npm run pack && npm test",
     "release": "npm run build && npm run pack",
     "prepare-release": "./scripts/prepare-release.sh"
@@ -41,7 +40,6 @@
     "@types/semver": "^7.3.12",
     "@typescript-eslint/parser": "^5.33.1",
     "@vercel/ncc": "^0.34.0",
-    "codecov": "^3.8.3",
     "eslint": "^8.22.0",
     "eslint-plugin-github": "^4.3.7",
     "eslint-plugin-jest": "^26.8.5",
