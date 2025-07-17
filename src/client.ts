@@ -32,6 +32,9 @@ export interface With {
   channel: string;
   fields: string;
   job_name: string;
+  success_message: string;
+  cancelled_message: string;
+  failure_message: string;
 }
 
 export interface Field {
@@ -129,18 +132,15 @@ export class Client {
     switch (this.with.status) {
       case Success:
         text += this.mentionText(Success);
-        text += this.insertText(
-          ':white_check_mark: Succeeded GitHub Actions\n',
-          value,
-        );
+        text += this.insertText(this.with.success_message, value);
         return text;
       case Cancelled:
         text += this.mentionText(Cancelled);
-        text += this.insertText(':warning: Canceled GitHub Actions\n', value);
+        text += this.insertText(this.with.cancelled_message, value);
         return text;
       case Failure:
         text += this.mentionText(Failure);
-        text += this.insertText(':no_entry: Failed GitHub Actions\n', value);
+        text += this.insertText(this.with.failure_message, value);
         return text;
     }
     throw new Error(`invalid status: ${this.with.status}`);

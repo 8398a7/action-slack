@@ -51,7 +51,7 @@ export const setupNockJobs = (runId: string, fixture: string) =>
     });
 
 export const successMsg = ':white_check_mark: Succeeded GitHub Actions\n';
-export const cancelMsg = ':warning: Canceled GitHub Actions\n';
+export const cancelMsg = ':warning: Cancelled GitHub Actions\n';
 export const failMsg = ':no_entry: Failed GitHub Actions\n';
 export const getApiFixture = (name: string): any =>
   JSON.parse(
@@ -70,6 +70,9 @@ export const newWith = (): With => {
     channel: '',
     fields: '',
     job_name: '',
+    success_message: successMsg,
+    cancelled_message: cancelMsg,
+    failure_message: failMsg,
   };
 };
 
