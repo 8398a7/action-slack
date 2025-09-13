@@ -16,6 +16,9 @@ async function run(): Promise<void> {
     const payload = core.getInput('payload');
     const fields = core.getInput('fields');
     const job_name = core.getInput('job_name');
+    const success_message = core.getInput('success_message');
+    const cancelled_message = core.getInput('cancelled_message');
+    const failure_message = core.getInput('failure_message');
     const github_token = core.getInput('github_token');
     const github_base_url = core.getInput('github_base_url');
 
@@ -32,6 +35,9 @@ async function run(): Promise<void> {
     core.debug(`payload: ${payload}`);
     core.debug(`fields: ${fields}`);
     core.debug(`job_name: ${job_name}`);
+    core.debug(`success_message: ${success_message}`);
+    core.debug(`cancelled_message: ${cancelled_message}`);
+    core.debug(`failure_message: ${failure_message}`);
     core.debug(`github_base_url: ${github_base_url}`);
 
     const client = new Client(
@@ -46,6 +52,9 @@ async function run(): Promise<void> {
         channel,
         fields,
         job_name,
+        success_message,
+        cancelled_message,
+        failure_message,
       },
       github_token,
       github_base_url,

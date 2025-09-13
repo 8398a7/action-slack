@@ -58,6 +58,18 @@ inputs:
     description: Use this if you want to overwrite the job name.
     default: ""
     required: false
+  success_message:
+    description: Message to use when the status is 'success'.
+    default: ":white_check_mark: Succeeded GitHub Actions\n"
+    required: false
+  cancelled_message:
+    description: Message to use when the status is 'cancelled'.
+    default: ":warning: Cancelled GitHub Actions\n"
+    required: false
+  failure_message:
+    description: Message to use when the status is 'failure'.
+    default: ":no_entry: Failed GitHub Actions\n"
+    required: false
   github_token:
     description: Use this if you wish to use a different GitHub token than the one provided by the workflow.
     required: false
