@@ -1,6 +1,7 @@
 name: action-slack
 description: You can notify slack of GitHub Actions.
 author: 8398a7
+deprecated: "This action is archived as of 2025-09-13. Please migrate to slackapi/slack-github-action or another maintained alternative."
 inputs:
   status:
     description: Specify success or failure or cancelled or custom.

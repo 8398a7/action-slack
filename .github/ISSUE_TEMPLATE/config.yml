@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: This project is archived
+    url: https://github.com/8398a7/action-slack#readme
+    about: As of 2025-09-13, issues and pull requests are no longer accepted. Please migrate to a maintained alternative.

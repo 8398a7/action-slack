@@ -1,5 +1,5 @@
 name: test-build
-on: [pull_request, push]
+on: workflow_dispatch
 
 jobs:
   test:

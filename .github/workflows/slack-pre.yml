@@ -1,8 +1,5 @@
 name: Slack Pre
-on:
-  push:
-    branches:
-      - pre
+on: workflow_dispatch
 
 jobs:
   notification:

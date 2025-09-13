@@ -1,8 +1,5 @@
 name: Slack Mainline
-on:
-  push:
-    branches:
-      - v3
+on: workflow_dispatch
 
 jobs:
   notification:

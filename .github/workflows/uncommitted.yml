@@ -1,9 +1,5 @@
 name: Check for uncommitted changes
-on:
-  push:
-    branches:
-      - pre
-      - "v*"
+on: workflow_dispatch
 
 jobs:
   uncommitted:
